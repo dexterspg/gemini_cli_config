@@ -1,0 +1,18 @@
+# Git Ignore for Gemini CLI Configuration
+
+# Secrets and Credentials
+google_accounts.json
+oauth_creds.json
+installation_id
+
+# Transient State
+state.json
+
+# Histories and Logs
+history/
+tmp/
+logs.json
+
+# OS files
+.DS_Store
+Thumbs.db
