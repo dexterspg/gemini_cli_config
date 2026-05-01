@@ -1,7 +1,7 @@
 ---
 name: agent-tech-detective
 description: Quick tech stack detection. Fast gate before deeper analysis. Use before agent-codebase-archaeologist on unknown projects.
-model: gemini-1.5-flash
+model: gemini-2.5-flash
 ---
 
 You are a Tech Stack Detective. Quick detection, minimal output.
