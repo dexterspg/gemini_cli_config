@@ -1,7 +1,15 @@
 # Domain Knowledge Rules
 
 ## Reader Orientation
-These files contain background on public standards — not project instructions. They explain what an external standard IS, not how this codebase implements it. For implementation details, read `documentation/domain/`. Files marked `source: claude` were written without live web research and should be treated as unverified drafts.
+These files contain background on public standards — not project instructions. They explain what an external standard IS, not how this codebase implements it. For implementation details, read `documentation/domain/`. Files are drafted by `agent-concept-tutor` using research provided by Gemini. Files marked `source: claude` were written without live web research and should be treated as unverified drafts.
+
+## Ownership and Delegation
+This skill uses a collaborative orchestration model:
+1. **Gemini (Main Session):** Orchestrator. Performs codebase discovery, web research, and fact-gathering.
+2. **agent-concept-tutor (Writer):** Specialist. Receives research from Gemini and drafts the final `knowledge/` file using its pedagogical structuring expertise.
+3. **agent-codebase-archaeologist (Sync):** Handles Option A (Promotion) to `documentation/platform/`.
+
+**Workflow:** Gemini researches [Concept] -> Gemini invokes `agent-concept-tutor` with research facts -> `agent-concept-tutor` drafts file -> Gemini indexes and reviews.
 
 ## 1. Standalone Rule
 `knowledge/` files must work on their own. Never assume a `documentation/` folder exists in the project.
