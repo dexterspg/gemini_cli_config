@@ -273,3 +273,458 @@ Run this checklist before finalizing any document.
 - [ ] **Status table:** is the per-project status table current?
 - [ ] **Business value:** is the "why" clear for non-technical readers?
 - [ ] **Contract accuracy:** (for INTEGRATION.md) do the event/API definitions match current code?
+
+---
+
+## Platform-Level Documentation Mapping
+
+The platform folder contains documentation that spans multiple projects.
+
+| File | Primary Owner | Purpose |
+|------|---------------|---------|
+| platform/README.md | Parent (doc skill) | Navigation for the platform folder |
+| platform/system-overview.md | agent-system-architect | High-level topology and platform goals |
+| platform/INTEGRATION-MAP.md | agent-system-architect | Matrix of every project and its inbound/outbound dependencies |
+| platform/INTEGRATION-PATTERNS.md | agent-system-architect | Standardized protocols (REST, Kafka, etc.) and client libraries |
+| platform/SECURITY-MODEL.md | agent-system-architect | Platform-wide auth, TLS, and PII standards |
+| platform/DEPLOYMENT-MAP.md | agent-system-architect --infra | Onboarding requires cross-service setup steps |
+| decisions/ADR-*.md | agent-system-architect | A specific architecture decision needs to be recorded |
+| diagrams/ | agent-codebase-archaeologist | Any platform-level diagram |
+| domain-concepts/{concept}.md | agent-codebase-archaeologist --domain (formal) · agent-concept-tutor (draft) | General concept applies to 2+ projects |
+
+**Rule:** Always spawn the assigned agent above when writing any platform file — never write directly in the main session.     
+
+### Companion Doc Pattern
+
+When a domain area serves two distinct audiences — one reading to understand, one reading to change — split it into **two consecutive numbered docs** rather than one long file.
+
+| Doc role | Audience | Voice |
+|----------|----------|-------|
+| **Architecture reference** (NN) | Developers understanding the system | Comprehensive — every rule, every layer, every edge case |
+| **Operations guide** (NN+1) | Developers making changes or customizations | Task-oriented — step-by-step workflows, config schemas, end-to-end walkthroughs |
+
+**Decision checklist — split when ALL of these are true:**
+
+1. **Two distinct reader goals exist** — "understand how X works" is a different task from "change how X behaves"
+2. **Customization touches 3+ files OR requires a fixed sequence of 4+ steps** — if you can express the change in fewer steps or fewer files, it fits inside one doc as an on-demand `End-to-End Walkthrough` section
+3. **The operations content will be consulted repeatedly** — a developer making routine changes will return to it more than once, making it worth maintaining as a standalone reference
+
+If any of these are false, keep it as one doc. Use the on-demand `End-to-End Walkthrough` and `Config File Schemas` sections within that single doc instead.
+
+**Naming the split:**
+- Architecture doc: name describes the system — `NN-[area]-model.md`, `NN-[area]-architecture.md`, or just `NN-[area].md`      
+- Operations doc: name describes the action — `NN+1-[area]-customization.md`, `NN+1-[area]-configuration.md`, `NN+1-[area]-guide.md`
+
+**Deduplication rule between companion docs:**
+
+Canonical content lives in the **architecture doc** only. The operations doc uses reference notes instead of repeating it:       
+
+```markdown
+> See [NN-topic-name.md — Section](./NN-topic-name.md#section) for framework-level rules. Below: [operation-specific subset] only.
+```
+
+Apply this to: Business Rules, Observability, Common Pitfalls — any section where the framework rules are in the architecture doc and the operations doc only adds a subset.
+
+**Prerequisite chain:** Operations doc always lists the architecture doc as a prerequisite in `00-overview.md`.
+
+### Observability Section Pattern
+
+Every `domain/*.md` deep dive has an Observability section. How deep it goes depends on the domain area — use graduated enrichment, not a fixed template.
+
+**Baseline (required for all domain docs):**
+- Signal table: log messages, error classes, stack trace signatures that identify this area when it breaks
+- "Check first" checklist: 2–5 items to verify immediately when the area misbehaves
+
+**Add a diagnostic decision tree** when the domain has **3 or more distinct failure paths** that start from different user-reported symptoms (e.g., "can't see X at all" vs "can see X but can't do Y" vs "action fails after clicking"). A decision tree is not needed when the only failure mode is one thing breaking in one way.
+
+**Add a user-facing symptoms table** when **user-reported symptoms don't map obviously to technical causes** — i.e., when a support analyst cannot guess the technical root cause from what the user describes. Skip it when symptoms are self-explanatory (e.g., "404 error on endpoint X" maps obviously to a missing route).
+
+**Add cleanup/remediation guidance** when the domain has **DB side effects that can leave orphaned or inconsistent records** — include the identification query, cascade safety check, and ordered delete. This is not needed for read-only domains or domains where failures are fully transactional (auto-rolled-back).
+
+**Content boundary with `issues/`:**
+
+The Observability section is for **reusable, pattern-level content** — things that apply every time this area breaks. The `issues/` folder is for **instance-level content** — what happened on one specific ticket. Never cross the line:
+
+| Belongs in domain Observability | Belongs in `issues/{ticket}/` only |
+|---|---|
+| Reusable diagnostic SQL (works for any future occurrence) | SQL with specific object IDs, timestamps, customer names |
+| Log search strings and stack trace signatures | Log excerpts with specific timestamps or user sessions |
+| Decision tree for any role/config combination | Steps that only apply to one customer's environment |
+| Cleanup query template with placeholders | Confirmed orphan object IDs from one incident |
+
+### Multi-Project Ownership
+
+When documentation involves code from more than one project, apply the decision tree in order:
+
+#### Step 1 — Is one project a framework/library and the other an application?
+
+| Code location | App customization? | Document in |
+|--------------|-------------------|-------------|
+| Lives in framework module | No | Framework's `domain/` |
+| Lives in framework module | Yes — app overrides or wires it | App's `domain/` |
+| Lives in app module | — | App's `domain/` |
+
+**Decision test:**
+1. Where does the code live? → framework module = framework docs, app module = app docs
+2. Does the app add project-specific wiring? → if yes, document in the app even if the base code is in the framework
+
+**Examples:**
+- A framework's HTTP dispatch mechanism with no app-specific overrides → document in the framework's `domain/`
+- A framework's security model that the app wires to its own user/role entities → document in the app's `domain/` (app-specific wiring is the content)
+- A Spring Boot auto-configuration class used as-is → Spring docs cover it; don't duplicate. If the app customizes the bean, document the customization in the app's `domain/`
+
+**Cross-reference rule:** When the app doc covers framework behavior for app-specific reasons, add a note pointing back to the framework's doc for the canonical explanation.
+
+---
+
+#### Step 2 — Are both projects application-layer peers (no framework/app split)?
+
+Ask: **does one project call or depend on the other?**
+
+| Relationship | Where to document |
+|---|---|
+| Project A calls Project B (caller/consumer) | Document from **Project A's perspective** in A's `domain/`. Document from **Project B's perspective** in B's `domain/`. Each covers its own side; cross-reference the other. |
+| Both projects contribute equally to a shared concept — neither is clearly the caller | Document in **`platform/`** as a cross-project concern. Each project's `domain/` has a stub entry pointing to `platform/`. |
+
+**Decision test:**
+1. Can you say "Project A uses Project B" or "Project A triggers Project B"? → caller/consumer split — each project documents its own side
+2. Is the concept owned equally by both with no clear primary? → platform-level doc
+
+**Examples:**
+- `order-service` calls `payment-service` to process a charge → `order-service` documents the outbound call in its `domain/`, `payment-service` documents the inbound handler in its `domain/`; both cross-reference each other
+- `api-gateway` and `auth-service` both implement halves of a shared token contract → document the contract in `platform/`, each project's `domain/` stubs point there
+- An app's request handler wired into a shared framework's dispatcher → Step 1 applies (app wires into framework), not Step 2  
+
+**Transitive dependency boundary:** When documenting Project A's integrations, only document the direct caller-to-target relationship. If A calls B, and B internally calls C, the B-to-C relationship belongs in **B's** documentation, not A's. A's docs may *mention* that B calls C (one sentence with a cross-reference link to B's docs) but must not document B-to-C's protocol, endpoints, or contract details.
+
+**Cross-reference rule:** Every project-level doc that covers a cross-project flow must have an explicit "Related" entry pointing to the other project's doc or the platform doc.
+
+**Stub format** (for project `domain/` entries that point to platform):
+```markdown
+## [Topic Name]
+
+> This concept spans multiple projects. Full documentation: [platform/TOPIC.md](../../platform/TOPIC.md)
+
+[1-2 sentence summary of this project's role in the shared concept.]
+```
+
+### Other Files
+
+| File | Written By |
+|------|-----------|
+| projects/README.md (index) | Parent (doc skill) |
+| issues/investigation.md | agent-debugger |
+
+**Rule:** Each agent reads the relevant template from `templates/` before writing. The skill provides format/audience/conventions — the agent provides the content from its analysis.
+
+### Root Navigation Files
+
+Two optional files are allowed at the `documentation/` root. **Never write these proactively.** Only write when the specific trigger condition is met.
+
+| File | Trigger | Agent | What it contains |
+|------|---------|-------|-----------------|
+| `LEARNING-PATH.md` | User explicitly requests an onboarding path or reading order that spans multiple projects (2+ documented) | agent-codebase-archaeologist --onboard | Ordered reading sequence with a one-line rationale for each doc — links only, no duplicated content |
+| `DOC-INDEX.md` | User needs to navigate docs by topic/concern rather than by service, AND 3+ projects are documented | Parent (doc skill) | Topic-grouped cross-project index (e.g., "Security", "Data Flow", "Deployment") — links into existing docs, no new content |
+
+**Decision rule:**
+- "Help me learn this codebase" / "What order should I read the docs" / "Onboard me" → `LEARNING-PATH.md`
+- "Where are all the security docs" / "Give me a topic-based index" → `DOC-INDEX.md`
+- Neither trigger met → do not create either file; `projects/README.md` and `platform/` are sufficient
+
+**Content rules:**
+- Both files are navigation-only — they link to existing docs, never duplicate content
+- Update both whenever a new project or major deep dive is added
+- `LEARNING-PATH.md` is ordered (numbered steps); `DOC-INDEX.md` is grouped by topic (not ordered)
+
+---
+
+## Diagrams
+
+Every project gets a `diagrams/` subfolder. Diagrams are first-class documentation, not afterthoughts.
+
+**Preferred format:** ASCII box diagrams in fenced code blocks — renders in any editor, GitHub, GitLab, Gemini CLI, IntelliJ, and plain text viewers with no renderer required.
+**Optional:** Mermaid syntax for diagrams that benefit from auto-layout (large ERDs, complex graphs). Never use Mermaid as the sole representation — always include an ASCII version or ensure the audience has a renderer.
+
+### Diagram File Format
+
+Every file in `diagrams/` follows this structure:
+
+````markdown
+# [Diagram Title]
+
+> Referenced from: [which documents link here]
+
+```
+[ASCII diagram content]
+```
+
+## What This Shows
+1-3 sentences explaining what to look at and what the key paths are.
+````
+
+If a Mermaid version is also provided, place it after the ASCII block under a `### Mermaid Source` heading.
+
+### Rules
+
+- One diagram per file, one concern per diagram — don't mix data flow and deployment topology
+- Label every arrow (what data flows, what protocol)
+- Keep diagrams to 10 or fewer boxes — split into multiple diagrams if larger
+- **Dual placement:** every diagram lives as a canonical file in `diagrams/` AND is embedded inline (mermaid) where it's referenced. The `diagrams/` file is the source of truth; inline copies are for convenience. When a diagram changes, update the `diagrams/` file first, then copy the updated mermaid block to every inline reference
+- Every deep dive file (`domain/NN-*.md`) must include at least one diagram
+- DOMAIN.md must include at minimum: entity model diagram + one state machine or workflow diagram
+- **Multi-mode state machines:** When a state machine has distinct modes (e.g., feature flag ON/OFF, accounting enabled/disabled), DOMAIN.md must show only the simplest path, labelled `> Simplified — [mode]. See [deep dive] for the full state machine.` Never show a hybrid that silently misrepresents both modes. The full state machine for each mode belongs in the relevant `domain/NN-*.md` deep dive.
+
+### Diagram Type Selection Guide
+
+Choose the diagram type based on the question it answers:
+
+| Type | Question it answers | Primary doc |
+|------|---------------------|-------------|
+| **Topology / Architecture** | What services exist, how they connect, which are HTTP vs in-process | README, INTEGRATION |      
+| **C4 — Context (L1)** | Who uses the system, what external systems does it touch | README, ARCHITECTURE |
+| **C4 — Container (L2)** | What processes/services run, what is embedded vs separate | ARCHITECTURE, DEPLOYMENT |
+| **C4 — Component (L3)** | What classes/modules are inside a container | DOMAIN.md, domain deep dives |
+| **C4 — Code (L4)** | Methods, fields, class relationships for a specific component | domain deep dives |
+| **Sequence** | How a request flows step by step, message ordering, who calls who | DOMAIN.md, API-REFERENCE |
+| **State machine** | All states a thing can be in, transitions, triggers, guards | DOMAIN.md, domain deep dives |
+| **Entity / ERD** | Data model, table relationships, foreign keys | DATABASE.md, DOMAIN.md |
+| **Service mesh / Infra overlay** | Sidecars, mesh layer, observability, TLS, service discovery | DEPLOYMENT |
+| **Event flow** | Topics, publishers, consumers, event payloads | INTEGRATION, domain deep dives |
+| **Pattern comparison** | Side-by-side contrast of two approaches (e.g. orchestration vs choreography) | DOMAIN.md, BUSINESS-CASE |
+
+**Rules of thumb:**
+- Start with Topology — get oriented before going deep
+- Use C4 levels as zoom: L1 for README, L2 for ARCHITECTURE, L3–L4 for domain deep dives
+- Sequence diagrams belong wherever a specific flow is described — one diagram per flow, not one mega-diagram
+- State machines are mandatory for any entity with lifecycle states (lease, contract, posting)
+- Pattern comparison diagrams belong in DOMAIN.md when two valid approaches exist and readers may confuse them
+
+### Minimum Diagrams by Tier
+
+| Tier | Required diagrams |
+|------|------------------|
+| **Minimal** | 1 — Topology or C4 L2 (what exists and how it connects) |
+| **Standard** | Topology + C4 L2 + Sequence (happy path) + 1 per deep dive |
+| **Full** | Topology + C4 L1–L3 + Sequence (happy + error paths) + State machine(s) + Entity/ERD + 1 per deep dive |
+
+### Where Diagrams Live
+
+| Scope | Location |
+|-------|----------|
+| Per-project | `documentation/projects/{service}/diagrams/` |
+| Platform-level | `documentation/platform/diagrams/` |
+
+---
+
+## Writing Standards
+
+| Guideline | Detail |
+|-----------|--------|
+| **Tables for structured data** | Dependencies, endpoints, configs, metrics — anything with columns |
+| **Prose for context and persuasion** | Problem statements, business case, strategic importance |
+| **Code examples, not descriptions** | Show the JSON body, the bash command, the YAML config |
+| **Links, not duplication** | Link to related docs instead of rewriting the same content |
+| **"Last Updated" with change note** | `YYYY-MM-DD — Added auth endpoints` — always at the **bottom** of the file, never the top |
+| **One file = one topic** | Don't make README 20 pages; split into INTEGRATION, DEPLOYMENT, etc. |
+| **Highlight the 20%** | Show what matters most first; deep dives in separate files |
+| **Document what IS, not what might be** | No roadmaps, no "we plan to add..." |
+| **No internal debates** | Use git history or `decisions/` ADR files for that |
+| **Implementation facts over domain theory** | Document what the code produces, not why the industry standard or domain framework requires it. "This code sets flag X which triggers downstream process Y" belongs in a deep dive. Concept explanations and domain background belong in concept-tutor. Every claim in a deep dive must be traceable to a specific class, method, or config. |     
+| **No credentials in docs** | Replace any real credentials (usernames, passwords, tokens, API keys) with `<placeholder>`. Add a one-line note pointing to where the actual value is stored (env file, secrets manager, team vault). Applies to all sections including code snippets, script examples, and Data Contracts. |
+
+---
+
+## What NOT to Output
+
+- Tutorials or step-by-step learning guides — that's concept-tutor's domain. Docs provide *reference*, not *lessons*.
+
+---
+
+## When Documentation Changes
+
+### Integration Changes
+
+**Pre-write verification:** Before writing any INTEGRATION.md or integration-related domain deep dive, read `platform/INTEGRATION-MAP.md` and `platform/INTEGRATION-PATTERNS.md` to confirm the protocol, client library, and pattern for every integration you plan to document. If INTEGRATION-MAP.md does not have a row for this integration, add one first — the platform map is the canonical source.
+
+If a service gains a new dependency, endpoint, or integration:
+1. Update the project's INTEGRATION.md (new outbound/inbound row)
+2. Update the TARGET project's INTEGRATION.md (new consumer row)
+3. Update `platform/INTEGRATION-MAP.md` (new row in the matrix)
+4. If a new integration pattern is introduced, update `platform/INTEGRATION-PATTERNS.md`
+
+### Platform File Registration
+If a new file is added to `documentation/platform/` that is not listed in this skill's folder structure or platform file table, update this skill to register it before the next documentation generation run.
+
+### Business Logic Changes
+If a workflow, business rule, or state machine changes:
+1. Update DOMAIN.md (affected workflow, rule table, or state machine)
+2. Update the relevant `domain/NN-*.md` deep dive (if one exists for that area)
+3. Update affected `diagrams/` files
+4. Update the `Last Updated` line on every changed file
+
+### Domain Deep Dive Ordering
+
+When deciding the number (NN) to assign a new deep dive, order by learning dependency — not by importance or frequency of change:
+
+| Position | What goes here | Signals |
+|----------|---------------|---------|
+| **First (01–03)** | Foundational patterns every developer must understand before any other code makes sense | "This pattern appears in every service / every entity / every workflow" |
+| **Middle** | Core business workflows and domain flows | "This is what the service primarily does" |
+| **Later** | Specific subsystems, integration details, edge cases | "A developer only needs this when working on [specific area]" |
+
+**Decision rule:** Ask — "Can a developer understand deep dive N+1 without reading deep dive N?" If no, N comes first. If yes, order by business centrality (core flows before edge cases).
+
+**Framework projects:** the first deep dive must be the extension point or base pattern that consuming services override — because that is what every application developer will look for first.
+
+For **Framework-Standard and above**, deep dives must collectively cover every extension point category the framework provides. A framework that passes the file-count check but leaves a category undocumented has a silent gap. Omit a category only if the framework genuinely does not provide that layer:
+
+- **CRUD lifecycle hooks** — the create/update/delete sequence that consuming services override (template methods, callbacks, interceptors)
+- **Data access patterns** — repository base contract, how consuming services construct queries (specification pattern, query builder, ORM filter hooks)
+- **State machine / workflow** — if provided: state/event/transition contracts and the auto-transition mechanism
+- **Security / auth model** — if provided: authentication filter hooks, row-level security clauses, authorization interceptors that consuming services inherit
+- **Supporting utilities** — code generation, mapping conventions, error handling contracts, annotation processors — anything consuming services depend on implicitly
+
+### New Domain Area Discovered
+If investigation or development reveals a domain area not yet documented:
+1. Apply the ordering rule above to assign the right NN number
+2. Create new `domain/NN-topic.md` using the deep dive template
+3. Add row to DOMAIN.md "Deep Dives" table
+4. Add row to `domain/00-overview.md`
+5. Create supporting diagrams in `diagrams/`
+
+### Domain Area Removed or Merged
+If a deep dive is deleted or absorbed into another file:
+1. Remove the row from `domain/00-overview.md`
+2. Remove the row from DOMAIN.md "Deep Dives" table
+3. Remove or update cross-references in sibling deep dives that linked to it
+4. Remove the canonical diagram file(s) from `diagrams/` if they are not referenced elsewhere
+5. Do **not** renumber surviving deep dives — gaps in numbering are acceptable and prevent broken references
+6. If the content was merged into another deep dive, do not delete the row from `domain/00-overview.md` — replace it with a redirect note: `NN — [topic] merged into [MM-topic.md](./MM-topic.md)`
+
+### Tier Promotion
+
+Documentation is written incrementally. A project does not jump from Minimal to Full in one step — it advances one file at a time, in priority order. The tier label and `Complete?` column in `projects/README.md` only advance when ALL required files for the next tier exist.
+
+**Rule — when to update the tier label:**
+- A file from a higher tier can be written at any point; update the Documentation Status table in that project's README.md after each new file is added
+- The `Tier` and `Complete?` columns in `projects/README.md` only change when the project satisfies ALL required files for the new tier — not before
+
+**Priority order — Minimal → Standard (Service):**
+
+Write in this order. Each file unlocks more developer productivity than the next:
+
+| Step | File | Why first |
+|------|------|-----------|
+| 1 | INTEGRATION.md | Shows who talks to whom — most cross-service developers need this first |
+| 2 | DEPLOYMENT.md | Enables local setup and DevOps configuration |
+| 3 | domain/ deep dives | Add as domain areas are investigated or bugs are fixed |
+
+**Priority order — Standard → Full (Service):**
+
+| Step | File | Why this order |
+|------|------|----------------|
+| 1 | API-REFERENCE.md | External consumers need this before any other Full-tier doc |
+| 2 | DATABASE.md | Entity relationships block developers making schema changes |
+| 3 | TECH-STACK.md | Version reference — needed for upgrades and debugging |
+| 4 | FRONTEND.md | UI developers need this, but less urgent than backend consumers |
+| 5 | BUSINESS-CASE.md | Stakeholder-oriented — useful but not developer-critical |
+
+**Priority order — Framework-Minimal → Framework-Standard:**
+
+| Step | File | Why first |
+|------|------|-----------|
+| 1 | DOMAIN.md | Navigator — without this, deep dives are unnavigable |
+| 2 | domain/ deep dives | Start with the most-used extension points and patterns |
+| 3 | diagrams/ | Add one diagram per deep dive |
+
+**After each file is written:**
+1. Add or update the row in the project README.md Documentation Status table (change `— missing` to `✓`)
+2. If the tier is now fully satisfied → update `Tier` column and `Complete?` → `✓` in `projects/README.md`
+3. If the tier is not yet satisfied → leave `Tier` and `Complete?` unchanged; `partial` stays until the tier is complete       
+
+### Stale Documentation
+If code has changed but documentation hasn't:
+- Flag stale sections with `[NEEDS VERIFICATION — code may have changed since YYYY-MM-DD]`
+- Never silently leave stale docs — a wrong doc is worse than no doc
+
+### DEPLOYMENT.md — Section Ownership
+
+DEPLOYMENT.md has two distinct content types that require different agents. **agent-system-architect --infra is the primary owner and coordinator.** The archaeologist contributes one section only.
+
+| Section | Owner | Why |
+|---------|-------|-----|
+| Container | agent-system-architect --infra | Sourced from Dockerfile and deployment config — infra domain |
+| Resource Limits | agent-system-architect --infra | Sourced from deployment config (K8s manifests, docker-compose, etc.) — infra domain |
+| Managed Services | agent-system-architect --infra | Sourced from deployment config — infra domain |
+| Kafka / Message Queue Jobs | agent-system-architect --infra | Sourced from deployment config — infra domain |
+| Cron Jobs | agent-system-architect --infra | Sourced from deployment config — infra domain |
+| Environment Variables | agent-system-architect --infra | Sourced from .env / application config files — infra domain |       
+| Startup Dependencies | agent-system-architect --infra | Sourced from docker-compose.yml or orchestration config — infra domain |
+| APIs Exposed | agent-system-architect --infra | Sourced from deployment / API gateway config — infra domain |
+| **Security + Auth Request Flow** | **agent-codebase-archaeologist** | Requires tracing filter/interceptor/security classes in source code — code reading domain |
+
+**Handoff sequence:**
+1. agent-system-architect --infra writes all infrastructure sections → delivers a complete DEPLOYMENT.md with the Security section left as a placeholder
+2. agent-codebase-archaeologist reads the partially written DEPLOYMENT.md + traces the auth filter chain in source → fills in the Security and Auth Request Flow sections
+3. The final file has a single `Last Updated` line — do not write separate timestamps per section
+
+**When there is no Security section to write** (e.g., a framework JAR with no HTTP layer): agent-system-architect --infra writes the complete file; no handoff needed.
+
+### Domain Deep Dive — Mandatory Source Verification
+
+**Hard rule — no inferred or teaching-derived values.** Any agent writing a `domain/NN-*.md` file MUST verify the following fact categories against authoritative source before writing. If a source cannot be confirmed, mark the field `[NEEDS VERIFICATION — read {filename} to confirm]`. Do NOT present inferred or teaching-derived values as fact.
+
+| Fact category | Must be sourced from |
+|---|---|
+| Port numbers | `docker-compose.yml`, `application.properties`, service integration docs, or deployment config — not from memory or teaching content |
+| URL paths and proxy routes | Actual route config, servlet/handler registration code, or INTEGRATION.md — not from concept-tutor output |
+| Primary API / class usage patterns | Actual source code or existing canonical docs — confirm which class/method is primary vs. secondary before stating it |
+| Class and method names | Source code — exact names, exact package paths |
+| Behavior descriptions ("X triggers Y") | Traceable to a specific class, method, or config file — not inferred from domain theory |
+| External system contracts (BAPI names, callback paths, response shapes) | INTEGRATION.md, source code, or SAP/external system knowledge base |
+| Communication protocols (REST, Kafka, embedded JAR, webhook callback, JMS) | `platform/INTEGRATION-MAP.md` Service Communication Matrix, or source code client type (Retrofit = REST, `@KafkaListener` = Kafka, Maven dependency with no HTTP = embedded JAR) — never inferred from general architectural knowledge |
+| Prose descriptions of parameter behavior | Must match the code snippet in the same section. If a parameter description (e.g., "false = do not drop") and nearby prose (e.g., "indices are recreated fresh") appear contradictory, mark both with `[NEEDS VERIFICATION — prose and code appear contradictory: confirm behavior of <param> in <ClassName>]` |
+
+**Teaching content is not a verified source.** If a domain deep dive originates from concept-tutor output, teaching session notes, or a conversation summary — treat every fact in that content as unverified draft. Run the verification table above against source files before writing anything to disk. The concept-tutor reasons from documentation; it can drift from the source. The agent writing the doc must go back to the source itself.
+
+**Consequence of skipping this rule:** Wrong proxy paths, wrong primary API patterns, and wrong port assignments produce documentation that misleads developers and requires a full quality review cycle to detect and correct.
+
+---
+
+### DEPLOYMENT.md — Mandatory Source Verification
+
+**Hard rule — no inferred values.** Any agent writing DEPLOYMENT.md (project-level or platform-level) MUST read the following actual codebase files before writing a single value. If a file does not exist, note its absence and mark the affected fields `[NEEDS VERIFICATION]`. Do NOT present inferred or guessed values as fact.
+
+| Value type | Must be sourced from |
+|---|---|
+| Port numbers | `docker-compose.yml`, `server.port` in application properties, or reverse proxy config |
+| Context path / URL path | `server.servlet.context-path` in application properties, or web server config |
+| JVM / application property names | Actual `application.properties` / `application.yml` / `.env` — never inferred from framework defaults |
+| Startup command | `pom.xml` packaging type (`war` vs `jar`) determines deploy method; `Procfile` or `Dockerfile` for runtime command |
+| Environment variable names | `.env`, `.env.example`, `docker-compose.yml` `environment:` block, or `application.properties` `${VAR_NAME}` references |
+| Service versions | `pom.xml` `<version>`, `docker-compose.yml` image tags, or `package.json` |
+| Resource limits (memory, CPU) | `docker-compose.yml` `deploy.resources`, JVM startup scripts, or Kubernetes manifests |        
+
+**Consequence of skipping this rule:** Wrong port numbers, wrong property names, and wrong startup commands cause silent misconfiguration or immediate startup failure. This is unacceptable for enterprise deployment documentation.
+
+**What to do when a value cannot be confirmed:** Write `[NEEDS VERIFICATION — read {filename} to confirm]` with the specific file to check. This is honest and actionable. Presenting a guess as a fact is not.
+
+### Cross-Location Sync (Knowledge in Multiple Places)
+
+When the same domain knowledge exists in more than one location (e.g., a deep dive doc + a skill file + a knowledge base file + a debug investigation), there is a defined update order to prevent drift:
+
+| Location | Role | Update when |
+|----------|------|-------------|
+| `documentation/projects/{service}/domain/NN-*.md` | **Canonical source** — full detail, all 4 purposes | Primary: always update this first |
+| `~/.gemini/skills/{area}/SKILL.md` or knowledge base `*.md` | **Agent quick-reference** — scannable subset for agents | Secondary: update after the canonical doc; must cross-reference canonical |
+| `{project-root}/issues/{ticket}/investigation.md` | **Investigation record** — point-in-time snapshot | Do NOT backport doc changes here; it is a historical record, not a living doc |
+
+**Rule:** The canonical domain doc is the source of truth. Skill files and knowledge base files summarize it. If they conflict, the canonical doc wins. The investigation file is never updated retroactively — it reflects what was known at the time.
+
+**Content boundary — pattern vs instance:** See **Observability Section Pattern** above for the full boundary table (reusable diagnostic content belongs in canonical docs; instance-specific content belongs in `issues/{ticket}/` only).
+
+**Reference direction is one-way:** The issues folder references documentation. Documentation never references the issues folder — docs are self-contained. It is the investigation file's job to point at the canonical doc, not the other way around.
+
+---
+
+Last Updated: 2026-03-13 — Added Last Updated placement rule; deep dive section pointer; multi-mode state machine rule; hybrid Library/Service classification; framework extension point coverage categories

@@ -33,21 +33,15 @@ description: Verbatim migration of skills and agents from ~/.claude to ~/.gemini
 This section tracks skills and agents in `~/.gemini` that are missing content or features present in their `~/.claude` counterparts, or are pending migration.
 
 ### Pending Migration
-- `agent-quality-guardian` (and its 14+ dependencies)
-- `quality-guardian` (skill)
-- `documentation-specialist` (skill)
-- `migration` (skill)
-- `qa-engineer` (skill)
-- `scheduled-automation-routine` (skill)
-- `agent-data-analysis-expert`
-- `agent-debugger`
-- `concept-tutor`
-- `note-taker`
-- `implementation-engineer`
-- `system-architect`
-- `product-strategist`
-- `data-doc-specialist`
-- `agent-support-investigator`
+- `agent-prompt-builder` (agent)
+- `agent-time-tracker` (agent)
+- `architecture-audit` (skill)
+- `architecture-audit-workspace` (skill)
+- `data` (skill)
+- `desktop-app-storage` (skill)
+- `guided-implementation-walkthrough` (skill)
+- `prd-to-tasks` (skill)
+- `prompt-builder` (skill)
 
 ### In-Sync / Migrated
 - `jira` (skill)
@@ -56,4 +50,33 @@ This section tracks skills and agents in `~/.gemini` that are missing content or
 - `claude-bridge` (skill)
 - `agent-persona-reviewer` (agent)
 - `persona-reviewer` (skill)
+- `agent-quality-guardian` (agent)
+- `quality-guardian` (skill)
+- `documentation-specialist` (skill)
+- `migration` (skill)
+- `qa-engineer` (skill)
+- `scheduled-automation-routine` (skill)
+- `agent-data-analysis-expert` (agent)
+- `agent-debugger` (agent)
+- `agent-concept-tutor` (agent)
+- `agent-note-taker` (agent)
+- `agent-implementation-engineer` (agent)
+- `agent-system-architect` (agent)
+- `agent-product-strategist` (agent)
+- `agent-data-doc-specialist` (agent)
+- `agent-support-investigator` (agent)
+- `agent-codebase-archaeologist` (agent)
+- `agent-tech-detective` (agent)
+- `agent-nla-implementation-engineer` (agent)
+- `learning-strategy` (skill)
+- `sandbox-builder` (skill)
+- `step-visualization` (skill)
+- `support-investigation` (skill)
+- `project-estimator` (skill)
+- `poc-writer` (skill)
+- `grill-me` (skill)
+- `requirements-discovery` (skill)
+- `tdd` (skill)
+- `ui-design` (skill)
+- `walkthrough-planner` (skill)
 
