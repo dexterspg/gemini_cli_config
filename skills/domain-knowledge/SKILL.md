@@ -31,13 +31,16 @@ Triggered when a user explicitly asks to document a single concept.
 
 Triggered by `discover domain knowledge in [path], n=[5]`. Automatically finds and documents `n` missing concepts from a given codebase area.
 
-| Step | Phase          | Handler                             | Output                                                                                                        |
-|------|----------------|-------------------------------------|---------------------------------------------------------------------------------------------------------------|
-| 1    | Scan Codebase  | `agent-codebase-archaeologist`      | A list of potential domain keywords (from class names, etc.).                                                 |
-| 2    | Update Backlog | Gemini (Main Session)               | New keywords are added to `knowledge/<domain>/keywords.md`.                                                   |
-| 3    | Gap Analysis   | Gemini (Main Session)               | The skill compares `keywords.md` with existing `.md` files to find what's missing.                            |
-| 4    | Document Batch | **Reactive Workflow** (steps 1-4) | The skill loops `n` times, running the full reactive workflow for the top `n` missing keywords.               |
-| 5    | Prune Backlog  | Gemini (Main Session)               | Once a document is created, the keyword is removed from `keywords.md`.                                        |
+| Step | Phase                   | Handler                             | Output                                                                                                                            |
+|------|-------------------------|-------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------|
+| 1    | Scan Codebase           | `agent-codebase-archaeologist`      | A list of potential domain keywords.                                                                                              |
+| 2    | Update Backlog          | Gemini (Main Session)               | New keywords are added to `knowledge/<domain>/keywords.md` after being deduplicated against existing `*.md` files.                |
+| 3    | Triage & Cluster        | Gemini (Main Session)               | Keywords are triaged using the 3-Question Rule. Proprietary terms are clustered under broader public concepts.                  |
+| 4    | Propose Cluster & Confirm | Gemini (Main Session)               | The proposed concept clusters are presented to the user for approval.                                                             |
+| 5    | **Generate & Propose Plan** | `learning-strategy` skill       | For the approved cluster, a detailed pedagogical plan (why, analogy, etc.) is created and presented to the user for final approval. |
+| 6    | **User Confirms Plan**    | User Input                          | A final `go/no-go` from the user before writing begins.                                                                           |
+| 7    | Document Approved Concept | Gemini & `agent-concept-tutor` | The Main Session assembles a final prompt containing the pedagogical plan AND a list of existing domain documents, then invokes the tutor. |
+| 8    | Prune Backlog           | Gemini (Main Session)               | Once documented, all keywords from the cluster are removed from `keywords.md`.                                                    |
 
 ## Core Mandates
 

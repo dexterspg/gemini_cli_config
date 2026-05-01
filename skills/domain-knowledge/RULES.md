@@ -74,10 +74,14 @@ Apply in order. Stop at the first YES.
 2. Did the platform create, adapt, or extend this concept in a specific way? -> `documentation/platform/domain-concepts/`
 3. Does this concept exist verbatim in a public standard, textbook, or vendor docs? -> `knowledge/<domain>/`
 
-## 11. Discovery Backlog (`keywords.md`)
-The Discovery Workflow uses a backlog file to track candidate concepts.
+## 11. Dynamic Keyword Backlog (`keywords.md`)
+The Discovery Workflow uses a prioritized, self-regulating backlog file to track candidate concepts.
 
 - **Location:** `knowledge/<domain>/keywords.md`
-- **Format:** A plain text file with one keyword or phrase per line.
-- **Deduplication:** When the discovery workflow runs, it must first read all existing `*.md` file names in the directory and remove those from the keyword list to prevent documenting concepts that already exist.
-- **Pruning:** When a concept from `keywords.md` is successfully documented, the corresponding line must be removed from `keywords.md` immediately.
+- **Format:** A plain text file with the format `keyword: count`, where `count` is the number of times the keyword has been detected across all scans.
+- **Prioritization:** The file must be sorted in descending order by `count`. This ensures the most frequently detected concepts are always at the top of the backlog.
+- **Update Process:** When a scan runs, for each keyword found:
+    1. If the keyword exists in the file, its count is incremented.
+    2. If it does not exist, it is added to the file with a count of 1.
+- **Dynamic Capping:** After updating, the backlog's size is capped. The maximum number of lines in `keywords.md` is calculated by the formula: `max_size = 20 + (number_of_domain_documents * 2)`. This provides a base of 20 and scales with the size of the knowledge base. Any keywords beyond this cap (the ones with the lowest frequency) are truncated.
+- **Pruning:** When a concept cluster is successfully documented, all keywords belonging to that cluster must be removed from `keywords.md` immediately.
