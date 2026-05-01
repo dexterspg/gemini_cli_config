@@ -73,3 +73,11 @@ Apply in order. Stop at the first YES.
 1. Does this concept only make sense by reading the source code? -> `documentation/domain/NN-*.md`
 2. Did the platform create, adapt, or extend this concept in a specific way? -> `documentation/platform/domain-concepts/`
 3. Does this concept exist verbatim in a public standard, textbook, or vendor docs? -> `knowledge/<domain>/`
+
+## 11. Discovery Backlog (`keywords.md`)
+The Discovery Workflow uses a backlog file to track candidate concepts.
+
+- **Location:** `knowledge/<domain>/keywords.md`
+- **Format:** A plain text file with one keyword or phrase per line.
+- **Deduplication:** When the discovery workflow runs, it must first read all existing `*.md` file names in the directory and remove those from the keyword list to prevent documenting concepts that already exist.
+- **Pruning:** When a concept from `keywords.md` is successfully documented, the corresponding line must be removed from `keywords.md` immediately.

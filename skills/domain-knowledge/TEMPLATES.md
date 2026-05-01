@@ -54,4 +54,15 @@ standard-version: [version or "n/a" if unversioned]
 
 ```md
 | [filename.md] | [Concept Name] | [YYYY-MM-DD] | draft |
+
+## keywords.md File Template
+A plain text file containing a list of candidate concepts to document, one per line. Keywords should be in kebab-case.
+
+**Example `knowledge/accounting/keywords.md`:**
+```
+deferred-revenue
+goodwill
+amortization
+substance-over-form
+```
 ```
