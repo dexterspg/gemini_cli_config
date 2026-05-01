@@ -74,14 +74,21 @@ Apply in order. Stop at the first YES.
 2. Did the platform create, adapt, or extend this concept in a specific way? -> `documentation/platform/domain-concepts/`
 3. Does this concept exist verbatim in a public standard, textbook, or vendor docs? -> `knowledge/<domain>/`
 
-## 11. Dynamic Keyword Backlog (`keywords.md`)
+## 11. Dynamic Keyword Backlog (`_keywords.md`)
 The Discovery Workflow uses a prioritized, self-regulating backlog file to track candidate concepts.
 
-- **Location:** `knowledge/<domain>/keywords.md`
+- **Location:** `knowledge/<domain>/_keywords.md`
 - **Format:** A plain text file with the format `keyword: count`, where `count` is the number of times the keyword has been detected across all scans.
 - **Prioritization:** The file must be sorted in descending order by `count`. This ensures the most frequently detected concepts are always at the top of the backlog.
 - **Update Process:** When a scan runs, for each keyword found:
     1. If the keyword exists in the file, its count is incremented.
     2. If it does not exist, it is added to the file with a count of 1.
-- **Dynamic Capping:** After updating, the backlog's size is capped. The maximum number of lines in `keywords.md` is calculated by the formula: `max_size = 20 + (number_of_domain_documents * 2)`. This provides a base of 20 and scales with the size of the knowledge base. Any keywords beyond this cap (the ones with the lowest frequency) are truncated.
-- **Pruning:** When a concept cluster is successfully documented, all keywords belonging to that cluster must be removed from `keywords.md` immediately.
+- **Dynamic Capping:** After updating, the backlog's size is capped. The maximum number of lines in `_keywords.md` is calculated by the formula: `max_size = 20 + (number_of_domain_documents * 2)`. This provides a base of 20 and scales with the size of the knowledge base. Any keywords beyond this cap (the ones with the lowest frequency) are truncated.
+- **Pruning:** When a concept cluster is successfully documented, all keywords belonging to that cluster must be removed from `_keywords.md` immediately.
+
+## 12. Project Context Metadata (`_metadata.md`)
+To keep concept files pure, all project-specific context is stored in a single metadata file per domain.
+
+- **Location:** `knowledge/<domain>/_metadata.md`
+- **Purpose:** Acts as an index, providing the project-specific context and a link to the detailed implementation document for each concept in the domain.
+- **Update Process:** When a new concept document is created, a corresponding entry must be added to this file.

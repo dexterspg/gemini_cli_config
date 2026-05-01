@@ -55,12 +55,12 @@ standard-version: [version or "n/a" if unversioned]
 ```md
 | [filename.md] | [Concept Name] | [YYYY-MM-DD] | draft |
 
-## keywords.md File Template
+## _keywords.md File Template
 A plain text file containing a list of candidate concepts to document, with their frequency count. The file should be sorted by count in descending order.
 
 **Format:** `keyword: count`
 
-**Example `knowledge/accounting/keywords.md`:**
+**Example `knowledge/accounting/_keywords.md`:**
 ```
 asset-class: 8
 depreciation-area: 5
