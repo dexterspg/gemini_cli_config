@@ -51,8 +51,11 @@ Write-Output "Dry Run Result: $($summary.Count) files found ($($summary.Sum / 1M
 ### Bash (MINGW64)
 ```bash
 # Step 1: Dry Run
-find ~/.gemini/history -type f -mmin +86400 -mmin +60 -exec ls -l {} + | awk '{sum+=$5} END {print "History: "NR" files, "sum/1024/1024" MB"}'
-find ~/.gemini/tmp -type f -mmin +10080 -mmin +60 -exec ls -l {} + | awk '{sum+=$5} END {print "Tmp: "NR" files, "sum/1024/1024" MB"}'
+# History: older than 14 days AND not modified in last 60 minutes
+find ~/.gemini/history -type f \( -mmin +20160 \) ! -mmin -60 -exec ls -l {} + | awk '{sum+=$5} END {print "History: "NR" files, "sum/1024/1024" MB"}'
+
+# Tmp: older than 7 days AND not modified in last 60 minutes
+find ~/.gemini/tmp -type f \( -mmin +10080 \) ! -mmin -60 -exec ls -l {} + | awk '{sum+=$5} END {print "Tmp: "NR" files, "sum/1024/1024" MB"}'
 ```
 
 ## 4. Session & Agent Maintenance
