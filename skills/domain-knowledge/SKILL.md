@@ -1,6 +1,6 @@
 ---
 name: domain-knowledge
-description: Use when writing public domain knowledge files into a project's knowledge/<domain>/ folder. Triggers when: "research [concept] for the knowledge base", "add [topic] to knowledge/", "document domain knowledge for [project]", "write knowledge base entry for [concept]". This skill governs how Gemini writes concept files in knowledge/<domain>/ — covering frontmatter, content structure, scope boundaries, deduplication, and lifecycle rules. Do NOT trigger for project-specific documentation (that goes in documentation/domain/NN-*.md) or platform interpretations (that goes in documentation/platform/domain-concepts/).
+description: Use when writing public domain knowledge files into a project's knowledge/<domain>/ folder using a two-file structure ({concept}.md and {concept}-ref.md). Triggers when: "research [concept] for the knowledge base", "add [topic] to knowledge/", "document domain knowledge for [project]", "write knowledge base entry for [concept]". This skill governs how Gemini writes concept files in knowledge/<domain>/ — covering frontmatter, content structure, scope boundaries, deduplication, and lifecycle rules. Do NOT trigger for project-specific documentation (that goes in documentation/domain/NN-*.md) or platform interpretations (that goes in documentation/platform/domain-concepts/).
 ---
 
 # Domain Knowledge Skill (Router)

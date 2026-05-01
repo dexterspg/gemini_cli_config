@@ -1,6 +1,8 @@
 # Domain Knowledge Templates
 
-## File Template
+## File 1: Domain File Template (`{concept}.md`)
+
+Pure concept content — no project specifics. Written by `agent-concept-tutor` from Gemini research. Standalone: works without any project documentation folder existing.
 
 ```md
 ---
@@ -9,14 +11,11 @@ status: draft
 last-updated: YYYY-MM-DD
 snapshot-date: YYYY-MM-DD
 standard-version: [version or "n/a" if unversioned]
-project-context: [one sentence on why this concept surfaced in this codebase]
 ---
 
 # [Concept Name]
 
 **What it is:** [1-2 sentence plain-language definition. No jargon.]
-
-**Why it matters here:** [1-2 sentences connecting this concept to the project codebase. What breaks or becomes confusing if you don't understand this?]
 
 ## Key Terms
 
@@ -28,29 +27,52 @@ project-context: [one sentence on why this concept surfaced in this codebase]
 
 [3-7 bullet points covering the most important things a developer needs to know. Focus on what is non-obvious or commonly misunderstood. Do not reproduce the full standard.]
 
-## How the Platform Uses This
-
-[If a direct project mapping exists, link to it. Do not explain implementation details here — that belongs in documentation/domain/.]
-
-See: [link to documentation/domain/NN-topic.md or documentation/platform/domain-concepts/concept.md]
-
-If no direct mapping exists: "No direct platform mapping identified. This file provides background context only."
-
 ## External Reference
 
 [Standard name and version] — [Authoritative source link: official standard body, vendor docs, or RFC. One link only.]
 ```
 
+## File 2: Reference File Template (`{concept}-ref.md`)
+
+Project-specific bridge — codebase links, documentation references, and how the platform uses this concept. Only create when the project has an actual implementation of the concept.
+
+```md
+---
+project-context: [one sentence on why this concept surfaced in this codebase]
+last-updated: YYYY-MM-DD
+---
+
+# [Concept Name] — Project Reference
+
+> Public standard background: see [`{concept}.md`]({concept}.md)
+
+## Why It Matters Here
+
+[1-2 sentences: what breaks or becomes confusing if a developer doesn't understand this concept in context of this project?]
+
+## How the Platform Uses This
+
+[Direct mapping to implementation. Do not explain the standard here — that is in the domain file.]
+
+See: `documentation/domain/NN-topic.md` or `documentation/platform/domain-concepts/concept.md`
+
+If no direct mapping exists: omit this section entirely — do not create the reference file.
+
+## Codebase References
+
+- `[file or class path]` — [what it does with this concept]
+```
+
 ## Frontmatter Fields Explanation
 
-| Field | Purpose | Accepted Values |
-|---|---|---|
-| `source` | Identifies who wrote the content. | `gemini` (default) or `claude` (if written by Claude fallback) |
-| `status` | Current readiness state of the file. | `draft` (new), `validated` (spot-checked), `stale` (snapshot > 12mo) |
-| `last-updated` | The date the file was last edited. | YYYY-MM-DD |
-| `snapshot-date` | The date the research was performed. | YYYY-MM-DD |
-| `standard-version` | Version of the standard described. | e.g., "IFRS 16 (2023)" or "n/a" |
-| `project-context` | Anchors the file to the specific codebase. | Single sentence explaining why this concept is relevant. |
+| Field | File | Purpose | Accepted Values |
+|---|---|---|---|
+| `source` | Domain | Identifies who wrote the content. | `gemini` (default) or `claude` (fallback) |
+| `status` | Domain | Current readiness state. | `draft`, `validated`, `stale` |
+| `last-updated` | Both | Date last edited. | YYYY-MM-DD |
+| `snapshot-date` | Domain | Date research was performed. | YYYY-MM-DD |
+| `standard-version` | Domain | Version of the standard described. | e.g., `IFRS 16 (2023)` or `n/a` |
+| `project-context` | Reference | Why this concept appeared in this codebase. | Single sentence. |
 
 ## _PENDING_SYNC.md Table Format
 

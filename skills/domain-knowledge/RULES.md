@@ -17,20 +17,31 @@ This skill uses a collaborative orchestration model:
 - The stub-creation step in the write workflow is **conditional** — only perform it if a `documentation/` folder already exists in the project root.
 
 ## 2. File Naming
+- **Structure:** Each concept produces up to two files:
+  - `{concept}.md`: Pure public standard content only. No project specifics.
+  - `{concept}-ref.md`: Project-specific bridge only. Conditional (only created if project implements the concept).
 - **Format:** kebab-case (e.g., `ifrs-16.md`, `sap-posting-keys.md`)
-- **Quantity:** One concept per file.
+- **Quantity:** One concept per file set.
 - **Organization:** No numbering. Place under the correct domain subfolder (e.g., `accounting/`, `sap/`, `tax/`, `logistics/`).
+- **Rule:** Never put project-specific content in the domain file.
 
 ## 3. Content Rules
-**What to write:**
+**What to write in the Domain File ({concept}.md):**
+- Pure public standard content only.
 - The 20% of the standard that explains 80% of the code behavior.
 - Non-obvious rules that catch developers off guard.
 - Key terms with plain-language definitions.
 - Exactly ONE authoritative external link (official body, vendor docs, RFC).
 
+**What to write in the Reference File ({concept}-ref.md):**
+- Project-specific bridge only. No concept explanation.
+- Project-context (why this surfaced).
+- "Why It Matters Here" and "How the Platform Uses This".
+- Codebase file/class references and links to documentation/.
+- Always opens with: `> Public standard background: see [{concept}.md]({concept}.md)`
+
 **What NOT to write:**
 - Full reproductions of the standard (link to it instead).
-- Project implementation details (belongs in `documentation/domain/`).
 - Opinions or recommendations.
 - Content that requires reading source code to verify.
 

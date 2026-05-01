@@ -17,7 +17,9 @@ Use this when domain concepts are not explicitly provided.
 
 3. **Group by domain** — cluster concepts into domain subfolders (`accounting/`, `sap/`, `logistics/`, etc.)
 
-4. **Research each concept** — web search for each item on the research list; write one `knowledge/<domain>/` file per concept using the template in `TEMPLATES.md`.
+4. **Research each concept** — web search for each item on the research list; write one `knowledge/<domain>/` file set per concept using the templates in `TEMPLATES.md`.
+   - **Step 4a: Write Domain File ({concept}.md)** — Pure public standard content.
+   - **Step 4b: Write Reference File ({concept}-ref.md) [Conditional]** — If the codebase has a direct implementation of this concept, write a `{concept}-ref.md` using the reference template. If no implementation exists, skip.
 
 5. **Deduplication check** — check if the concept already exists in the project or the notebook.
    - Step 2 must be deterministic: check `/c/workarea/notebook/20-domains/` first.
