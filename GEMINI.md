@@ -56,6 +56,26 @@ When explaining new concepts:
 
 ---
 
+# Performance & Efficiency Mandates (All Agents)
+
+To minimize latency (Turn Overhead) and maximize context longevity (Token Economy), all agents MUST adhere to these rules:
+
+### 1. Consolidated Execution (The "One-Turn" Rule)
+- ALWAYS combine related shell commands into a single `run_shell_command` call using chain operators (`;` for PowerShell).
+- **Example:** `git add .; git commit -m "fix"; git push` instead of three separate turns.
+- Batch independent read/search operations in parallel within the same turn whenever possible.
+
+### 2. Lazy Loading & Search-First Policy
+- NEVER read a file in its entirety unless it is under 200 lines or critically necessary for a surgical edit.
+- ALWAYS use `grep_search` or `glob` to identify relevant sections of a file before calling `read_file` with specific `start_line` and `end_line`.
+- If a file is over 500 lines, provide a technical justification in the thoughts before reading it.
+
+### 3. Topic Summarization (Checkpointing)
+- Use `update_topic` at the end of every major phase (Research, Execution, Validation) to provide a concise summary.
+- These summaries act as "checkpoints" that allow the model to maintain state without needing to re-read every detailed tool output in the session history.
+
+---
+
 # Shared Agent Conventions
 
 ## Path Output Rules (All Agents)
