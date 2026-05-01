@@ -41,10 +41,25 @@ If no direct mapping exists: "No direct platform mapping identified. This file p
 [Standard name and version] — [Authoritative source link: official standard body, vendor docs, or RFC. One link only.]
 ```
 
-## _PENDING_SYNC.md Row Template
+## Frontmatter Fields Explanation
+
+| Field | Purpose | Accepted Values |
+|---|---|---|
+| `source` | Identifies who wrote the content. | `gemini` (default) or `claude` (if written by Claude fallback) |
+| `status` | Current readiness state of the file. | `draft` (new), `validated` (spot-checked), `stale` (snapshot > 12mo) |
+| `last-updated` | The date the file was last edited. | YYYY-MM-DD |
+| `snapshot-date` | The date the research was performed. | YYYY-MM-DD |
+| `standard-version` | Version of the standard described. | e.g., "IFRS 16 (2023)" or "n/a" |
+| `project-context` | Anchors the file to the specific codebase. | Single sentence explaining why this concept is relevant. |
+
+## _PENDING_SYNC.md Table Format
 
 ```md
-| [File Path] | [Domain] | [YYYY-MM-DD] | pending | — |
+# Pending Sync Decisions
+
+| File | Domain | Written | Decision | Notes |
+|------|--------|---------|----------|-------|
+| [path/to/file.md] | [domain] | [YYYY-MM-DD] | pending | — |
 ```
 
 ## INDEX.md Row Template

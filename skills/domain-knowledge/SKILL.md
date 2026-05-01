@@ -9,15 +9,13 @@ description: Use when writing public domain knowledge files into a project's kno
 
 ## Core Mandates
 
-1. **Lazy Loading:** For detailed templates, read `TEMPLATES.md`. For discovery workflows, read `WORKFLOWS.md`.
-2. **Decision Rule:** Apply these three questions in order. Stop at the first YES.
-   - Does this concept only make sense by reading the source code? -> `documentation/domain/`
-   - Did the platform create, adapt, or extend this concept? -> `documentation/platform/domain-concepts/`
-   - Does this concept exist verbatim in a public standard? -> `knowledge/<domain>/`
+1. **Lazy Loading:** For detailed templates, read `TEMPLATES.md`. For discovery workflows, read `WORKFLOWS.md`. For foundational governance, read `RULES.md`.
+2. **Decision Rule:** Apply the three-question decision rule in `RULES.md` to assign concepts to `knowledge/`, `documentation/domain/`, or `documentation/platform/`.
 3. **Reference Rules:** `knowledge/` may point to `documentation/`, but `documentation/` must NOT depend on `knowledge/` (use stubs only).
 
 ## File Locations
 
+- **Foundational Rules:** `C:/Users/dexte/.gemini/skills/domain-knowledge/RULES.md`
 - **Detailed Templates:** `C:/Users/dexte/.gemini/skills/domain-knowledge/TEMPLATES.md`
 - **Discovery Workflows:** `C:/Users/dexte/.gemini/skills/domain-knowledge/WORKFLOWS.md`
 
