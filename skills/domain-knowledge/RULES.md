@@ -13,7 +13,7 @@ This skill uses a collaborative orchestration model:
 
 ## 1. Standalone Rule
 `knowledge/` files must work on their own. Never assume a `documentation/` folder exists in the project.
-- The "How the Platform Uses This" section in each file is **optional**.
+- The reference file (`{concept}-ref.md`) is **conditional** — only create it if the project implements the concept.
 - The stub-creation step in the write workflow is **conditional** — only perform it if a `documentation/` folder already exists in the project root.
 
 ## 2. File Naming
