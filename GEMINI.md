@@ -1,60 +1,24 @@
+# Scratch Pad
+
+**File:** `C:/Users/dpagkaliwangan/scratch.md` — global temporary notes, single file, organized by topic sections.
+
+**Commands:** "add to scratch: ...", "show scratch", "clear scratch [topic]", "wipe scratch"
+
+When adding from emails/messages: strip greetings and sign-offs, keep only actionable info.
+
+---
+
 # Jira & Data Analysis Skills
 
 This document defines the consolidated Jira operations and data analysis standards for this workspace.
 
-## Core Mandate: MCP Tools Only
-**HARD RULE:** ALL Jira operations MUST use `mcp__jira__*` tools (or the local logic in `src/jira_mcp_server.py`). NEVER use any other Jira/Atlassian plugins.
+## Core Mandate: Skill Priority
+**HARD RULE:** For ALL Jira operations, data cleaning, and technical migrations, prioritize the dedicated skill files over this document.
+- **Jira:** `C:/Users/dpagkaliwangan/.gemini/skills/jira/SKILL.md`
+- **CSR Tickets:** `C:/Users/dpagkaliwangan/.gemini/skills/jira/csr/SKILL.md`
+- **Migration:** `C:/Users/dpagkaliwangan/.gemini/skills/migration/SKILL.md`
 
-## Jira MCP Configuration
-The Jira MCP server is configured at the workspace root and is accessible from any folder.
-- **Server Path (Original):** `C:/workarea/jira_manager/src/jira_mcp_server.py`
-- **Server Path (Gemini Optimized):** `C:/workarea/jira_manager/src/jira_mcp_gemini.py`
-- **Configuration File:** `C:/workarea/.gemini/settings.json`
-
----
-
-## 1. Jira Operational Skills
-
-### CSR Ticket Creation Skill
-When creating Cloud Services (CSR) tickets, use these specific requirements:
-- **Project Key:** CSR
-- **Customer field (`customfield_10900`):** Array of strings, e.g., `["BP"]`.
-- **Customer Approval (`customfield_13268`):** Always `{"value": "Yes"}`.
-- **Environment Link (`customfield_13170`):** URL string.
-- **Title Pattern:** `Enable Access, SQL pad and Remote Debugging for {CUSTOMER} {ENV} Environment`
-- **Description Hello Line:** Always includes Jalil Elkarfi, Umer Shafqat, Haseeb Ashfaq.
-- **Auto-Defaults:** Customer Approval (Yes), Type of Access (Other), Start Date (Today), End Date (Today + 14 days).
-
-### NCS → LAE Ticket Workflow
-1. **Fetch** the NCS ticket.
-2. **Present** proposed LAE ticket fields → **wait for user confirmation**.
-3. **Create** LAE ticket (with ADF description).
-4. **Fix** Assignee: Development (`customfield_13004`) to Dexter Pagkaliwangan (`60396b7af032740068924835`).
-5. **Add comment** (reuse wording from similar tickets) → ADF mention for reporter.
-6. **Present** Resolution Path draft (5-question format) → **wait for user confirmation**.
-7. **Close** via transition 801 with Root Cause + Resolution Path.
-8. **Log time** using `log_work_on_issue`.
-
-### 5-Question Analysis Format
-Every ticket analysis and Resolution Path field (`customfield_12000`) **MUST** use exactly these 5 questions:
-1. **What was the issue and its impact?**
-2. **What caused the issue?**
-3. **What troubleshooting steps should be taken?**
-4. **What resolution or workaround was applied?**
-5. **How can this be prevented in the future?**
-
-### Write Confirmation Protocol
-**MANDATORY** for ALL write operations:
-- Show a summary of proposed changes.
-- Wait for explicit confirmation.
-- Each content field (description, resolution path, comment) is a separate confirmation gate.
-
-### LAE Ticket Conventions
-- **Type:** Default to **Support Request**.
-- **Assignee:** Default to **Dexter Pagkaliwangan** (`60396b7af032740068924835`).
-- **Post-Action Corrections:** After every creation or transition, re-fetch and ensure **Assignee** and **Assignee: Development** (`customfield_13004`) are set to Dexter.
-
-### 2. Universal Migration & Parity Standards
+## 2. Universal Migration & Parity Standards
 
 #### Verbatim Copying & Compatibility Protocol
 - When asked to copy a skill or agent from another system (e.g., Claude), the copy must be **verbatim, word-for-word, and line-for-line**.
@@ -66,36 +30,74 @@ Every ticket analysis and Resolution Path field (`customfield_12000`) **MUST** u
 
 ---
 
-## 3. Data Analysis & Cleaning Skills
+# Git Commit Rules
 
-### Understand Before Analyzing
-- Identify the **business question** behind every request.
-- Confirm the target audience to calibrate output depth.
-
-### Data Cleaning Methodology
-1. **Profile:** Count rows/cols, check completeness, detect duplicates and inconsistencies.
-2. **Clean:** Document every transformation. Never silently drop data. Standardize dates to ISO 8601.
-3. **Validate:** Cross-check counts and aggregations against source totals.
-
-### Jira-Specific Analysis
-- **Efficient Querying:** Use JQL to filter precisely.
-- **Key Metrics:** Resolution time (created→resolved), backlog health (age distribution), workflow bottlenecks, SLA compliance.
-- **Normalization:** Handle status transitions (e.g., 'Replied' = resolved), normalize custom field values.
-
-### Business-Analyst-Ready Output
-- **Executive Summary:** 2-3 sentences on findings and recommended action.
-- **Key Metrics:** Tables or bullets with comparisons and trends.
-- **Detailed Findings:** Organized by business question (Observation, Data, Implication).
-- **Format:** Use **markdown tables** for structured data and clickable ticket links: `[KEY](https://nakisa.atlassian.net/browse/KEY)`.
+- Write a single sentence describing what was done (imperative, plain English)
+- Never include `Co-Authored-By` or any author attribution lines
+- Always push to remote after committing
+- **Always ask for user permission before committing** — never auto-commit
+- **Never commit or push in:** `C:/Users/dpagkaliwangan/git0/`, `C:/Users/dpagkaliwangan/git/`, `/c/core2/`
+- **Sandbox/notebook commits:** Describe what was learned/built/captured, never reference production-specific terms. Frame around the concept, not the source.
+  - Good: `Add stage 5: Retrofit2 HTTP clients with factory pattern and service abstraction`
+  - Bad: `Migrate to production-accurate Retrofit matching NFS codebase`
+- Example: `Add login form validation` or `Fix null pointer in payment processor`
 
 ---
 
-## 3. Technical Reference
+# Learning Preferences
+When explaining new concepts:
+- Gauge the learner first — adapt depth, vocabulary, and examples to their level and context
+- Start with WHY — if this concept solves a problem or improves something, explain that problem first
+- Build core understanding gently — use easy analogies, visual models, diagrams, or first principles before any technical depth
+- Introduce vocabulary AFTER understanding is established — never front-load jargon
+- Check understanding before advancing — pause to verify before adding complexity
+- Include prerequisites as a bridge — after the core idea lands, mention what helps go deeper
+- End with the 80/20 — highlight the 20% that matters most AND explicitly state what can be safely ignored for now
 
-### Custom Field Mapping
-- **customer:** `"Customer Commitment"` (use exact match `=` not `~`).
-- **Assignee: Development:** `customfield_13004`
-- **Resolution Path:** `customfield_12000`
+---
 
-### Common JQL Patterns
-- `"Customer Commitment" = Fairprice AND assignee = "Lionel Malonga" AND status = Closed`
+# Shared Agent Conventions
+
+## Path Output Rules (All Agents)
+
+**MANDATORY — no exceptions, no excuses.**
+
+- ALWAYS write full absolute paths — never use `~`, `$HOME`, relative paths, or any shorthand
+- ALWAYS expand to the full path e.g. `C:/Users/dpagkaliwangan/...`
+- ALWAYS show the base directory on its own line FIRST, then the full file path on its own line SECOND
+- NEVER inline a path within a sentence — paths always go on their own lines
+- This rule applies every single time a path or file is mentioned, including in follow-up replies
+
+Example: `C:/Users/dpagkaliwangan/.../folder/` on its own line, then `C:/Users/dpagkaliwangan/.../folder/filename.ext` on the next — never inline, never `~` or relative paths.
+
+## Files to Ignore (All Agents)
+
+All agents MUST ignore these files (note existence only, never read or analyze):
+
+- **Binaries:** *.exe, *.dll, *.so, *.dylib, *.bin
+- **Build outputs:** dist/, build/, target/, out/, bin/, obj/, *.pyc, *.class, *.o
+- **Dependencies:** node_modules/, vendor/, venv/, .venv/, __pycache__/, .gradle/, .m2/
+- **Archives:** *.zip, *.tar, *.gz, *.jar, *.war
+- **Media:** *.png, *.jpg, *.gif, *.mp3, *.mp4, *.pdf
+- **IDE:** .idea/, .vscode/, *.iml
+
+This convention is defined here once. Individual agent definitions do NOT need to repeat it.
+
+## Bloat Prevention (Global Agents + Skills + GEMINI.md)
+
+Before adding or modifying content in any global agent file, global skill file, or GEMINI.md itself:
+1. Apply the bloat checklist: `C:/Users/dpagkaliwangan/.gemini/skills/quality-guardian/CHECKLISTS.md` → "For Global Agents / Skills / GEMINI.md"
+2. **SCOPE:** This rule applies ONLY to `GEMINI.md` and any agents/skills that are NOT available in Claude (as tracked in the `claude-bridge` skill).
+3. Project agents (`agent-nla-*`, etc.) are exempt — their specificity is intentional.
+
+## Memory vs Skill Routing Rule
+
+Before saving anything to auto-memory, check if it belongs in a skill first:
+
+- **Conventions, field mappings, workflow rules, domain knowledge** → edit the relevant skill file instead
+- **User behavioral overrides** (e.g. "always do X instead of Y") → memory
+- **Personal/project-specific data** (file locations, project paths) → memory
+- **Reference data used globally across projects** (team lists, account IDs) → relevant skill
+- **Jira-related items specifically**: check `C:/Users/dpagkaliwangan/.gemini/skills/jira/SKILL.md` first
+
+Saving to memory is faster but the wrong default. Skills are the right home for anything that would apply to anyone using the same system.
