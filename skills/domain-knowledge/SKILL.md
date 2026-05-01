@@ -19,12 +19,15 @@ description: Use when writing public domain knowledge files into a project's kno
 - **Detailed Templates:** `C:/Users/dexte/.gemini/skills/domain-knowledge/TEMPLATES.md`
 - **Discovery Workflows:** `C:/Users/dexte/.gemini/skills/domain-knowledge/WORKFLOWS.md`
 
-## Ownership and fallback
+## Ownership and Delegation
 
-| Condition | Handler |
+| Task | Handler |
 |---|---|
-| agent-gemini available | agent-gemini — codebase discovery + web research + writes `knowledge/` files |
-| agent-gemini NOT available | agent-codebase-archaeologist (discovery) + main session or concept-tutor (writes files from known domain knowledge) |
+| **Codebase Discovery** | Gemini (Main Session) |
+| **Web Research** | Gemini (Main Session) |
+| **Writing / Drafting** | `agent-concept-tutor` (invoked by Gemini) |
+| **Sync / Promotion** | `agent-codebase-archaeologist` |
+| **Fallback (No Web)** | `agent-concept-tutor` (marks as `source: claude`) |
 
 ## Lifecycle & Sync
 
