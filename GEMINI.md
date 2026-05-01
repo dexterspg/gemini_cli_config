@@ -70,6 +70,15 @@ When explaining new concepts:
 
 Example: `C:/Users/dpagkaliwangan/.../folder/` on its own line, then `C:/Users/dpagkaliwangan/.../folder/filename.ext` on the next — never inline, never `~` or relative paths.
 
+## Model Fallback Rule (All Agents)
+
+- If an agent cannot access its primary model, it is permitted to use a different available model to complete the task.
+
+## Quality Review Output Rule (All Agents)
+
+- Whenever a quality review is performed on a tool output (like a search), the verdict must be saved as a markdown file in the project temporary directory.
+- File naming convention: `gemini-quality-<slug>.md` (where `<slug>` matches the corresponding tool output file).
+
 ## Files to Ignore (All Agents)
 
 All agents MUST ignore these files (note existence only, never read or analyze):
