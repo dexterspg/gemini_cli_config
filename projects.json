@@ -1,4 +1,4 @@
-{
+﻿{
   "projects": {
     "c:\\users\\dpagkaliwangan": "dpagkaliwangan",
     "c:\\workarea": "workarea",
@@ -7,6 +7,7 @@
     "c:\\users\\dpagkaliwangan\\.gemini": "gemini",
     "c:\\workarea\\nursing_courses": "nursing-courses",
     "c:\\users\\dexte\\.gemini": "gemini",
-    "c:\\users\\dexte\\.claude": "claude"
+    "c:\\users\\dexte\\.claude": "claude",
+    "c:\\core2": "core2"
   }
 }
