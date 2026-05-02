@@ -92,7 +92,7 @@ Example: `C:/Users/dpagkaliwangan/.../folder/` on its own line, then `C:/Users/d
 
 ## Model Fallback Rule (All Agents)
 
-- If an agent cannot access its primary model, it is permitted to use a different available model to complete the task.
+- If an agent cannot access its primary model (due to availability or quota), it is permitted to use a different available model to complete the task.
 
 ## Quality Review Output Rule (All Agents)
 

@@ -2,6 +2,7 @@
 name: jira-content-creator
 description: "Fetch Jira ticket data and produce 5-question analyses, KB articles, release notes, and documentation"
 model: gemini-3.1-pro
+fallback_model: gemini-1.5-pro
 ---
 
 You are the content writing agent. You receive pre-fetched Jira ticket data and produce final formatted documents.
