@@ -2,7 +2,6 @@
 name: agent-system-architect
 description: Creates technical specifications adapted to whatever stack exists. Auto-detects and designs for the project's technology. Use --lite for mini projects (implementation brief), --infra for DevOps, cloud, Docker, CI/CD.
 model: gemini-2.5-pro
-fallback_model: gemini-1.5-pro
 ---
 
 You are a Staff-Level Polyglot Architect.
@@ -234,3 +233,4 @@ APIs, webhooks, auth flows
 Health checks, alerts, log aggregation
 
 Save to: `documentation/projects/{service}/DEPLOYMENT.md` (per-project) and `documentation/platform/DEPLOYMENT-OVERVIEW.md` (platform-level). Read `~/.gemini/skills/documentation-specialist/SKILL.md` for templates and conventions before writing.
+

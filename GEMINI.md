@@ -10,23 +10,23 @@ When adding from emails/messages: strip greetings and sign-offs, keep only actio
 
 # Jira & Data Analysis Skills
 
-This document defines the consolidated Jira operations and data analysis standards for this workspace.
+This document defines the consolidated organizational standards for Jira operations and data analysis.
 
 ## Core Mandate: Skill Priority
 **HARD RULE:** For ALL Jira operations, data cleaning, and technical migrations, prioritize the dedicated skill files over this document.
-- **Jira:** `C:/Users/dpagkaliwangan/.gemini/skills/jira/SKILL.md`
-- **CSR Tickets:** `C:/Users/dpagkaliwangan/.gemini/skills/jira/csr/SKILL.md`
-- **Migration:** `C:/Users/dpagkaliwangan/.gemini/skills/migration/SKILL.md`
+- **Jira:** `~/.gemini/skills/jira/SKILL.md`
+- **CSR Tickets:** `~/.gemini/skills/jira/csr/SKILL.md`
+- **Migration:** `~/.gemini/skills/migration/SKILL.md`
 
 ## 2. Universal Migration & Parity Standards
 
 #### Verbatim Copying & Compatibility Protocol
-- When asked to copy a skill or agent from another system (e.g., Claude), the copy must be **verbatim, word-for-word, and line-for-line**.
-- If any part of the source is suspected to be incompatible with the current environment (e.g., tool mismatches, missing dependencies):
+- When asked to copy a skill or agent from another system, the copy must be **verbatim, word-for-word, and line-for-line**.
+- If any part of the source is suspected to be incompatible with the current environment:
   - Do **NOT** silently modify the content during the copy.
   - Identify and **flag the exact word and line differences** to the user for review.
   - Review compatibility **section by section** before proceeding.
-  - If a dependency (like a skill or agent) is missing, propose creating a Gemini-suitable equivalent rather than omitting the instruction.
+  - If a dependency is missing, propose creating a suitable equivalent rather than omitting the instruction.
 
 ---
 
@@ -36,11 +36,45 @@ This document defines the consolidated Jira operations and data analysis standar
 - Never include `Co-Authored-By` or any author attribution lines
 - Always push to remote after committing
 - **Always ask for user permission before committing** — never auto-commit
-- **Never commit or push in:** `C:/Users/dpagkaliwangan/git0/`, `C:/Users/dpagkaliwangan/git/`, `/c/core2/`
+- **Never commit or push in:** `C:/Users/dpagkaliwangan/git0/`, `C:/Users/dpagkaliwangan/git/`, `/c/gemini-config/`
 - **Sandbox/notebook commits:** Describe what was learned/built/captured, never reference production-specific terms. Frame around the concept, not the source.
   - Good: `Add stage 5: Retrofit2 HTTP clients with factory pattern and service abstraction`
-  - Bad: `Migrate to production-accurate Retrofit matching NFS codebase`
+  - Bad: `Migrate to production-accurate Retrofit matching production codebase`
 - Example: `Add login form validation` or `Fix null pointer in payment processor`
+
+---
+
+# Public Domain Knowledge Standards
+
+This section defines the mandatory standards for domain knowledge bases and architectural documentation across all projects.
+
+## 1. Domain Knowledge Architecture (`knowledge/`)
+
+The `knowledge/` directory is a pure, public-domain library. It must adhere to the following rules:
+
+### 1.1. The Purity Rule (Standalone Concepts)
+- **No Project Jargon:** Use of proprietary terms, project names, or internal service names is strictly prohibited in concept files.
+- **Zero Frontmatter:** Concept files must not contain YAML frontmatter, technical metadata, or dates at the top. They must start immediately with the `<h1>` title.
+- **Pedagogical Structure:** All concept documents must follow a 3-part pedagogical plan:
+    1.  **The Problem:** Explain the business "Why" before the "What."
+    2.  **The Analogy:** Use a non-technical comparison to build intuition.
+    3.  **Key Terms:** Define industry-standard vocabulary in plain language.
+
+### 1.2. The Metadata Bridge (`_metadata.md`)
+- All project-specific context, implementation links, and technical metadata (Status, Last Updated) must reside exclusively in the domain's `_metadata.md` file.
+- This file acts as the bridge connecting pure public concepts to the specific project implementation.
+
+### 1.3. The Knowledge Puzzle (`_INDEX.md`)
+- Concepts must be organized into a tiered roadmap:
+    - **Level 1: Anchors:** Foundational business entities.
+    - **Level 2: Engines:** Logic systems and core processes.
+    - **Level 3: Operations:** Complex workflows and specific calculations.
+
+## 2. Ownership and Authority
+
+### 2.1. Strict Agent Authority
+- **The Specialized Tutor:** Only a specialized `agent-concept-tutor` is authorized to generate or revise the content of the `knowledge/` folder.
+- **No Fallback:** If the specialized tutor is unavailable, writing or revising knowledge files is strictly prohibited. The main session must halt the process and inform the user.
 
 ---
 

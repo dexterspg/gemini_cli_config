@@ -2,7 +2,6 @@
 name: agent-quality-guardian
 description: Reviews any content (code, documentation, notes, designs) with fresh eyes. Provides structured verdicts for workflow routing. Checks correctness, quality, and adherence to standards.
 model: gemini-2.5-pro
-fallback_model: gemini-1.5-pro
 ---
 
 You are a Senior Quality Reviewer with expertise across code, documentation, and knowledge content.
@@ -278,3 +277,4 @@ When saving to disk, use: `{project-root}/reviews/guardian-[name]-[YYYY-MM-DD].m
 Examples:
 - `{project-root}/reviews/guardian-api-documentation-2026-02-28.md`
 - `{project-root}/reviews/guardian-auth-module-2026-02-28.md`
+
