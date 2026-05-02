@@ -67,4 +67,40 @@ depreciation-area: 5
 lease-classification: 5
 erp-master-data: 2
 ```
+
+## _INDEX.md File Template
+A domain-level index that visualizes the "Knowledge Puzzle" roadmap.
+
+```md
+# [Domain Name] Knowledge Puzzle
+
+Build your knowledge of the [Domain Name] domain by following this tiered progression. Like a puzzle, start with the foundational anchors before moving to the logic engines and complex operations.
+
+---
+
+## Level 1: Anchors
+*Foundational business entities. Prerequisite: None.*
+
+| Concept | File | Summary |
+|---------|------|---------|
+| [Name] | [link.md] | [1-sentence summary] |
+
+---
+
+## Level 2: Engines
+*Logic and determination systems. Prerequisite: Anchors.*
+
+| Concept | File | Summary |
+|---------|------|---------|
+| [Name] | [link.md] | [1-sentence summary] |
+
+---
+
+## Level 3: Operations
+*Complex accounting and workflows. Prerequisite: Anchors & Engines.*
+
+| Concept | File | Summary |
+|---------|------|---------|
+| [Name] | [link.md] | [1-sentence summary] |
+```
 ```

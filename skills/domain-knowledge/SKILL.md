@@ -31,16 +31,16 @@ Triggered when a user explicitly asks to document a single concept.
 
 Triggered by `discover domain knowledge in [path], n=[5]`. Automatically finds and documents `n` missing concepts from a given codebase area.
 
-| Step | Phase                   | Handler                             | Output                                                                                                                            |
-|------|-------------------------|-------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------|
-| 1    | Scan Codebase           | `agent-codebase-archaeologist`      | A list of potential domain keywords.                                                                                              |
-| 2    | Update Backlog          | Gemini (Main Session)               | New keywords are added to `knowledge/<domain>/keywords.md` after being deduplicated against existing `*.md` files.                |
-| 3    | Triage & Cluster        | Gemini (Main Session)               | Keywords are triaged using the 3-Question Rule. Proprietary terms are clustered under broader public concepts.                  |
+| Step | Phase                     | Handler                             | Output                                                                                                                            |
+|------|---------------------------|-------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------|
+| 1    | Scan Codebase             | `agent-codebase-archaeologist`      | A list of potential domain keywords.                                                                                              |
+| 2    | Update Backlog            | Gemini (Main Session)               | New keywords are added to `knowledge/<domain>/_keywords.md` after being deduplicated and capped.                                |
+| 3    | Triage & Cluster          | Gemini (Main Session)               | Keywords are triaged using the 3-Question Rule. Proprietary terms are clustered under broader public concepts.                  |
 | 4    | Propose Cluster & Confirm | Gemini (Main Session)               | The proposed concept clusters are presented to the user for approval.                                                             |
-| 5    | **Generate & Propose Plan** | `learning-strategy` skill       | For the approved cluster, a detailed pedagogical plan (why, analogy, etc.) is created and presented to the user for final approval. |
-| 6    | **User Confirms Plan**    | User Input                          | A final `go/no-go` from the user before writing begins.                                                                           |
-| 7    | Document Approved Concept | Gemini & `agent-concept-tutor` | The Main Session assembles a final prompt containing the pedagogical plan AND a list of existing domain documents, then invokes the tutor. |
-| 8    | Prune Backlog           | Gemini (Main Session)               | Once documented, all keywords from the cluster are removed from `keywords.md`.                                                    |
+| 5    | **Generate Plan**             | `learning-strategy` skill       | For the approved cluster, a detailed pedagogical plan (why, analogy, etc.) is created autonomously.                             |
+| 6    | **Execute & Self-Review**     | Gemini & `agent-concept-tutor` | The Main Session assembles a final prompt containing the plan AND existing documents. The tutor executes and self-reviews. |
+| 7    | Prune Backlog             | Gemini (Main Session)               | Once documented, all keywords from the cluster are removed from `_keywords.md`.                                                 |
+| 8    | **Update Knowledge Puzzle**   | Gemini (Main Session)               | The domain's `_INDEX.md` is updated to place the new concept in its correct Tier (Stand, Walk, or Run).                          |
 
 ## Core Mandates
 
@@ -59,18 +59,17 @@ Triggered by `discover domain knowledge in [path], n=[5]`. Automatically finds a
 
 This skill follows a "Strategize, then Delegate" model.
 
-| Step | Phase | Handler | Output |
-|------|-------|---------|--------|
-| 1 | Research | Gemini (Main Session) | Raw facts, code snippets, web links. |
-| 2 | Strategize | `learning-strategy` skill | A structured "Pedagogical Plan" with why, analogy, and key points. |
-| 3 | Execute | `agent-concept-tutor` | The final, well-written `.md` file based on the plan. |
-| 4 | Review | `agent-concept-tutor` | The agent is responsible for reviewing its own output against the plan. |
+| Step | Phase      | Handler                   | Output                                                               |
+|------|------------|---------------------------|----------------------------------------------------------------------|
+| 1    | Research   | Gemini (Main Session)     | Raw facts, code snippets, web links for the approved concept(s).     |
+| 2    | Strategize | `learning-strategy` skill | A structured "Pedagogical Plan" with why, analogy, and key points.   |
+| 3    | Execute    | `agent-concept-tutor`     | The final, well-written `.md` file based on the plan.                |
+| 4    | Review     | `agent-concept-tutor`     | The agent is responsible for reviewing its own output against the plan. |
 
-**Workflow:**
-1. User triggers this skill (e.g., "document [concept]").
-2. The Main Session performs initial research to gather raw facts.
-3. This skill then invokes the `learning-strategy` skill to generate a Pedagogical Plan from the raw facts.
-4. Finally, this skill invokes `agent-concept-tutor`, providing it with the detailed plan for execution.
+**Discovery Workflow Automation:**
+1. User approves a **Concept Cluster** (Step 4 of Discovery).
+2. The Main Session autonomously generates the Pedagogical Plan and the context-aware prompt.
+3. The `agent-concept-tutor` is invoked to perform the final writing and self-review without further user intervention.
 
 ## Lifecycle & Sync
 

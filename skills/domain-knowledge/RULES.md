@@ -92,3 +92,21 @@ To keep concept files pure, all project-specific context is stored in a single m
 - **Location:** `knowledge/<domain>/_metadata.md`
 - **Purpose:** Acts as an index, providing the project-specific context and a link to the detailed implementation document for each concept in the domain.
 - **Update Process:** When a new concept document is created, a corresponding entry must be added to this file.
+
+## 13. Foundational Prioritization
+During the "Triage & Cluster" step of the Discovery Workflow, concepts must be prioritized by their foundational impact.
+
+- **The "Trunk" Test:** Prioritize core concepts that act as "anchors" for the domain.
+- **Dependency Logic:** If Concept B requires understanding Concept A to make sense, Concept A must be documented first.
+- **Breadth of Impact:** Prioritize concepts that appear across multiple modules or services.
+- **Rule:** Always document the "Trunk" before the "Leaves."
+
+## 14. Tiered Progression (The Knowledge Puzzle)
+To guide learners, every domain folder must have an `_INDEX.md` file that organizes concepts into a logical "Knowledge Puzzle."
+
+- **Level 1: Anchors:** Foundational business entities and master data (e.g., Company, Chart of Accounts). Prerequisite: None.
+- **Level 2: Engines:** Logic engines, determination systems, and core processes (e.g., Financial Determination, Currency Conversion). Prerequisite: "Anchors" concepts.
+- **Level 3: Operations:** Complex accounting treatments, specific operational workflows, and calculations (e.g., Tax Determination, CAM Reconciliation). Prerequisite: "Anchors" & "Engines" concepts.
+
+**Rule:** When a new concept is documented, it must be added to the appropriate Level in the domain's `_INDEX.md` file immediately.
+
