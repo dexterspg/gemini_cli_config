@@ -2,15 +2,6 @@
 
 ## File Template
 
-```md
----
-source: gemini
-status: draft
-last-updated: YYYY-MM-DD
-snapshot-date: YYYY-MM-DD
-standard-version: [version or "n/a" if unversioned]
----
-
 # [Concept Name]
 
 **What it is:** [1-2 sentence plain-language definition. No jargon.]
@@ -28,6 +19,21 @@ standard-version: [version or "n/a" if unversioned]
 ## External Reference
 
 [Standard name and version] — [Authoritative source link: official standard body, vendor docs, or RFC. One link only.]
+
+## _metadata.md File Template
+The central index for project context and document status.
+
+```md
+# [Domain Name] Domain - Project Context & Status
+
+This file contains the project-specific context and document status for the public domain knowledge files in this directory.
+
+---
+
+### `[filename.md]`
+- **Status:** [draft | validated | stale] | **Last Updated:** YYYY-MM-DD
+- **Project Context:** [1-2 sentences explaining why this concept is relevant to the current project/codebase.]
+- **Implementation Details:** See `[link to documentation/platform/...]`
 ```
 
 ## Frontmatter Fields Explanation

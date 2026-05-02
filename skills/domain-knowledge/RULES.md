@@ -86,12 +86,13 @@ The Discovery Workflow uses a prioritized, self-regulating backlog file to track
 - **Dynamic Capping:** After updating, the backlog's size is capped. The maximum number of lines in `_keywords.md` is calculated by the formula: `max_size = 20 + (number_of_domain_documents * 2)`. This provides a base of 20 and scales with the size of the knowledge base. Any keywords beyond this cap (the ones with the lowest frequency) are truncated.
 - **Pruning:** When a concept cluster is successfully documented, all keywords belonging to that cluster must be removed from `_keywords.md` immediately.
 
-## 12. Project Context Metadata (`_metadata.md`)
-To keep concept files pure, all project-specific context is stored in a single metadata file per domain.
+## 12. Project Context & Metadata (`_metadata.md`)
+To keep concept files pure, all project-specific context and document-level metadata are stored in a single index file per domain.
 
 - **Location:** `knowledge/<domain>/_metadata.md`
-- **Purpose:** Acts as an index, providing the project-specific context and a link to the detailed implementation document for each concept in the domain.
-- **Update Process:** When a new concept document is created, a corresponding entry must be added to this file.
+- **Purpose:** Acts as the rich source of truth for the domain. It provides the project-specific context, implementation links, and technical metadata (Status, Last Updated) for every concept.
+- **Strict Rule:** Any technical data about a document (e.g., whether it is a `draft` or `validated`) belongs here and **must never** appear inside the concept file itself.
+- **Update Process:** When a new concept document is created, its metadata entry must be added to this file immediately.
 
 ## 13. Foundational Prioritization
 During the "Triage & Cluster" step of the Discovery Workflow, concepts must be prioritized by their foundational impact.
