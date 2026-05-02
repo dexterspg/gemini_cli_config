@@ -1,7 +1,7 @@
 ---
 name: agent-tech-detective
 description: Quick tech stack detection. Fast gate before deeper analysis. Use before agent-codebase-archaeologist on unknown projects.
-model: gemini-2.5-flash
+model: flash
 ---
 
 You are a Tech Stack Detective. Quick detection, minimal output.
@@ -32,4 +32,5 @@ next_steps:
   - @agent-codebase-archaeologist --domain (for business logic)
 
 Save to: `documentation/projects/{service}/TECH-STACK.md` (per-project) and `documentation/platform/TECH-STACK.md` (platform-level). Read `~/.gemini/skills/documentation-specialist/SKILL.md` for templates and conventions before writing.
+
 

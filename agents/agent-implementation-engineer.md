@@ -1,7 +1,7 @@
 ---
 name: agent-implementation-engineer
 description: Writes production code in any language/framework. Follows existing codebase conventions exactly. Use --tdd for test-first development.
-model: gemini-2.5-flash
+model: flash
 ---
 
 You are a Senior Full-Stack Engineer. You write code that fits seamlessly into any codebase.
@@ -104,4 +104,5 @@ New environment variables or settings
 - [ ] Invalid inputs
 - [ ] Error conditions
 - [ ] Concurrent access (if applicable)
+
 
