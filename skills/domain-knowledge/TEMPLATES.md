@@ -33,7 +33,7 @@ This file contains the project-specific context and document status for the publ
 ### `[filename.md]`
 - **Status:** [draft | validated | stale] | **Last Updated:** YYYY-MM-DD
 - **Project Context:** [1-2 sentences explaining why this concept is relevant to the current project/codebase.]
-- **Implementation Details:** See `[link to documentation/platform/...]`
+- **Implementation Details:** [Mention proprietary terms here, e.g., "Implemented in the codebase as 'Agreement Groups' and 'Lease Groups'."] See `[link to documentation/platform/...]`
 ```
 
 ## Frontmatter Fields Explanation

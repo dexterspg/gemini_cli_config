@@ -111,3 +111,10 @@ To guide learners, every domain folder must have an `_INDEX.md` file that organi
 
 **Rule:** When a new concept is documented, it must be added to the appropriate Level in the domain's `_INDEX.md` file immediately.
 
+## 15. The Abstraction & Bridge Pattern (Proprietary Terms)
+To maintain the purity of the `knowledge/` folder, proprietary or project-specific jargon (e.g., "Agreement Group", "Lease Group") must never have its own concept file.
+
+- **Abstracting:** Map the proprietary term to its underlying public-domain concept (e.g., "Agreement Group" -> "Contract Hierarchies and Grouping"). Document the universal concept.
+- **Bridging:** Use the `_metadata.md` file to bridge the gap. In the "Project Context" or "Implementation Details" section for that concept, explicitly mention the proprietary terms used in the codebase.
+- **Goal:** A developer should be able to read the concept file to understand the universal principle, then read `_metadata.md` to see exactly how it maps to the specific labels and entities in the code.
+

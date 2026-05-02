@@ -5,7 +5,7 @@
     }
   },
   "model": {
-    "name": "pro"
+    "name": "auto-gemini-3"
   },
   "experimental": {
     "dynamicModelConfiguration": true
