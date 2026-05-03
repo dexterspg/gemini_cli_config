@@ -1,3 +1,44 @@
+## Accounting File Template (Quantitative)
+
+# [Concept Name]
+
+**What it is:** [1-2 sentence plain-language definition.]
+
+## Core Formulas
+
+| Calculation | Formula | Source |
+|---|---|---|
+| *[e.g., ROU Asset Measurement]* | `Liability - Incentives + IDC` | `IFRS 16.24` |
+
+### Variable Definitions
+
+| Variable | Definition |
+|---|---|
+| **Liability** | The present value of all future lease payments. |
+| **Incentives** | Payments received from the lessor to encourage signing the lease. |
+| **IDC** | Initial Direct Costs, such as broker commissions. |
+
+## Worked Example
+...
+
+---
+## _formulas.md File Template
+
+A central repository for all mathematical and logical formulas within a domain. Each entry must be four lines, followed by a separator.
+
+# Example:
+# Net Book Value (NBV): Calculates the remaining value of an asset on the company's books.
+# (Net Book Value) = (Gross Book Value) - (Accumulated Depreciation)
+# TerminationOutput.java
+# accounting/asset-retirement.md
+#
+# ---
+#
+# Gain or Loss on Disposal: Determines the accounting gain or loss when an asset is sold or retired.
+# (Gain / Loss) = (Proceeds from Sale) - (Net Book Value)
+# TerminationOutput.java, SomeOtherFile.java
+# accounting/asset-retirement.md
+
 # Domain Knowledge Templates
 
 ## File Template
