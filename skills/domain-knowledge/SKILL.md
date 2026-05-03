@@ -1,13 +1,49 @@
 ---
 name: domain-knowledge
-description: Use when writing public domain knowledge files into a project's knowledge/<domain>/ folder using a two-file structure ({concept}.md and {concept}-ref.md). Triggers when: "research [concept] for the knowledge base", "add [topic] to knowledge/", "document domain knowledge for [project]", "write knowledge base entry for [concept]". This skill governs how Gemini writes concept files in knowledge/<domain>/ — covering frontmatter, content structure, scope boundaries, deduplication, and lifecycle rules. Do NOT trigger for project-specific documentation (that goes in documentation/domain/NN-*.md) or platform interpretations (that goes in documentation/platform/domain-concepts/).
+description: >
+  Governs the creation of public domain knowledge files.
+  **Reactive Mode:** Trigger with "document [concept] for the knowledge base".
+  **Proactive Mode:** Trigger with "discover domain knowledge in [code_path], n=[number]".
+  This skill orchestrates a workflow of discovery, pedagogical planning, and delegated writing to build a pure, standalone knowledge base.
+
 ---
 
 # Domain Knowledge Skill (Router)
 
 **Purpose:** Rules for writing public domain knowledge files in `knowledge/<domain>/` folders.
 
+## Workflows
+
+This skill operates in two modes:
+
+### 1. Reactive Workflow (User-Driven)
+
+Triggered when a user explicitly asks to document a single concept.
+
+| Step | Phase      | Handler                   | Output                                                               |
+|------|------------|---------------------------|----------------------------------------------------------------------|
+| 1    | Research   | Gemini (Main Session)     | Raw facts, code snippets, web links for one concept.                 |
+| 2    | Strategize | `learning-strategy` skill | A structured "Pedagogical Plan" with why, analogy, and key points.   |
+| 3    | Execute    | `agent-concept-tutor`     | The final, well-written `.md` file based on the plan.                |
+| 4    | Review     | `agent-concept-tutor`     | The agent is responsible for reviewing its own output against the plan. |
+
+### 2. Discovery Workflow (Code-Driven, Proactive)
+
+Triggered by `discover domain knowledge in [path], n=[5]`. Automatically finds and documents `n` missing concepts from a given codebase area.
+
+| Step | Phase                     | Handler                             | Output                                                                                                                            |
+|------|---------------------------|-------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------|
+| 1    | Scan Codebase             | `agent-codebase-archaeologist`      | A list of potential domain keywords.                                                                                              |
+| 2    | Update Backlog            | Gemini (Main Session)               | New keywords are added to `knowledge/<domain>/_keywords.md` after being deduplicated and capped.                                |
+| 3    | Triage & Cluster          | Gemini (Main Session)               | Keywords are triaged using the 3-Question Rule. Proprietary terms are clustered under broader public concepts.                  |
+| 4    | Propose Cluster & Confirm | Gemini (Main Session)               | The proposed concept clusters are presented to the user for approval.                                                             |
+| 5    | **Generate Plan**             | `learning-strategy` skill       | For the approved cluster, a detailed pedagogical plan (why, analogy, etc.) is created autonomously.                             |
+| 6    | **Execute & Self-Review**     | Gemini & `agent-concept-tutor` | The Main Session assembles a final prompt containing the plan AND existing documents. The tutor executes and self-reviews. |
+| 7    | Prune Backlog             | Gemini (Main Session)               | Once documented, all keywords from the cluster are removed from `_keywords.md`.                                                 |
+| 8    | **Update Knowledge Puzzle**   | Gemini (Main Session)               | The domain's `_INDEX.md` is updated to place the new concept in its correct Tier (Stand, Walk, or Run).                          |
+
 ## Core Mandates
+
 
 1. **Lazy Loading:** For detailed templates, read `TEMPLATES.md`. For discovery workflows, read `WORKFLOWS.md`. For foundational governance, read `RULES.md`.
 2. **Decision Rule:** Apply the three-question decision rule in `RULES.md` to assign concepts to `knowledge/`, `documentation/domain/`, or `documentation/platform/`.
@@ -21,13 +57,19 @@ description: Use when writing public domain knowledge files into a project's kno
 
 ## Ownership and Delegation
 
-| Task | Handler |
-|---|---|
-| **Codebase Discovery** | Gemini (Main Session) |
-| **Web Research** | Gemini (Main Session) |
-| **Writing / Drafting** | `agent-concept-tutor` (invoked by Gemini) |
-| **Sync / Promotion** | `agent-codebase-archaeologist` |
-| **Fallback (No Web)** | `agent-concept-tutor` (marks as `source: claude`) |
+This skill follows a "Strategize, then Delegate" model.
+
+| Step | Phase      | Handler                   | Output                                                               |
+|------|------------|---------------------------|----------------------------------------------------------------------|
+| 1    | Research   | Gemini (Main Session)     | Raw facts, code snippets, web links for the approved concept(s).     |
+| 2    | Strategize | `learning-strategy` skill | A structured "Pedagogical Plan" with why, analogy, and key points.   |
+| 3    | Execute    | `agent-concept-tutor`     | The final, well-written `.md` file based on the plan.                |
+| 4    | Review     | `agent-concept-tutor`     | The agent is responsible for reviewing its own output against the plan. |
+
+**Discovery Workflow Automation:**
+1. User approves a **Concept Cluster** (Step 4 of Discovery).
+2. The Main Session autonomously generates the Pedagogical Plan and the context-aware prompt.
+3. The `agent-concept-tutor` is invoked to perform the final writing and self-review without further user intervention.
 
 ## Lifecycle & Sync
 

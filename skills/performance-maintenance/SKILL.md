@@ -15,7 +15,7 @@ ALL pruning operations must follow this sequential protocol:
 2. **User Disclosure:** Present the summary (File count + Total size) to the user.
 3. **Explicit Confirmation:** Require the user to type "confirm" or "yes" before proceeding.
 4. **Execution:** Only run the actual deletion after confirmation.
-5. **Logging:** Append a record to `C:/Users/dexte/.gemini/maintenance-log.md` using this format:
+5. **Logging:** Append a record to `C:/Users/dpagkaliwangan/.gemini/maintenance-log.md` using this format:
    ```md
    | Timestamp | Action | Count | Size (MB) | Status |
    |-----------|--------|-------|-----------|--------|
@@ -37,7 +37,7 @@ ALL pruning operations must follow this sequential protocol:
 ### PowerShell (Windows)
 ```powershell
 # Step 1: Directory Check
-$dirs = @("C:\Users\dexte\.gemini\history", "C:\Users\dexte\.gemini\tmp", "C:\Users\dexte\.gemini\history\archived")
+$dirs = @("C:\Users\dpagkaliwangan\.gemini\history", "C:\Users\dpagkaliwangan\.gemini\tmp", "C:\Users\dpagkaliwangan\.gemini\history\archived")
 foreach ($dir in $dirs) { if (!(Test-Path $dir)) { New-Item -ItemType Directory -Path $dir } }
 
 # Step 2: Dry Run
@@ -72,7 +72,7 @@ find ~/.gemini/history ~/.gemini/tmp -type f \( \( -path "*/history/*" -mmin +20
 - **Rule:** If the current session context (visible in tool outputs or history) exceeds **5MB**, it must be compacted.
 - **Action:** 
   1. Use `read_file` to capture the current session history if available.
-  2. Write a summary to `C:/Users/dexte/.gemini/history/archived/YYYY-MM-DD-summary.md`.
+  2. Write a summary to `C:/Users/dpagkaliwangan/.gemini/history/archived/YYYY-MM-DD-summary.md`.
   3. Inform the user: "Session size limit reached (X MB). A summary has been archived. Please start a new session to maintain performance."
 
 ### Topic Compaction (Turn Counter)
@@ -82,7 +82,7 @@ find ~/.gemini/history ~/.gemini/tmp -type f \( \( -path "*/history/*" -mmin +20
 
 ### Agent Integrity Check
 - **Trigger:** During every **Weekly Maintenance Check** or when the user says "clean up workspace".
-- **Action:** Scan `C:/Users/dexte/.gemini/agents/*.md`. Verify that all referenced skills in the `activate_skill` instructions exist in `C:/Users/dexte/.gemini/skills/`. Flag broken links.
+- **Action:** Scan `C:/Users/dpagkaliwangan/.gemini/agents/*.md`. Verify that all referenced skills in the `activate_skill` instructions exist in `C:/Users/dpagkaliwangan/.gemini/skills/`. Flag broken links.
 
 ## 5. Scope
 Maintenance applies to:
