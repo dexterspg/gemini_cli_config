@@ -29,15 +29,15 @@ A central repository for all mathematical and logical formulas within a domain. 
 # Example:
 # Net Book Value (NBV): Calculates the remaining value of an asset on the company's books.
 # (Net Book Value) = (Gross Book Value) - (Accumulated Depreciation)
-# TerminationOutput.java
-# accounting/asset-retirement.md
+# <path-to-source-file.java>
+# <domain>/<concept-name>.md
 #
 # ---
 #
 # Gain or Loss on Disposal: Determines the accounting gain or loss when an asset is sold or retired.
 # (Gain / Loss) = (Proceeds from Sale) - (Net Book Value)
-# TerminationOutput.java, SomeOtherFile.java
-# accounting/asset-retirement.md
+# <path-to-source-file.java>, <another-source-file.java>
+# <domain>/<concept-name>.md
 
 # Domain Knowledge Templates
 
