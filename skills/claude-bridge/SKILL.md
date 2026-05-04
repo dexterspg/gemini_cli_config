@@ -23,7 +23,7 @@ description: Verbatim migration of skills and agents from ~/.claude to ~/.gemini
 *   **Remediation:** If the dependency is missing, ask the user: *"This relies on [Agent/Skill Name] from Claude. Should we migrate that dependency next?"*
 
 ### 4. System Immutability
-*   **Read-Only State:** You are strictly forbidden from modifying existing skills or agents in the `~/.gemini` directory unless this specific rule is explicitly rescinded by the user. 
+*   **Read-Only State:** You are strictly forbidden from modifying existing skills or agents in the `~/.claude` directory unless this specific rule is explicitly rescinded by the user. 
 *   **Section-by-Section Review:** For complex files, break the review into logical Markdown headers or JSON blocks to allow for granular approval.
 
 ---
