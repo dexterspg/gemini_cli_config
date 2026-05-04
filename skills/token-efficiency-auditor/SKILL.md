@@ -107,6 +107,11 @@ Mark each: PASS / WARN / FAIL
 - [ ] Has a "Do NOT trigger for" section with routing alternatives
 - [ ] Trigger phrases cover casual/implicit user language
 - [ ] No overlap with other known skills causing ambiguous routing
+- [ ] Trigger phrases are literal user-typed strings, not category labels (e.g. "jira", "LAE ticket" — not "Jira operations")
+- [ ] Skills that must always load have an explicit MANDATORY load instruction, not advisory phrasing like "read skill first"
+
+# These catch undertriggering — the highest-cost routing failure.
+# A skill that never loads scores worse than a verbose one that does.
 
 #### Structure Completeness
 - [ ] Clear named purpose / overview at top
