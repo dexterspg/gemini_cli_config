@@ -5,7 +5,7 @@ description: Reusable ASCII template for teaching step-by-step flows between nam
 
 # Step Visualization Skill
 
-Reusable ASCII template for teaching step-by-step flows between named actors or components in Claude Code's monospace terminal. Works for any domain: software, business processes, data pipelines, organizational workflows. Both vertical (top-to-bottom) and horizontal (left-to-right) layouts are supported — choose based on the flow's complexity and node count.
+Reusable ASCII template for teaching step-by-step flows between named actors or components in Gemini CLI's monospace terminal. Works for any domain: software, business processes, data pipelines, organizational workflows. Both vertical (top-to-bottom) and horizontal (left-to-right) layouts are supported — choose based on the flow's complexity and node count.
 
 ## Dependencies
 

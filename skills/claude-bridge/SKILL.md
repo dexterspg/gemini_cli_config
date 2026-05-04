@@ -26,6 +26,11 @@ description: Verbatim migration of skills and agents from ~/.claude to ~/.gemini
 *   **Read-Only State:** You are strictly forbidden from modifying existing skills or agents in the `~/.claude` directory unless this specific rule is explicitly rescinded by the user. 
 *   **Section-by-Section Review:** For complex files, break the review into logical Markdown headers or JSON blocks to allow for granular approval.
 
+### 5. Workflow Migration
+*   **Subdirectories:** If a Claude skill contains a `workflows/` directory, migrate it to the corresponding `~/.gemini/skills/[skill]/workflows/` location.
+*   **Lazy-Loading Conversion:** Convert any Claude-style workflow loading instructions into the Gemini lazy-loading format: "If [condition]: MANDATORY: Load [path]".
+*   **Standardization:** Prefer consolidating simple workflows into a single `WORKFLOWS.md` file within the skill folder if they do not require a full directory structure.
+
 ---
 
 # 📋 Out-of-Sync Registry
@@ -33,15 +38,7 @@ description: Verbatim migration of skills and agents from ~/.claude to ~/.gemini
 This section tracks skills and agents in `~/.gemini` that are missing content or features present in their `~/.claude` counterparts, or are pending migration.
 
 ### Pending Migration
-- `agent-prompt-builder` (agent)
-- `agent-time-tracker` (agent)
-- `architecture-audit` (skill)
-- `architecture-audit-workspace` (skill)
-- `data` (skill)
-- `desktop-app-storage` (skill)
-- `guided-implementation-walkthrough` (skill)
-- `prd-to-tasks` (skill)
-- `prompt-builder` (skill)
+- None
 
 ### In-Sync / Migrated
 - `jira` (skill)
@@ -79,4 +76,12 @@ This section tracks skills and agents in `~/.gemini` that are missing content or
 - `tdd` (skill)
 - `ui-design` (skill)
 - `walkthrough-planner` (skill)
-
+- `agent-prompt-builder` (agent)
+- `agent-time-tracker` (agent)
+- `architecture-audit` (skill)
+- `architecture-audit-workspace` (skill)
+- `data` (skill)
+- `desktop-app-storage` (skill)
+- `guided-implementation-walkthrough` (skill)
+- `prd-to-tasks` (skill)
+- `prompt-builder` (skill)

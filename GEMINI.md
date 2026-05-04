@@ -110,6 +110,23 @@ To minimize latency (Turn Overhead) and maximize context longevity (Token Econom
 
 ---
 
+# Workflow & Routing Architecture
+
+To maintain high performance and context efficiency, the workspace follows a **Lazy-Loading** and **Hierarchical Routing** pattern.
+
+### 1. Workflow Implementation
+- **Simple Workflows**: Define procedures directly in `SKILL.md` or a sibling `WORKFLOWS.md` file.
+- **Complex Workflows**: Use a `workflows/` subfolder within the skill directory for variants or multi-file procedures.
+- **Lazy-Loading Rule**: Do NOT load workflow files by default. The `SKILL.md` must act as a router that only calls for the specific workflow file when the task is confirmed.
+    - *Example:* "If [condition]: MANDATORY: Load `~/.gemini/skills/[skill]/workflows/[FILE.md]`"
+
+### 2. Hierarchical Routing
+- **Global Routing**: Use `GEMINI.md` (Global/Workspace) for repo-wide mandates and skill priorities.
+- **JIT (Just-In-Time) Routing**: Use directory-level `GEMINI.md` files for instructions that only apply to a specific part of the codebase.
+- **Skill Routing**: The `activate_skill` tool is the primary router for switching between specialized expert domains.
+
+---
+
 # Shared Agent Conventions
 
 ## Path Output Rules (All Agents)

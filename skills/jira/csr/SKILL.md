@@ -7,7 +7,7 @@ user-invocable: false
 
 # CSR Ticket Creation Skill
 
-**Parent skill:** [`~/.claude/skills/jira/SKILL.md`](../SKILL.md)
+**Parent skill:** [`~/.gemini/skills/jira/SKILL.md`](../SKILL.md)
 
 ## CSR Project Overview
 

@@ -75,10 +75,10 @@ assignee = "Lionel Malonga" AND "Customer Commitment" = Fairprice
 The Jira MCP server is a local Python server at `/c/workarea/jira_manager/`.
 
 ### How it's registered
-MCP servers must be in `~/.claude.json` under `mcpServers` (NOT `~/.claude/settings.json` — that key is ignored for MCP loading):
+MCP servers must be in `~/.gemini.json` under `mcpServers` (NOT `~/.gemini/settings.json` — that key is ignored for MCP loading):
 
 ```json
-// ~/.claude.json
+// ~/.gemini.json
 {
   "mcpServers": {
     "jira": {
@@ -98,8 +98,8 @@ Loaded automatically from `/c/workarea/jira_manager/.env` (path is hardcoded rel
 **MCP tools only work in the main session.** Subagents (Task tool) have zero MCP access. All `mcp__jira__*` calls must be made by the main session directly. Jira subagents (content-creator, ticket-manager) receive pre-fetched data as input and return formatted output or prepared parameters.
 
 ### Troubleshooting
-- **Tools not available in a session:** MCP server failed to connect at startup. Restart Claude Code — the server will re-attempt.
-- **Works from `~/.claude/` but not other dirs:** Previously the config was only in `~/.claude/settings.json` (wrong) and `~/.claude/mcp.json` (project-local). Fixed by moving to `~/.claude.json`.
+- **Tools not available in a session:** MCP server failed to connect at startup. Restart Gemini CLI — the server will re-attempt.
+- **Works from `~/.gemini/` but not other dirs:** Previously the config was only in `~/.gemini/settings.json` (wrong) and `~/.gemini/mcp.json` (project-local). Fixed by moving to `~/.gemini.json`.
 
 ### Available Tools (main session only)
 `mcp__jira__search_jira_issues`, `mcp__jira__get_jira_issue`, `mcp__jira__create_jira_issue`, `mcp__jira__update_jira_issue`, `mcp__jira__copy_jira_issue`, `mcp__jira__get_custom_fields`, `mcp__jira__log_work_on_issue`, `mcp__jira__get_worklogs_by_date`, `mcp__jira__save_to_file`
@@ -134,7 +134,7 @@ mcp__jira__download_jira_attachments(
 )
 ```
 
-If the MCP tool is unavailable (server not running, or working outside Claude Code), fall back to the REST API recipe below.     
+If the MCP tool is unavailable (server not running, or working outside Gemini CLI), fall back to the REST API recipe below.     
 
 ### Fallback: REST API (when MCP unavailable)
 
@@ -185,7 +185,7 @@ If recovery fails after the action above, **stop and surface the failure** — d
 - ⚠️ Field name "customer" does not exist in this Jira instance; always use `"Customer Commitment"` instead
 - Values like "Fairprice", "Fair Price", "FairPrice" may be used inconsistently in descriptions; use the field value directly    
 - ⚠️ `"Customer Commitment" ~ "value"` (contains) does NOT work — always use `"Customer Commitment" = "value"` (exact match)
-- ⚠️ **User field fuzzy search (`~`) does NOT work** — `assignee ~ "Zark"` returns nothing. Always use exact username format: `assignee = "zark.ahmed"` (lowercase, dot-separated). To find a user's username: (1) use the company skill (`~/.claude/skills/company/SKILL.md`) to look up their full display name, (2) use `text ~ "Full Name"` to find a probe ticket, (3) confirm the display name from results. Note: `reporter = "Display Name"` does NOT work — only exact account usernames resolve in JQL
+- ⚠️ **User field fuzzy search (`~`) does NOT work** — `assignee ~ "Zark"` returns nothing. Always use exact username format: `assignee = "zark.ahmed"` (lowercase, dot-separated). To find a user's username: (1) use the company skill (`~/.gemini/skills/company/SKILL.md`) to look up their full display name, (2) use `text ~ "Full Name"` to find a probe ticket, (3) confirm the display name from results. Note: `reporter = "Display Name"` does NOT work — only exact account usernames resolve in JQL
 - ✅ **For the current user's own tickets**, always use `assignee = currentUser()` — more reliable than hardcoding a username 
 - ⚠️ Customer names from the company skill's reference data may not reflect the exact spelling or casing stored in Jira. When unsure of the exact value, probe with a known ticket: fetch a ticket you know belongs to that customer and read the `Customer Commitment` field value directly from the result — then use that exact string in JQL
 
@@ -319,7 +319,7 @@ When creating or cloning LAE tickets:
 
 - **Type:** Always default to **Support Request** unless explicitly told otherwise
 - **Assignee:** Always default to **Dexter Pagkaliwangan** (`accountId: 60396b7af032740068924835`) unless explicitly told otherwise
-- **Reporter:** Use the **assignee of the linked NCS ticket** (not the reporter), unless explicitly told otherwise. If no linked NCS ticket exists, fall back to the company skill (`~/.claude/skills/company/SKILL.md`) to look up the customer's Lead Support Sponsor as reporter
+- **Reporter:** Use the **assignee of the linked NCS ticket** (not the reporter), unless explicitly told otherwise. If no linked NCS ticket exists, fall back to the company skill (`~/.gemini/skills/company/SKILL.md`) to look up the customer's Lead Support Sponsor as reporter
 - **Fix/Affect Versions:** If the source or linked NCS ticket has no versions, find the latest BP (or relevant customer) ticket in NCS or LAE with those fields populated and copy from there
 - **Affect Version (if name rejected):** Look up the version ID via REST API (`/rest/api/3/project/LAE/versions`) and pass it via `custom_fields` as `{"versions": [{"id": "VERSION_ID"}]}`
 - **Mentions in description:** Always use Jira's built-in ADF mention node — never plain text `@Name`. Since `mcp__jira__create_jira_issue` does not support ADF natively, always set the description via REST API (`PUT /rest/api/3/issue/LAE-XXXXX`) after creation
