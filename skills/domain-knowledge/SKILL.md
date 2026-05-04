@@ -51,9 +51,9 @@ Triggered by `discover domain knowledge in [path], n=[5]`. Automatically finds a
 
 ## File Locations
 
-- **Foundational Rules:** `C:/Users/dexte/.gemini/skills/domain-knowledge/RULES.md`
-- **Detailed Templates:** `C:/Users/dexte/.gemini/skills/domain-knowledge/TEMPLATES.md`
-- **Discovery Workflows:** `C:/Users/dexte/.gemini/skills/domain-knowledge/WORKFLOWS.md`
+- **Foundational Rules:** `$HOME/.gemini/skills/domain-knowledge/RULES.md`
+- **Detailed Templates:** `$HOME/.gemini/skills/domain-knowledge/TEMPLATES.md`
+- **Discovery Workflows:** `$HOME/.gemini/skills/domain-knowledge/WORKFLOWS.md`
 
 ## Ownership and Delegation
 

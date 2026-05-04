@@ -71,7 +71,7 @@ Based on detected type, select the 4-persona panel:
 
 | Signal | Classification |
 |--------|---------------|
-| File operations, CLI args, string/number parsing, data structures, no domain terms | Simple — use Tech Lead / Architect |    
+| File operations, CLI args, string/number parsing, data structures, no domain terms | Simple — use Tech Lead / Architect |
 | Domain entity names in imports or test subjects (Order, Contract, Invoice, Payment, Policy, Claim, Lease, Account...) | Domain-heavy — use Domain Expert |
 | State machine, approval workflow, multi-step business process | Domain-heavy — use Domain Expert |
 | Tests live in a service with a business domain (finance, insurance, logistics, HR, legal, healthcare...) | Domain-heavy — use Domain Expert |
@@ -146,7 +146,7 @@ Dimensions vary by content type:
 - Data Analysis: Methodology, Completeness, Business Question Answered, Visualization, Actionability
 - Jira Ticket: Reproducibility, Acceptance Criteria, Impact Scope, Root Cause, Priority Justification
 - KB Article: Findability, Step Clarity, Prerequisite Coverage, Troubleshooting, Accuracy
-- Support Investigation: Evidence Quality, Hypothesis Coverage, Technical Accuracy, Escalation Routing, Customer Communication   
+- Support Investigation: Evidence Quality, Hypothesis Coverage, Technical Accuracy, Escalation Routing, Customer Communication
 
 ---
 
@@ -187,13 +187,13 @@ Dimensions vary by content type:
 
 1. **Always 4 personas** — never fewer, never more
 2. **Always parallel** — spawn all 4 Task subagents in a single message, never sequentially
-3. **Always cross-examine** — the cross-examination section must reflect genuine tension between personas, not just agreement  
+3. **Always cross-examine** — the cross-examination section must reflect genuine tension between personas, not just agreement
 4. **Synthesize, don't concatenate** — the opening statements should sound like distinct voices, not a single review cut into 4 pieces
 5. **Coverage table is mandatory** — always grade all dimensions for all personas
 6. **Shared Recommendations are actionable** — vague feedback ("improve clarity") is not acceptable. Be specific about what to fix and where.
 7. **Verdict consensus reflects the range** — if 3 personas say STRONG but 1 says INCOMPLETE, the consensus is ADEQUATE, not STRONG. On a 2-2 split, use the lower of the two verdicts (e.g., 2 STRONG + 2 NEEDS_WORK = NEEDS_WORK)
 8. **Custom personas (`--personas`) respect the user's intent** — infer concerns from the role title provided; do not override with standard personas
-9. **Handle subagent failures** — if a persona subagent returns empty or errors out, note which persona failed and synthesize from the remaining 3. Log the missing voice in the Panel Verdict section. Never re-run the entire panel for one failed subagent.  
+9. **Handle subagent failures** — if a persona subagent returns empty or errors out, note which persona failed and synthesize from the remaining 3. Log the missing voice in the Panel Verdict section. Never re-run the entire panel for one failed subagent.
 
 ---
 
@@ -208,5 +208,3 @@ When saving to disk, use: `{project-root}/reviews/panel-[content-name]-[YYYY-MM-
 Examples:
 - `{project-root}/reviews/panel-api-documentation-2026-02-26.md`
 - `{project-root}/reviews/panel-auth-module-2026-02-26.md`
-
-
