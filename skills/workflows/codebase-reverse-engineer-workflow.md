@@ -1,6 +1,6 @@
 ---
 name: codebase-reverse-engineer
-description: Deep technical analysis and documentation generation. Triggers: "reverse engineer [project]", "analyze this project", "what does [project] do".
+description: 'Deep technical analysis and documentation generation. Triggers: "reverse engineer [project]", "analyze this project", "what does [project] do".'
 ---
 # Codebase Reverse Engineer Workflow
 

@@ -86,7 +86,7 @@ User pastes skill frontmatter and trigger section:
 ```
 ---
 name: code-review-helper
-description: Helps review code for quality and correctness.
+description: 'Helps review code for quality and correctness.'
 ---
 
 ## Do NOT trigger for
@@ -124,13 +124,13 @@ ALL REWRITES (ranked by token impact)
 Before:
 ---
 name: code-review-helper
-description: Helps review code for quality and correctness.
+description: 'Helps review code for quality and correctness.'
 ---
 
 After:
 ---
 name: code-review-helper
-description: Helps review code for quality and correctness. Triggers on: "review this code", "code review", "audit this", "check for bugs", "feedback on [file]", "is this good?". For general code explanation, use agent-concept-tutor.
+description: 'Helps review code for quality and correctness. Triggers on: "review this code", "code review", "audit this", "check for bugs", "feedback on [file]", "is this good?". For general code explanation, use agent-concept-tutor.'
 ---
 
 Token delta: +120 characters (~30 tokens)

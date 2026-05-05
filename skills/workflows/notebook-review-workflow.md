@@ -1,6 +1,6 @@
 ---
 name: notebook-review
-description: Quality review workflow for notebook entries focusing on pedagogical quality and organization. Triggers: "QA my notes", "check notes quality".
+description: 'Quality review workflow for notebook entries focusing on pedagogical quality and organization. Triggers: "QA my notes", "check notes quality".'
 ---
 # Notebook Review Workflow
 

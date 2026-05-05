@@ -1,6 +1,6 @@
 ---
 name: issue-investigation
-description: Intake and initial triage workflow for Jira or local issues. Triggers: "investigate [ticket]", "debug [issue]".
+description: 'Intake and initial triage workflow for Jira or local issues. Triggers: "investigate [ticket]", "debug [issue]".'
 ---
 # Issue Investigation Workflow
 

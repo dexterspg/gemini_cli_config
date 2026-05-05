@@ -1,6 +1,6 @@
 ---
 name: feature-development
-description: End-to-end workflow for new feature implementation including requirements, design, architecture, and QA. Triggers: "build [feature]", "implement [X]".
+description: 'End-to-end workflow for new feature implementation including requirements, design, architecture, and QA. Triggers: "build [feature]", "implement [X]".'
 ---
 # Feature Development Workflow
 

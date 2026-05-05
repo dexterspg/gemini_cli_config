@@ -119,7 +119,7 @@ Mark each: PASS / WARN / FAIL
 
 #### Frontmatter
 - [ ] Has `name:` — short, lowercase, hyphenated
-- [ ] Has `description:` — not empty
+- [ ] Has `description:` — MUST be wrapped in single quotes or use block scalar (`>`) to prevent YAML parsing errors from internal colons or special characters.
 - [ ] Description states WHAT the skill does
 - [ ] Description states WHEN to trigger (specific contexts, not just a category)
 - [ ] Description includes example trigger phrases

@@ -1,6 +1,6 @@
 ---
 name: tdd-workflow
-description: Test-first development flow for high-integrity features or bug fixes. Triggers: "build with TDD", "test-first development".
+description: 'Test-first development flow for high-integrity features or bug fixes. Triggers: "build with TDD", "test-first development".'
 ---
 # TDD Workflow
 

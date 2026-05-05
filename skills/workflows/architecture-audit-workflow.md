@@ -1,6 +1,6 @@
 ---
 name: architecture-audit
-description: Codebase exploration and redesign workflow for addressing structural friction. Triggers: "this code is getting messy", "audit the architecture".
+description: 'Codebase exploration and redesign workflow for addressing structural friction. Triggers: "this code is getting messy", "audit the architecture".'
 ---
 # Architecture Audit Workflow
 

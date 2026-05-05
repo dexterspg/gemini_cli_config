@@ -1,6 +1,6 @@
 ---
 name: notebook-creation
-description: Orchestrated workflow for teaching, capturing, and reviewing polished notebook entries. Triggers: "teach me and save it", "create polished entry".
+description: 'Orchestrated workflow for teaching, capturing, and reviewing polished notebook entries. Triggers: "teach me and save it", "create polished entry".'
 ---
 # Notebook Creation Workflow
 

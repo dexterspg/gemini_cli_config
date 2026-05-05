@@ -1,6 +1,6 @@
 ---
 name: notebook-capture
-description: Fast capture workflow for notes and learnings. Triggers: "save this to notebook", "take notes".
+description: 'Fast capture workflow for notes and learnings. Triggers: "save this to notebook", "take notes".'
 ---
 # Notebook Capture Workflow
 

@@ -1,6 +1,6 @@
 ---
 name: data-cleaning
-description: End-to-end flow from raw data scan to Python cleaning script. Triggers: "clean this data", "how to fix this CSV".
+description: 'End-to-end flow from raw data scan to Python cleaning script. Triggers: "clean this data", "how to fix this CSV".'
 ---
 # Data Cleaning Workflow
 

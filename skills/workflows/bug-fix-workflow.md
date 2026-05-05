@@ -1,6 +1,6 @@
 ---
 name: bug-fix
-description: Standard loop for fixing confirmed bugs. Triggers: "fix bug in [X]", "why is [Y] broken?".
+description: 'Standard loop for fixing confirmed bugs. Triggers: "fix bug in [X]", "why is [Y] broken?".'
 ---
 # Bug Fix Workflow
 

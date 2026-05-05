@@ -1,6 +1,6 @@
 ---
 name: data-cleaning-reviewed
-description: Reviewed flow for data cleaning including quality guardian gates. Triggers: "clean and review this data", "reviewed data cleaning pipeline".
+description: 'Reviewed flow for data cleaning including quality guardian gates. Triggers: "clean and review this data", "reviewed data cleaning pipeline".'
 ---
 # Data Cleaning Workflow (with Quality Review)
 

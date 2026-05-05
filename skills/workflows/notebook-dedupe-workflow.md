@@ -1,6 +1,6 @@
 ---
 name: notebook-dedupe
-description: Maintenance workflow for identifying and merging duplicate notebook entries. Triggers: "dedupe notes", "clean up notebook".
+description: 'Maintenance workflow for identifying and merging duplicate notebook entries. Triggers: "dedupe notes", "clean up notebook".'
 ---
 # Notebook Dedupe Workflow
 

@@ -1,6 +1,6 @@
 ---
 name: concept-tutor-notebook
-description: Manages notebook searching, context resumption, and capture workflow. Triggers: "--notebook", "teach me and save it".
+description: 'Manages notebook searching, context resumption, and capture workflow. Triggers: "--notebook", "teach me and save it".'
 ---
 # Concept Tutor: Notebook Mode
 

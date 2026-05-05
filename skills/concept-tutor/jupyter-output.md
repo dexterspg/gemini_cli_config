@@ -1,6 +1,6 @@
 ---
 name: concept-tutor-jupyter
-description: Generates Depth 1-5 structured cells (markdown + code) for Jupyter notebooks. Triggers: "Create interactive notebook", "Generate .ipynb".
+description: 'Generates Depth 1-5 structured cells (markdown + code) for Jupyter notebooks. Triggers: "Create interactive notebook", "Generate .ipynb".'
 ---
 # Concept Tutor: Jupyter Notebook Output
 
