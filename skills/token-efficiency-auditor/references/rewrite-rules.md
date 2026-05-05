@@ -25,7 +25,7 @@ Anti-pattern → Fix mappings for token efficiency and validation corrections.
 | Never: without ownership | "Never [X] — [agent-name] owns this" |
 | Implicit trigger phrases only ("--flag" style) | Add casual variants: "how does X work", "I don't understand X" |
 | Variant handled in separate routing row | Handle inline: "If [variant]: also load ~/.gemini/skills/[skill]/workflows/[VARIANT.md]" |
-| Unquoted YAML description containing colons | Wrap in single quotes or use block scalar (`>`) to prevent parsing errors |
+| Unquoted YAML description containing colons | Wrap in double quotes or use block scalar (`>`) to prevent parsing errors |
 
 ## Token Efficiency Anti-Patterns
 

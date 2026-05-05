@@ -1,6 +1,6 @@
 ---
 name: persona-reviewer-personas
-description: 'Full persona catalog for agent-persona-reviewer. Read this to look up the 4 selected personas before briefing subagents.'
+description: "Full persona catalog for agent-persona-reviewer. Read this to look up the 4 selected personas before briefing subagents."
 type: skill
 ---
 

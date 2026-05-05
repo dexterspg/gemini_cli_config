@@ -1,6 +1,6 @@
 ---
 name: token-efficiency-auditor
-description: 'Audit and validate Gemini agent system prompts, SKILL.md files, and prompt templates for token waste, context inefficiency, and structural correctness. Use this skill whenever the user wants to check, review, score, validate, or improve a prompt, agent definition, or skill file — for token efficiency, caching potential, verbosity, or structural completeness. Triggers on: "check my prompt", "is this token efficient", "audit my skill", "validate my agent", "review my SKILL.md", "is my skill correct", "does this skill have everything it needs", "too verbose?", "optimize my system prompt", "how many tokens is this", "can I make this shorter", "is my agent well structured".'
+description: "Audit and validate Gemini agent system prompts, SKILL.md files, and prompt templates for token waste, context inefficiency, and structural correctness. Use this skill whenever the user wants to check, review, score, validate, or improve a prompt, agent definition, or skill file — for token efficiency, caching potential, verbosity, or structural completeness. Triggers on: \"check my prompt\", \"is this token efficient\", \"audit my skill\", \"validate my agent\", \"review my SKILL.md\", \"is my skill correct\", \"does this skill have everything it needs\", \"too verbose?\", \"optimize my system prompt\", \"how many tokens is this\", \"can I make this shorter\", \"is my agent well structured\"."
 ---
 
 # Token Efficiency Auditor + Skill/Agent Validator
@@ -119,7 +119,7 @@ Mark each: PASS / WARN / FAIL
 
 #### Frontmatter
 - [ ] Has `name:` — short, lowercase, hyphenated
-- [ ] Has `description:` — MUST be wrapped in single quotes or use block scalar (`>`) to prevent YAML parsing errors from internal colons or special characters.
+- [ ] Has `description:` — MUST be wrapped in double quotes or use block scalar (`>`) to prevent YAML parsing errors from internal colons or special characters.
 - [ ] Description states WHAT the skill does
 - [ ] Description states WHEN to trigger (specific contexts, not just a category)
 - [ ] Description includes example trigger phrases

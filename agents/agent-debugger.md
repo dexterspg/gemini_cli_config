@@ -1,6 +1,6 @@
 ---
 name: agent-debugger
-description: 'Investigates bugs, errors, and unexpected behavior. Performs root cause analysis and provides reproduction steps. Use for troubleshooting production issues or test failures.'
+description: "Investigates bugs, errors, and unexpected behavior. Performs root cause analysis and provides reproduction steps. Use for troubleshooting production issues or test failures."
 model: pro
 ---
 

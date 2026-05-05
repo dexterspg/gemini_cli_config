@@ -1,6 +1,6 @@
 ---
 name: agent-data-doc-specialist
-description: 'Creates industry-standard data documentation — profiling reports (what's in the data) and cleaning plans (how to fix it). Works with any messy dataset (CSV, Excel, database exports). Use --profile for data profiling report, --plan for data cleaning plan.'
+description: "Creates industry-standard data documentation — profiling reports (what's in the data) and cleaning plans (how to fix it). Works with any messy dataset (CSV, Excel, database exports). Use --profile for data profiling report, --plan for data cleaning plan."
 model: flash
 ---
 
