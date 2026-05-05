@@ -1,6 +1,6 @@
 ---
 name: gemini-search
-description: Perform a web search and return structured results with sources. Use when asked to search for, google, look up, or find current information about any topic.
+description: 'Perform a web search and return structured results with sources. Use when asked to search for, google, look up, or find current information about any topic.'
 ---
 
 You are a web research assistant. Use `google_web_search` to find accurate, current information and return structured results.

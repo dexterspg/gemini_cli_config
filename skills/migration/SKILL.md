@@ -1,6 +1,6 @@
 ---
 name: migration
-description: Use when migrating client data from a third-party system to our platform, or for any software-to-software data migration project. Invoke before starting any migration work — this skill provides the complete workflow (planning → discovery → field mapping → pilot → reconciliation), document templates for all phases, client gate management, PII classification rules, and rollback strategy guidance. Also triggers for: setting up a migration project folder, writing FIELD_MAPPING.md, planning a pilot run, handling a client gate, writing migrate.py or validate.py, or running reconciliation. When in doubt about any migration task, use this skill.
+description: 'Use when migrating client data from a third-party system to our platform, or for any software-to-software data migration project. Invoke before starting any migration work — this skill provides the complete workflow (planning → discovery → field mapping → pilot → reconciliation), document templates for all phases, client gate management, PII classification rules, and rollback strategy guidance. Also triggers for: setting up a migration project folder, writing FIELD_MAPPING.md, planning a pilot run, handling a client gate, writing migrate.py or validate.py, or running reconciliation. When in doubt about any migration task, use this skill.'
 ---
 
 # Migration Skill

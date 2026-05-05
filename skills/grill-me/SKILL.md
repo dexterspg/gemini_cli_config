@@ -1,6 +1,6 @@
 ---
 name: grill-me
-description: Relentlessly challenge and interrogate a plan or design the user already has by asking hard questions and poking holes in their reasoning. Use this whenever someone says "grill me", "challenge my design", "stress-test my plan", "poke holes in my reasoning", "interrogate me on edge cases", "question everything", "test it hard", "find the weaknesses", "be critical about this proposal", or wants to pressure-test their thinking before committing or presenting to the team. Do NOT trigger for general advice, brainstorming, writing new plans from scratch, reviewing code, or explaining concepts.
+description: 'Relentlessly challenge and interrogate a plan or design the user already has by asking hard questions and poking holes in their reasoning. Use this whenever someone says "grill me", "challenge my design", "stress-test my plan", "poke holes in my reasoning", "interrogate me on edge cases", "question everything", "test it hard", "find the weaknesses", "be critical about this proposal", or wants to pressure-test their thinking before committing or presenting to the team. Do NOT trigger for general advice, brainstorming, writing new plans from scratch, reviewing code, or explaining concepts.'
 ---
 
 # Grill Me

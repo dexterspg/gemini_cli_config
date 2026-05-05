@@ -1,6 +1,6 @@
 ---
 name: poc-writer
-description: Guide the main session or any agent through writing a business-facing Proof of Concept (PoC) document.
+description: 'Guide the main session or any agent through writing a business-facing Proof of Concept (PoC) document.'
 ---
 
 # PoC Writer Skill
@@ -22,65 +22,26 @@ Triggers: "write a PoC", "create a proof of concept", "PoC for [project]", "busi
 ---
 
 ## Information Gathering (Ask First)
-
-Before writing the PoC, gather this from the user. Ask all at once — do not ask one by one:
-
-1. **What is the problem?** What pain point or inefficiency exists today?
-2. **Who is affected?** Which users, teams, or departments experience this problem?
-3. **What is the proposed solution?** What would the product or feature do at a high level?
-4. **What is the expected value?** Time saved, cost reduced, revenue gained, risk avoided?
-5. **What is the scope?** What is included? What is explicitly out of scope?
-6. **What are the risks?** What could prevent this from working?
-7. **What does success look like?** How do we know the PoC passed?
-8. **Who are the stakeholders?** Who needs to approve this?
-9. **What is the rough timeline?** When does a decision need to be made?
-10. **Who is the audience for this document?** (e.g., finance team, client, internal management) — this determines vocabulary and detail level.
-
-If context is already provided (e.g., user described the project), infer answers and note assumptions — do not ask for information already given.
-
----
+Ask these all at once before writing:
+1. **Problem:** Pain point/inefficiency today.
+2. **Impact:** Who is affected (teams/roles).
+3. **Solution:** High-level product/feature goal.
+4. **Value:** Time/cost/revenue/risk benefits.
+5. **Scope:** Included vs. explicitly excluded.
+6. **Success:** Measurable criteria for PoC pass.
+7. **Stakeholders:** Approvers and audience.
+8. **Timeline:** Key decision deadline.
 
 ## Audience Rules
+- **Non-Technical Default:** Never include code, languages, frameworks, or library names unless audience is technical leadership.
+- **WHAT not HOW:** Describe functional outcomes ("Web interface") not technical details ("Vue.js").
+- **Jargon Test:** Replace any term a non-technical manager would need to search.
 
-**The PoC audience is typically non-technical.** Before writing, identify who will read the document and enforce these rules throughout:
-
-- **Never include:** programming language names, framework names, library names, file names, code snippets, technical architecture, or developer tooling references
-- **Never include in Resources table:** tools/systems used to build the solution (e.g., "Python 3.x, pandas, openpyxl"). Only list tools/systems the stakeholder cares about (e.g., "Access to CTR_0422.xlsx")
-- **Describe WHAT the tool does, not HOW it is built:** "Standalone desktop application" not "PyInstaller-packaged Python app"; "Web application" not "Vue.js frontend with FastAPI backend"
-- **Technical jargon test:** Before finalizing, re-read every sentence. If a non-technical stakeholder would need to Google a term, replace it with plain language.
-- **Exception:** If the audience IS technical (e.g., engineering leadership), the user will say so. Only then can technical terms appear.
-
----
-
-## Timeline Estimation Rules
-
-**Never put arbitrary dates.** Timelines must be grounded in realistic effort estimates.
-
-### How to estimate build time
-
-Break the application into functional components and estimate each:
-
-1. List what needs to be built (e.g., file parser, calculation engine, output generator, UI)
-2. Estimate each component: simple (1-2 days), moderate (2-3 days), complex (3-5 days)
-3. Add integration + testing time (typically 30-50% of build time)
-4. Add bug fix buffer (1-2 days)
-5. Sum it up — this is the build phase
-
-### Timeline structure
-
-| Phase | Typical Duration |
-|-------|-----------------|
-| Build (single developer) | Sum of component estimates |
-| Internal validation + fixes | 2-3 days after build |
-| Client/stakeholder review | 1 week (external dependency) |
-| Go / No-Go decision | 1-3 days after review |
-
-### Rules
-
-- **Always show your math** to the user before writing the timeline — ask "does this feel right?"
-- **Never compress build time** to fit a desired deadline — flag the conflict instead
-- **Separate internal vs external milestones** — build time is in your control, client review is not
-- **Break build milestones into functional components** — not "PoC build complete" but the individual pieces (parser, engine, output, etc. described in business terms)
+## Timeline Estimation
+1. **Breakdown:** List components (parser, engine, UI).
+2. **Estimate:** Simple (1-2d), Moderate (2-3d), Complex (3-5d).
+3. **Buffer:** Add 30-50% for testing/fixes.
+4. **math:** Show your math to the user before finalizing dates.
 
 ---
 

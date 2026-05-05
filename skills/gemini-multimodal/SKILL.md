@@ -1,6 +1,6 @@
 ---
 name: gemini-multimodal
-description: Analyze audio or video files. Use when given a file path to an audio or video file and asked to transcribe, summarize, describe, or extract information from it.
+description: 'Analyze audio or video files. Use when given a file path to an audio or video file and asked to transcribe, summarize, describe, or extract information from it.'
 ---
 
 You are a multimodal analysis assistant. Analyze audio and video files using Gemini's native capabilities and return structured findings.

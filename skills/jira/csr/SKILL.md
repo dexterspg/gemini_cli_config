@@ -1,13 +1,13 @@
 ---
-skill: csr
-description: Create Cloud Services (CSR) tickets with correct required fields and valid option values
+name: csr
+description: 'Create Cloud Services (CSR) tickets with correct required fields and valid option values'
 args: ""
 user-invocable: false
 ---
 
 # CSR Ticket Creation Skill
 
-**Parent skill:** [`~/.gemini/skills/jira/SKILL.md`](../SKILL.md)
+**Parent skill:** [`~/.gemini/skills/jira/SKILL.md`](../SKILL.md)  
 
 ## CSR Project Overview
 
@@ -37,7 +37,7 @@ user-invocable: false
 
 ## Required Custom Fields
 
-| Field | Custom Field ID | Type | Valid Values / Default |
+| Field | Custom Field ID | Type | Valid Values / Default |        
 |-------|----------------|------|----------------------|
 | Customer | `customfield_10900` | array of strings | e.g., `["BP"]` — NOT option objects |
 | Customer Approval | `customfield_13268` | option | **Always `{"value": "Yes"}`** (auto-default) |
@@ -45,14 +45,14 @@ user-invocable: false
 | Solution | `customfield_13194` | option | `{"value": "Nakisa Lease Administration"}` |
 | Type of Access | `customfield_13274` | option | **Default: `{"value": "Other - See description"}`**, `{"value": "Server"}`, `{"value": "Application"}`, `{"value": "SQL-PAD"}` |
 | Issue Priority | `customfield_13326` | option | `{"value": "Medium"}`, `{"value": "High"}`, etc. |
-| Environment Link | `customfield_13170` | string | URL string, e.g., `"https://bp.nakisa.cloud/leasing/prod/app/default.html"` |
+| Environment Link | `customfield_13170` | string | URL string, e.g., `"https://bp.nakisa.cloud/leasing/prod/app/default.html"` |     
 | Project Start Date | `customfield_12500` | date | **Always today's date** `"YYYY-MM-DD"` (auto-default) |
 | End Date | `customfield_13249` | date | **Always 2 weeks from today** `"YYYY-MM-DD"` (auto-default) |
 
 ### Auto-Defaults (set without asking the user)
 
 - **Customer Approval** = `{"value": "Yes"}`
-- **Type of Access** = `{"value": "Other - See description"}`
+- **Type of Access** = `{"value": "Other - See description"}`      
 - **Project Start Date** = today (`YYYY-MM-DD`)
 - **End Date** = today + 14 days (`YYYY-MM-DD`)
 
@@ -67,7 +67,7 @@ Enable Access, SQL pad and Remote Debugging for {CUSTOMER} {ENV} Environment
 ### Variant B — Access + SQL pad only (no debugging)
 
 ```
-Enable Access and SQL pad (READ) for {CUSTOMER} {ENV} Environment
+Enable Access and SQL pad (READ) for {CUSTOMER} {ENV} Environment  
 ```
 
 Variables: `{CUSTOMER}` = customer name (BP, Stada, Danone, Bunge, etc.), `{ENV}` = Prod/QA/Pre-Prod
@@ -79,7 +79,7 @@ Variables: `{CUSTOMER}` = customer name (BP, Stada, Danone, Bunge, etc.), `{ENV}
 ```
 Hello @Jalil Elkarfi @Umer Shafqat @Haseeb Ashfaq
 
-Please enable remote debugging and provide all access (manager, default, admin) to {ENV} to the following developer/consultants: 
+Please enable remote debugging and provide all access (manager, default, admin) to {ENV} to the following developer/consultants:      
 
 @{DEVELOPER_NAME}
 
@@ -115,7 +115,7 @@ Also provide SQL pad access (READ only)
 mcp__jira__create_jira_issue(
     project_key="CSR",
     summary="{TITLE}",
-    issue_type="User Access",  # Most common; change as needed
+    issue_type="User Access",  # Most common; change as needed     
     description="{DESCRIPTION}",
     priority="Medium",
     custom_fields={
@@ -145,6 +145,6 @@ These people are commonly tagged in descriptions and assigned to CSR tickets:
 - **Priority:** Use Medium unless linked to a High/Critical ticket
 - **Customer field format:** Array of strings `["BP"]` — NOT option objects like `[{"value": "BP"}]`
 - **Access expiry:** Tickets expire periodically (~2-3 weeks), so new tickets are needed for continued access
-- **Environment URL:** Always include in BOTH the description AND the Environment Link custom field (`customfield_13170`)        
+- **Environment URL:** Always include in BOTH the description AND the Environment Link custom field (`customfield_13170`)
 - **URL pattern:** `https://{customer}.nakisa.cloud/leasing/{env}/app/default.html`
 - **Issue type for access requests:** Use `User Access` (ID: 11879)

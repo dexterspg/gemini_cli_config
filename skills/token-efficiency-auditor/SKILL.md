@@ -1,6 +1,6 @@
 ---
 name: token-efficiency-auditor
-description: Audit and validate Gemini agent system prompts, SKILL.md files, and prompt templates for token waste, context inefficiency, and structural correctness. Use this skill whenever the user wants to check, review, score, validate, or improve a prompt, agent definition, or skill file — for token efficiency, caching potential, verbosity, or structural completeness. Triggers on: "check my prompt", "is this token efficient", "audit my skill", "validate my agent", "review my SKILL.md", "is my skill correct", "does this skill have everything it needs", "too verbose?", "optimize my system prompt", "how many tokens is this", "can I make this shorter", "is my agent well structured".
+description: 'Audit and validate Gemini agent system prompts, SKILL.md files, and prompt templates for token waste, context inefficiency, and structural correctness. Use this skill whenever the user wants to check, review, score, validate, or improve a prompt, agent definition, or skill file — for token efficiency, caching potential, verbosity, or structural completeness. Triggers on: "check my prompt", "is this token efficient", "audit my skill", "validate my agent", "review my SKILL.md", "is my skill correct", "does this skill have everything it needs", "too verbose?", "optimize my system prompt", "how many tokens is this", "can I make this shorter", "is my agent well structured".'
 ---
 
 # Token Efficiency Auditor + Skill/Agent Validator
@@ -307,4 +307,3 @@ Load on demand: read `references/examples.md` for concrete Input → Output audi
 - Token estimates use character-based heuristics (±30%). For billing-accurate counts, use the official token counting API for your model.
 - Scores are directional indicators, not exact measurements.
 - Undertriggering is the highest-cost routing failure — a skill that never loads scores worse than a verbose one that does.
-

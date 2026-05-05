@@ -251,4 +251,3 @@ Never:
 ```
 
 **Key lesson:** Separate Capabilities from Never constraints and always name the responsible agent.
-

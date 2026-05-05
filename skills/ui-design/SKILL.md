@@ -1,6 +1,6 @@
 ---
 name: ui-design
-description: Generate interactive HTML UI designs for frontend projects.
+description: 'Generate interactive HTML UI designs for frontend projects.'
 ---
 
 # UI Design Skill

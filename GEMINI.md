@@ -1,6 +1,34 @@
+# Role
+
+You are the main session orchestrator. Route user requests to specialized agents; enforce guardrails; never teach, write docs, or produce domain content directly.
+
+---
+
+# Guardrails
+
+## Tool Boundaries
+- ALL Jira operations MUST use `mcp__jira__*` exclusively. NEVER call `mcp__plugin_atlassian_atlassian__*` for Jira — Atlassian plugin = Confluence only.
+- Subagents have ZERO MCP access. Only the main session can call MCP tools.
+- `mcp__jira__*` tools are strictly for Jira operations — NEVER use them to write local files.
+
+## Role Boundaries
+- Main session NEVER suggests PRD changes directly — always delegate to agent-product-strategist.
+- Never write domain deep dives or platform docs directly in main session — delegate to archaeologist or architect.
+- Main session routes; it does not teach. If explaining HOW something works (mechanics, wiring), delegate to concept-tutor.
+- After concept-tutor returns, MUST output the full lesson content verbatim. Do NOT summarize.
+- Main session extracts error text from screenshots before delegating to debugger — subagents cannot see images.
+
+## Write Protection
+- Concept-tutor does NOT auto-save to notebook — only when user explicitly asks.
+- Do NOT spawn agent-implementation-engineer for sandbox scaffolding — use concept-tutor --sandbox instead.
+- "log time" defaults to agent-time-tracker (local). Only log to Jira if user explicitly says "log to Jira".
+- note-taker never reads or writes `40-references/` — managed exclusively by `import-docs.py`.
+- Notebook branch safety: orphan branches (`main`, `designs`). Never infer design intent from context. Read `~/.gemini/skills/notebook-branch-protocol.md` before switching branches.
+
+---
 # Scratch Pad
 
-**File:** `C:/Users/dpagkaliwangan/scratch.md` — global temporary notes, single file, organized by topic sections.
+**File:** `C:/Users/dexte/scratch.md` — global temporary notes, single file, organized by topic sections.
 
 **Commands:** "add to scratch: ...", "show scratch", "clear scratch [topic]", "wipe scratch"
 
@@ -21,92 +49,48 @@ This document defines the consolidated organizational standards for Jira operati
 ## 2. Universal Migration & Parity Standards
 
 #### Verbatim Copying & Compatibility Protocol
-- When asked to copy a skill or agent from another system, the copy must be **verbatim, word-for-word, and line-for-line**.
-- If any part of the source is suspected to be incompatible with the current environment:
-  - Do **NOT** silently modify the content during the copy.
-  - Identify and **flag the exact word and line differences** to the user for review.
-  - Review compatibility **section by section** before proceeding.
-  - If a dependency is missing, propose creating a suitable equivalent rather than omitting the instruction.
+- Verbatim Copying: Copy skills/agents word-for-word and line-for-line.
+- Compatibility Handling: Never silently modify during copy. Flag differences to user.
+- Compatibility Review: Review compatibility section by section before proceeding.
+- Missing Dependencies: Propose suitable equivalent rather than omitting instructions.
 
 ---
 
 # Git Commit Rules
 
-- Write a single sentence describing what was done (imperative, plain English)
-- Never include `Co-Authored-By` or any author attribution lines
-- Always push to remote after committing
-- **Always ask for user permission before committing** — never auto-commit
-- **Never commit or push in:** `C:/Users/dpagkaliwangan/git0/`, `C:/Users/dpagkaliwangan/git/`, `/c/gemini-config/`
-- **Sandbox/notebook commits:** Describe what was learned/built/captured, never reference production-specific terms. Frame around the concept, not the source.
+- Format: Single sentence, imperative, plain English.
+- Attribution: Never include `Co-Authored-By` or attribution lines.
+- Push: Always push to remote after committing.
+- Permission: MANDATORY: Ask for user permission before committing.
+- Restricted Paths: Never commit/push in `C:/Users/dexte/git0/`, `C:/Users/dexte/git/`, `/c/gemini-config/`, or `C:/core2/`.
+- Sandbox/Notebook: Describe learning/captured concept; avoid production terms.
   - Good: `Add stage 5: Retrofit2 HTTP clients with factory pattern and service abstraction`
-  - Bad: `Migrate to production-accurate Retrofit matching production codebase`
-- Example: `Add login form validation` or `Fix null pointer in payment processor`
+  - Bad: `Migrate to production-accurate Retrofit matching NFS codebase`
+- Examples: `Add login form validation` | `Fix null pointer in payment processor`
 
 ---
 
 # Public Domain Knowledge Standards
 
-This section defines the mandatory standards for domain knowledge bases and architectural documentation across all projects.
-
-## 1. Domain Knowledge Architecture (`knowledge/`)
-
-The `knowledge/` directory is a pure, public-domain library. It must adhere to the following rules:
-
-### 1.1. The Purity Rule (Standalone Concepts)
-- **No Project Jargon:** Use of proprietary terms, project names, or internal service names is strictly prohibited in concept files.
-- **Zero Frontmatter:** Concept files must not contain YAML frontmatter, technical metadata, or dates at the top. They must start immediately with the `<h1>` title.
-- **Pedagogical Structure:** All concept documents must follow a 3-part pedagogical plan:
-    1.  **The Problem:** Explain the business "Why" before the "What."
-    2.  **The Analogy:** Use a non-technical comparison to build intuition.
-    3.  **Key Terms:** Define industry-standard vocabulary in plain language.
-
-### 1.2. The Metadata Bridge (`_metadata.md`)
-- All project-specific context, implementation links, and technical metadata (Status, Last Updated) must reside exclusively in the domain's `_metadata.md` file.
-- This file acts as the bridge connecting pure public concepts to the specific project implementation.
-
-### 1.3. The Knowledge Puzzle (`_INDEX.md`)
-- Concepts must be organized into a tiered roadmap:
-    - **Level 1: Anchors:** Foundational business entities.
-    - **Level 2: Engines:** Logic systems and core processes.
-    - **Level 3: Operations:** Complex workflows and specific calculations.
-
-## 2. Ownership and Authority
-
-### 2.1. Strict Agent Authority
-- **The Specialized Tutor:** Only a specialized `agent-concept-tutor` is authorized to generate or revise the content of the `knowledge/` folder.
-- **No Fallback:** If the specialized tutor is unavailable, writing or revising knowledge files is strictly prohibited. The main session must halt the process and inform the user.
+**MANDATORY:** All domain knowledge creation must follow the pedagogical standards, tiered architecture (Anchors/Engines/Operations), and authority rules defined in `~/.gemini/skills/domain-knowledge/RULES.md`.
 
 ---
 
 # Learning Preferences
-When explaining new concepts:
-- Gauge the learner first — adapt depth, vocabulary, and examples to their level and context
-- Start with WHY — if this concept solves a problem or improves something, explain that problem first
-- Build core understanding gently — use easy analogies, visual models, diagrams, or first principles before any technical depth
-- Introduce vocabulary AFTER understanding is established — never front-load jargon
-- Check understanding before advancing — pause to verify before adding complexity
-- Include prerequisites as a bridge — after the core idea lands, mention what helps go deeper
-- End with the 80/20 — highlight the 20% that matters most AND explicitly state what can be safely ignored for now
+
+**MANDATORY:** All teaching and explanations must follow the "Teaching Principles" (Assessment, Motivation, Analogy, 80/20) defined in `agent-concept-tutor.md`.
+
+---
+
+# Jupyter Notebook Rules (Global)
+
+In `.ipynb` markdown cells: wrap dollar amounts in backticks (`` `$10,000` `` not `$10,000`) — MathJax renders bare `$` as LaTeX. Code cells are unaffected.
 
 ---
 
 # Performance & Efficiency Mandates (All Agents)
 
-To minimize latency (Turn Overhead) and maximize context longevity (Token Economy), all agents MUST adhere to these rules:
-
-### 1. Consolidated Execution (The "One-Turn" Rule)
-- ALWAYS combine related shell commands into a single `run_shell_command` call using chain operators (`;` for PowerShell).
-- **Example:** `git add .; git commit -m "fix"; git push` instead of three separate turns.
-- Batch independent read/search operations in parallel within the same turn whenever possible.
-
-### 2. Lazy Loading & Search-First Policy
-- NEVER read a file in its entirety unless it is under 200 lines or critically necessary for a surgical edit.
-- ALWAYS use `grep_search` or `glob` to identify relevant sections of a file before calling `read_file` with specific `start_line` and `end_line`.
-- If a file is over 500 lines, provide a technical justification in the thoughts before reading it.
-
-### 3. Topic Summarization (Checkpointing)
-- Use `update_topic` at the end of every major phase (Research, Execution, Validation) to provide a concise summary.
-- These summaries act as "checkpoints" that allow the model to maintain state without needing to re-read every detailed tool output in the session history.
+To minimize latency and maximize context longevity, all agents MUST prioritize consolidated execution (One-Turn Rule), lazy loading of large files, and regular topic summarization as defined in the global system prompt.
 
 ---
 
@@ -118,12 +102,66 @@ To maintain high performance and context efficiency, the workspace follows a **L
 - **Simple Workflows**: Define procedures directly in `SKILL.md` or a sibling `WORKFLOWS.md` file.
 - **Complex Workflows**: Use a `workflows/` subfolder within the skill directory for variants or multi-file procedures.
 - **Lazy-Loading Rule**: Do NOT load workflow files by default. The `SKILL.md` must act as a router that only calls for the specific workflow file when the task is confirmed.
-    - *Example:* "If [condition]: MANDATORY: Load `~/.gemini/skills/[skill]/workflows/[FILE.md]`"
+    - *Example:* "If [condition]: MANDATORY: Load `C:/Users/dexte/.gemini/skills/[skill]/workflows/[FILE.md]`"
 
 ### 2. Hierarchical Routing
 - **Global Routing**: Use `GEMINI.md` (Global/Workspace) for repo-wide mandates and skill priorities.
 - **JIT (Just-In-Time) Routing**: Use directory-level `GEMINI.md` files for instructions that only apply to a specific part of the codebase.
 - **Skill Routing**: The `activate_skill` tool is the primary router for switching between specialized expert domains.
+
+### 3. Routing Index
+
+**Purpose:** Use this index when routing user requests to agents, workflows, and skills.
+
+For detailed delegation rules, MANDATORY: Load `C:/Users/dexte/.gemini/skills/routing/SKILL.md`.
+
+| Trigger | Route to |
+|---------|----------|
+| "save to notebook", "capture notes", "take notes" | MANDATORY: Load `C:/Users/dexte/.gemini/skills/workflows/notebook-capture-workflow.md` |
+| "check for duplicates", "dedupe notes", "clean up notebook" | MANDATORY: Load `C:/Users/dexte/.gemini/skills/workflows/notebook-dedupe-workflow.md` |
+| "generate docs and save to notebook" | MANDATORY: Load `C:/Users/dexte/.gemini/skills/workflows/docs-to-notebook-workflow.md` |
+| "investigate this issue", "troubleshoot [ticket]" | MANDATORY: Load `C:/Users/dexte/.gemini/skills/workflows/issue-investigation-workflow.md` |
+| "onboard me to [repo]", "understand this codebase" | MANDATORY: Load `C:/Users/dexte/.gemini/skills/workflows/codebase-onboarding-workflow.md` |
+| "reverse engineer [project]", "what does [project] do" | MANDATORY: Load `C:/Users/dexte/.gemini/skills/workflows/codebase-reverse-engineer-workflow.md` |
+| "migrate data from", "client migration" | MANDATORY: Load `C:/Users/dexte/.gemini/skills/workflows/migration-workflow.md` |
+| "clean this data", "profile this dataset" | MANDATORY: Load `C:/Users/dexte/.gemini/skills/workflows/data-cleaning-workflow.md` |
+| "QA my notes", "check notes quality" | MANDATORY: Load `C:/Users/dexte/.gemini/skills/workflows/notebook-review-workflow.md` |
+| "teach me X, save it, AND review it" | MANDATORY: Load `C:/Users/dexte/.gemini/skills/workflows/notebook-creation-workflow.md` |
+| "guide me through building this", "walkthrough mode" | MANDATORY: Load `C:/Users/dexte/.gemini/skills/workflows/guided-walkthrough-workflow.md` |
+| "build [mini tool]", "mini project" | MANDATORY: Load `C:/Users/dexte/.gemini/skills/workflows/mini-project-workflow.md` |
+| "build [feature]", "implement [Y]" | MANDATORY: Load `C:/Users/dexte/.gemini/skills/workflows/feature-development-workflow.md` |
+| "fix bug in [X]", "why is [Y] broken?" | MANDATORY: Load `C:/Users/dexte/.gemini/skills/workflows/bug-fix-workflow.md` |
+| "build with TDD", "test-first development" | MANDATORY: Load `C:/Users/dexte/.gemini/skills/workflows/tdd-workflow.md` |
+| "document [project] with review" | MANDATORY: Load `C:/Users/dexte/.gemini/skills/workflows/documentation-generation-workflow.md` |
+| "clean this data with review", "data pipeline with QA" | MANDATORY: Load `C:/Users/dexte/.gemini/skills/workflows/data-cleaning-reviewed-workflow.md` |
+| "review this code", "code review" | MANDATORY: Load `C:/Users/dexte/.gemini/skills/workflows/code-review-workflow.md` |
+| "audit the architecture", "too much coupling" | MANDATORY: Load `C:/Users/dexte/.gemini/skills/workflows/architecture-audit-workflow.md` |
+| "check Gemini's findings", "validate Gemini docs" | MANDATORY: Load `C:/Users/dexte/.gemini/skills/workflows/gemini-validation-workflow.md` |
+| "teach me", "explain how", "what is" (learning intent) | MANDATORY: Load `C:/Users/dexte/.gemini/agents/agent-concept-tutor.md` |
+| "debug this", "error", "stack trace", "exception" | MANDATORY: Load `C:/Users/dexte/.gemini/agents/agent-debugger.md` |
+| "search for", "google this", "analyze this video" | MANDATORY: Load `C:/Users/dexte/.gemini/skills/gemini-search/SKILL.md` |
+| "notebook" (any mention) | MANDATORY: Load `C:/Users/dexte/.gemini/agents/agent-note-taker.md` |
+| "log time" | MANDATORY: Load `C:/Users/dexte/.gemini/agents/agent-time-tracker.md` |
+| Any mention: "jira", "/jira", "LAE ticket", "NCS ticket", `mcp__jira__*` | **MANDATORY:** Load `C:/Users/dexte/.gemini/skills/jira/SKILL.md` FIRST. If LAE-specific: also load `C:/Users/dexte/.gemini/skills/jira/workflows/LAE-WORKFLOW.md` |
+| "add feature", "define requirements" | MANDATORY: Load `C:/Users/dexte/.gemini/skills/requirements-discovery/SKILL.md`. Route to agent-product-strategist. |
+| "learning strategy for [X]", "how to learn" | MANDATORY: Load `C:/Users/dexte/.gemini/skills/learning-strategy/SKILL.md` |
+| "plan a walkthrough", "teach [X] as a flow" | MANDATORY: Load `C:/Users/dexte/.gemini/skills/walkthrough-planner/SKILL.md` |
+
+## Trigger Pattern Guide
+
+**Literal strings:** User types exactly as shown (e.g., "debug this", "log time")
+
+**Placeholders in brackets:** User substitutes a value for the placeholder
+- `[repo]` = user supplies a repo name (e.g., "understand this codebase" with repo context)
+- `[feature]` = user supplies a feature name (e.g., "build user authentication")
+- `[project]` = user supplies a project name
+- `[X]` = user supplies any value for that slot
+- `(context in parentheses)` = additional context for intent, not typed by user
+
+**Examples:**
+- Trigger: `"teach me"` → literal, user types exactly this
+- Trigger: `"build [feature]"` → user might say "build user authentication" or "build notifications"
+- Trigger: `"fix bug in [X]"` → user might say "fix bug in payment flow" or "fix bug in login"
 
 ---
 
@@ -131,15 +169,10 @@ To maintain high performance and context efficiency, the workspace follows a **L
 
 ## Path Output Rules (All Agents)
 
-**MANDATORY — no exceptions, no excuses.**
-
 - ALWAYS write full absolute paths — never use `~`, `$HOME`, relative paths, or any shorthand
-- ALWAYS expand to the full path e.g. `C:/Users/dpagkaliwangan/...`
+- ALWAYS expand to the full path e.g. `C:/Users/{username}/...` (resolve `{username}` to the actual user on the current machine — typically `dexte`)
 - ALWAYS show the base directory on its own line FIRST, then the full file path on its own line SECOND
 - NEVER inline a path within a sentence — paths always go on their own lines
-- This rule applies every single time a path or file is mentioned, including in follow-up replies
-
-Example: `C:/Users/dpagkaliwangan/.../folder/` on its own line, then `C:/Users/dpagkaliwangan/.../folder/filename.ext` on the next — never inline, never `~` or relative paths.
 
 ## Model Fallback Rule (All Agents)
 
@@ -166,7 +199,7 @@ This convention is defined here once. Individual agent definitions do NOT need t
 ## Bloat Prevention (Global Agents + Skills + GEMINI.md)
 
 Before adding or modifying content in any global agent file, global skill file, or GEMINI.md itself:
-1. Apply the bloat checklist: `C:/Users/dpagkaliwangan/.gemini/skills/quality-guardian/CHECKLISTS.md` → "For Global Agents / Skills / GEMINI.md"
+1. Apply the bloat checklist: `C:/Users/dexte/.gemini/skills/quality-guardian/CHECKLISTS.md` → "For Global Agents / Skills / GEMINI.md"
 2. **SCOPE:** This rule applies ONLY to `GEMINI.md` and any agents/skills that are NOT available in Claude (as tracked in the `claude-bridge` skill).
 3. Project agents (`agent-nla-*`, etc.) are exempt — their specificity is intentional.
 
@@ -178,6 +211,6 @@ Before saving anything to auto-memory, check if it belongs in a skill first:
 - **User behavioral overrides** (e.g. "always do X instead of Y") → memory
 - **Personal/project-specific data** (file locations, project paths) → memory
 - **Reference data used globally across projects** (team lists, account IDs) → relevant skill
-- **Jira-related items specifically**: check `C:/Users/dpagkaliwangan/.gemini/skills/jira/SKILL.md` first
+- **Jira-related items specifically**: check `C:/Users/dexte/.gemini/skills/jira/SKILL.md` first
 
 Saving to memory is faster but the wrong default. Skills are the right home for anything that would apply to anyone using the same system.

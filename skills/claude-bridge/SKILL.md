@@ -1,41 +1,65 @@
 ---
 name: claude-bridge
-description: Verbatim migration of skills and agents from ~/.claude to ~/.gemini with dependency auditing.
+description: 'Verbatim migration of skills and agents from ~/.claude to ~/.gemini with dependency auditing. Triggers on: "migrate from claude", "copy skill from ~/.claude", "bring over my claude agent", "sync with claude", "is this skill in sync with claude".'
 ---
 
-# 📜 Core Rules of Migration
+# Claude Bridge
+
+Verbatim migration protocol for porting assets from Anthropic/Claude environments to Gemini 2026 architecture.
+
+## Trigger Conditions
+- User asks to "migrate", "copy", or "sync" a skill/agent from Claude.
+- User mentions the `~/.claude` directory.
+- User asks if a specific Gemini skill is "in sync" or "up to date" with its Claude counterpart.
+
+## Do NOT trigger for
+- Creating new skills from scratch -> Route to `skill-creator`.
+- Migrating client/business data -> Route to `migration`.
+- General codebase investigation -> Route to `codebase-investigator`.
+
+## Capabilities
+- Perform verbatim (word-for-word) replication of files.
+- Detect and flag technical incompatibilities (XML tags, model names, color metadata).
+- Audit dependencies and prompt for migration of missing linked assets.
+- Convert Claude-style workflow loading to Gemini `MANDATORY: Load [path]` format.
+- Organize migrated workflows into standard `workflows/` subdirectories.
+
+## Never
+- Paraphrase, summarize, or "improve" text during transfer.
+- Modify the source `~/.claude` directory.
+- Commit changes without explicit user approval.
+- Skip dependency validation.
+
+## Migration Protocol
 
 ### 1. The Verbatim Mandate
-*   **Action:** When copying a skill or agent, you must replicate the content **word-for-word and line-for-line**.
-*   **Integrity:** No paraphrasing, summarizing, or "improving" the text during the transfer.
+- Replicate content exactly (word-for-word, line-for-line).
+- Preserve all structural formatting and comments.
 
-### 2. The Conflict & Incompatibility Protocol
-*   **Detection:** If a line or keyword is technically incompatible with the Gemini 2026 CLI architecture, you must detect it. Examples of known incompatibilities:
-    *   Claude-specific XML tags like `<thinking>`.
-    *   `model: sonnet` (or similar Anthropic models) in frontmatter must be replaced with a Gemini equivalent (e.g., `gemini-3-pro`).
-    *   `color: [color]` in frontmatter is Claude-specific and should be removed.
-*   **Reporting:** Flag the specific **Line Number** and the **Exact Word/Phrase** that causes the mismatch.
-*   **Approval:** Present these differences to the user for manual approval before the file is written to the Gemini directory, *unless* they fall under pre-approved exceptions.
+### 2. Conflict & Incompatibility Protocol
+- Detect technically incompatible keywords/tags.
+- **Reporting:** Flag exact **Line Number** and **Phrase**.
+- **Gemini 2026 Mapping:**
+    - Remove: Claude-specific XML tags (e.g., `<thinking>`).
+    - Remove: `color: [color]` from frontmatter.
+    - Replace: `model: sonnet` (or other Anthropic models) with `model: flash` or `model: pro`.
+- **Approval:** Obtain user confirmation for every change before writing.
 
 ### 3. Dependency Auditing
-*   **Cross-Reference:** Scan the source file for references to other Claude skills or agents (e.g., "Use @researcher-skill").
-*   **Validation:** Check if a corresponding skill/agent exists in `~/.gemini`.
-*   **Remediation:** If the dependency is missing, ask the user: *"This relies on [Agent/Skill Name] from Claude. Should we migrate that dependency next?"*
+- Scan source for `@skill` or `@agent` references.
+- Verify existence in `~/.gemini`.
+- If missing, ask: *"Dependency [Name] is missing. Migrate it next?"*
 
-### 4. System Immutability
-*   **Read-Only State:** You are strictly forbidden from modifying existing skills or agents in the `~/.claude` directory unless this specific rule is explicitly rescinded by the user. 
-*   **Section-by-Section Review:** For complex files, break the review into logical Markdown headers or JSON blocks to allow for granular approval.
-
-### 5. Workflow Migration
-*   **Subdirectories:** If a Claude skill contains a `workflows/` directory, migrate it to the corresponding `~/.gemini/skills/[skill]/workflows/` location.
-*   **Lazy-Loading Conversion:** Convert any Claude-style workflow loading instructions into the Gemini lazy-loading format: "If [condition]: MANDATORY: Load [path]".
-*   **Standardization:** Prefer consolidating simple workflows into a single `WORKFLOWS.md` file within the skill folder if they do not require a full directory structure.
+### 4. Workflow Conversion
+- Move `workflows/` to `~/.gemini/skills/[skill]/workflows/`.
+- Convert loading logic: `If [condition]: MANDATORY: Load [path]`.
+- Consolidate simple flows into `WORKFLOWS.md` if possible.
 
 ---
 
 # 📋 Out-of-Sync Registry
 
-This section tracks skills and agents in `~/.gemini` that are missing content or features present in their `~/.claude` counterparts, or are pending migration.
+This section tracks assets in `~/.gemini` that are missing features from their `~/.claude` counterparts.
 
 ### Pending Migration
 - None

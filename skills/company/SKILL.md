@@ -1,6 +1,6 @@
 ---
 name: company
-description: Quick lookup of Nakisa customer accounts, support sponsors, NLA product documentation, and support team activity reports. Use this when you need to find Lead/Backup Support Sponsors for LAE tickets, identify customer regions/platforms, find doc links for specific NLA versions, or generate weekly support team activity reports.
+description: 'Quick lookup of Nakisa customer accounts, support sponsors, NLA product documentation, and support team activity reports. Use this when you need to find Lead/Backup Support Sponsors for LAE tickets, identify customer regions/platforms, find doc links for specific NLA versions, or generate weekly support team activity reports.'
 ---
 
 # Company Skill: Customer & Support Sponsor Lookup

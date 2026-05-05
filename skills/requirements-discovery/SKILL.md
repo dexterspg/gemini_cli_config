@@ -1,9 +1,14 @@
 ---
 name: requirements-discovery
-description: Structured discovery interview conducted BEFORE writing any PRD or requirements. Use this when the user has a feature idea or project but isn't sure what exactly to build — phrases like "where do we even start", "help me understand what we actually need to build", "I want to gather requirements", "let's define the problem first", "before we write the PRD", "I have an idea but I'm not sure what it should do", or kicking off any new feature at the ideation/definition stage. Do NOT trigger when the PRD already exists, the feature is in development, the user wants to review or implement existing requirements, or write a tech spec or test cases.
+description: 'Structured interview conducted BEFORE writing any PRD. Triggers: "where do we start", "I have an idea but not sure what to build".'
 ---
 
 # Requirements Discovery
+
+## Do NOT Trigger For:
+- Bug reports -> use `agent-debugger`.
+- Features for already-defined projects -> use `agent-product-strategist`.
+- Codebase documentation -> use `agent-codebase-archaeologist`.
 
 ## Purpose
 

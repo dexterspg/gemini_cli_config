@@ -1,6 +1,6 @@
 ---
 name: step-visualizer
-description: Reusable ASCII template for teaching step-by-step flows between named actors or components in a monospace terminal. Use when the user asks for step-by-step visualizations, ASCII diagrams, or walkthroughs of complex flows.
+description: 'Reusable ASCII template for teaching step-by-step flows between named actors or components in a monospace terminal. Use when the user asks for step-by-step visualizations, ASCII diagrams, or walkthroughs of complex flows.'
 ---
 
 # Step Visualization Skill

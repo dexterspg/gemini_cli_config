@@ -42,4 +42,3 @@ Anti-pattern → Fix mappings for token efficiency and validation corrections.
 | Ambiguous format instruction ("clean", "readable") | Replace with explicit rules: "JSON, no whitespace" or "markdown with headers" | 5–15 tokens |
 | Unused optional parameters in tool definitions | Remove completely | 2–8 tokens per param |
 | Redundant `required: true` on default-required fields | DELETE — let framework defaults apply | 2–3 tokens per field |
-

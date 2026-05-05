@@ -1,15 +1,13 @@
 {
   "projects": {
-    "c:\\users\\dpagkaliwangan\\git0": "git0",
     "c:\\core2": "core2",
-    "c:\\users\\dpagkaliwangan\\.gemini": "gemini",
     "c:\\core2\\knowledge\\accounting": "accounting",
     "c:\\core2\\knowledge": "knowledge",
-    "c:\\users\\dpagkaliwangan\\appdata\\local\\nvim": "nvim",
     "c:\\workarea\\knowledge": "knowledge-1",
     "c:\\workarea\\knowledge\\core2": "core2-1",
-    "c:\\users\\dpagkaliwangan\\.claude": "claude",
     "c:\\workarea\\learn_ai": "learn-ai",
-    "c:\\workarea": "workarea"
+    "c:\\workarea": "workarea",
+    "c:\\users\\dexte\\.gemini": "gemini",
+    "c:\\users\\dexte\\.claude": "claude"
   }
 }

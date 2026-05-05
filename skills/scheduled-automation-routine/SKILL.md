@@ -1,6 +1,6 @@
 ---
 name: scheduled-automation-routine
-description: Use when setting up a recurring automated pipeline for any project that needs to run on a schedule, self-improve over time, and never block on missing dependencies — especially when the pipeline involves multiple agents, API keys, or external services that may not all be available at once.
+description: 'Use when setting up a recurring automated pipeline for any project that needs to run on a schedule, self-improve over time, and never block on missing dependencies — especially when the pipeline involves multiple agents, API keys, or external services that may not all be available at once.'
 ---
 
 # Scheduled Automation Routine

@@ -1,3 +1,8 @@
+---
+name: quality-guardian
+description: 'Multi-type review checklists for code, docs, designs, and prd-sync. Triggers: "review this", "quality check", "sync check".'
+---
+
 # Quality Guardian Review Checklists
 
 ## Checklist Conventions
@@ -71,3 +76,7 @@ After the base checklist, read the matching type-specific file.
 | General / fallback (unrecognized type) | Apply base checklist only. Note in review output: "No type-specific checklist matched — add a new `CHECKLIST-*.md` if this content type will recur." |
 
 All checklist files are in `~/.gemini/skills/quality-guardian/`.
+
+## Rules
+- Do NOT trigger for raw data files (CSV, Excel, JSON datasets) -> route to `agent-data-analysis-expert`.
+- Do NOT trigger for live system behavior or runtime diagnostics -> route to `agent-debugger`.

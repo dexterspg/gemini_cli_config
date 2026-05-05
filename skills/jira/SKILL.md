@@ -1,32 +1,54 @@
+---
+name: jira
+description: >-
+  Jira field mappings, JQL patterns, ticket workflows, and MCP tool
+  conventions. Use before any Jira operation — creating, searching,
+  updating, or closing tickets. Triggers on: "create a ticket",
+  "search Jira", "close this ticket", "log time", "find tickets for
+  [customer]", "JQL", "LAE ticket", "NCS ticket", "filter by customer",
+  "check assignee", "verify version", "find this contract owner", or any
+  mcp__jira__* tool usage.
+---
+
 # Jira Skill: Field Mappings & Conventions
 
 > **HARD RULE:** ALL Jira operations MUST use `mcp__jira__*` tools ONLY. NEVER use `mcp__plugin_atlassian_atlassian__*` for any Jira operation — no exceptions, no fallbacks. Atlassian plugin = Confluence only.
+
+**Operational Rules:**
+- **NEVER write comments on NCS tickets** — all communication goes through linked LAE ticket (customer-facing only)
+- **NEVER guess transition IDs or status names** — load `~/.gemini/skills/jira/workflows/LAE-WORKFLOW.md` before any status transition
+- **NEVER skip Mandatory Sequence** — re-fetch and verify Assignee fields after every create/transition on LAE tickets
+
+**Do NOT trigger for:**
+- Confluence operations (e.g., writing pages, creating spaces) → Atlassian plugin (`mcp__plugin_atlassian_atlassian__*`), not this skill
+- Content generation from ticket data → pass to `jira-content-creator` subagent
+- Time tracking routing decisions → `agent-time-tracker`
 
 ## NCS → LAE Ticket Workflow
 
 When the user has an NCS ticket in their time tracker and wants to create a corresponding LAE ticket, follow these steps **in order**, pausing for confirmation at each gate:
 
-1. **Fetch** the NCS ticket via `mcp__jira__get_jira_issue`
+1. **Fetch** the NCS ticket via `mcp__jira__get_jira_issue`        
 2. **Present** proposed LAE ticket fields (summary, type, priority, assignee, reporter, versions, customer, description) → **wait for user confirmation**
 3. **Create** LAE ticket via `mcp__jira__create_jira_issue` with ADF description (ADF mention for Dexter)
 4. **Fix** Assignee: Development (`customfield_13004`) immediately after creation
-5. **Add comment** using the same wording as the last similar ticket (re-read from Jira, do not assume) → ADF mention for reporter
+5. **Add comment** using the same wording as the last similar ticket (re-read from Jira, do not assume) → ADF mention for reporter  
 6. **Present** Resolution Path draft (5-question format) + Root Cause → **wait for user confirmation**
 7. **Close** via REST API transition 801 with Root Cause + Resolution Path
 8. **Re-fetch** → verify and fix Assignee + Assignee: Development if overridden
 9. **Log time** in Jira via `mcp__jira__log_work_on_issue` using the time from the tracker entry
-10. **Update time tracker** — replace NCS ticket with new LAE ticket key + set `jira_logged: true`
+10. **Update time tracker** → replace NCS ticket with new LAE ticket key + set `jira_logged: true`
 
 **Rules:**
 - "Yes proceed" at step 2 only triggers step 3 — NOT the full chain
-- Always re-read the comment from the previous similar LAE ticket directly from Jira before reusing it — never rely on memory  
+- Always re-read the comment from the previous similar LAE ticket directly from Jira before reusing it — never rely on memory       
 - Resolution Path confirmation (step 6) is a mandatory separate gate — never skip it
 
 ---
 
 ## Confirmation Before Write Operations
 
-**MANDATORY** for ALL write operations (`create_jira_issue`, `update_jira_issue`, `copy_jira_issue`, `log_work_on_issue`):       
+**MANDATORY** for ALL write operations (`create_jira_issue`, `update_jira_issue`, `copy_jira_issue`, `log_work_on_issue`):
 
 1. Show the user a clear summary of the proposed changes
 2. Wait for explicit confirmation before executing
@@ -52,6 +74,14 @@ When querying or filtering Jira tickets, use these field names instead of common
 |-------|-------------------|-------|---------|
 | customer | `"Customer Commitment"` | Filter tickets by customer/account | `"Customer Commitment" = Fairprice` |
 
+## JQL Syntax Rules
+
+**Critical constraints:**
+- Use `"Customer Commitment" = "value"` (exact match only) — fuzzy search `~` does NOT work with this field
+- Use exact username format: `assignee = "zark.ahmed"` (lowercase, dot-separated) — fuzzy search `~` does NOT work for usernames    
+- Always verify customer name spelling against the field value directly (e.g., "Fairprice" not "Fair Price") — values are case-sensitive
+- If search returns 0 results: widen filter or check spelling by fetching a known ticket belonging to that customer and reading the `Customer Commitment` field value
+
 ## Common JQL Patterns
 
 ### Search by Customer and Assignee
@@ -66,56 +96,30 @@ When querying or filtering Jira tickets, use these field names instead of common
 
 ### Search by Assignee with Customer Filter
 ```jql
-assignee = "Lionel Malonga" AND "Customer Commitment" = Fairprice
+assignee = "Lionel Malonga" AND "Customer Commitment" = Fairprice  
 ```
 
 
 ## MCP Server Configuration
 
-The Jira MCP server is a local Python server at `/c/workarea/jira_manager/`.
+**Architecture:** MCP tools only work in the main session. Subagents (Task tool) have zero MCP access. All `mcp__jira__*` calls must be made by the main session directly. Jira subagents (content-creator, ticket-manager) receive pre-fetched data as input and return formatted output or prepared parameters.
 
-### How it's registered
-MCP servers must be in `~/.gemini.json` under `mcpServers` (NOT `~/.gemini/settings.json` — that key is ignored for MCP loading):
-
-```json
-// ~/.gemini.json
-{
-  "mcpServers": {
-    "jira": {
-      "command": "python",
-      "args": ["C:/workarea/jira_manager/src/jira_mcp_server.py"],
-      "cwd": "C:/workarea/jira_manager"
-    }
-  }
-}
-```
-
-### Credentials
-Loaded automatically from `/c/workarea/jira_manager/.env` (path is hardcoded relative to the script, so `cwd` doesn't affect it).
-
-### Architecture Constraint
-
-**MCP tools only work in the main session.** Subagents (Task tool) have zero MCP access. All `mcp__jira__*` calls must be made by the main session directly. Jira subagents (content-creator, ticket-manager) receive pre-fetched data as input and return formatted output or prepared parameters.
-
-### Troubleshooting
-- **Tools not available in a session:** MCP server failed to connect at startup. Restart Gemini CLI — the server will re-attempt.
-- **Works from `~/.gemini/` but not other dirs:** Previously the config was only in `~/.gemini/settings.json` (wrong) and `~/.gemini/mcp.json` (project-local). Fixed by moving to `~/.gemini.json`.
-
-### Available Tools (main session only)
-`mcp__jira__search_jira_issues`, `mcp__jira__get_jira_issue`, `mcp__jira__create_jira_issue`, `mcp__jira__update_jira_issue`, `mcp__jira__copy_jira_issue`, `mcp__jira__get_custom_fields`, `mcp__jira__log_work_on_issue`, `mcp__jira__get_worklogs_by_date`, `mcp__jira__save_to_file`
+**Available Tools:** `mcp__jira__search_jira_issues`, `mcp__jira__get_jira_issue`, `mcp__jira__create_jira_issue`, `mcp__jira__update_jira_issue`, `mcp__jira__copy_jira_issue`, `mcp__jira__get_custom_fields`, `mcp__jira__log_work_on_issue`, `mcp__jira__get_worklogs_by_date`, `mcp__jira__save_to_file`
 
 ### get_worklogs_by_date Parameters
 
 | Parameter | Type | Default | Description |
 |---|---|---|---|
-| `start_date` | string | required | Start date `YYYY-MM-DD` |
+| `start_date` | string | required | Start date `YYYY-MM-DD` |     
 | `end_date` | string | required | End date `YYYY-MM-DD` |
 | `assignee_names` | list | optional | Filter by person names (e.g. `["Dexter Pagkaliwangan"]`) |
 | `projects` | list | optional | Projects to search (default: `["LAE", "NCS"]`) |
-| `filter_by` | string | `"worklog"` | `"worklog"` — finds tickets where time was logged on those dates; `"updated"` — finds tickets updated on those dates that also have worklogs in the range |
+| `filter_by` | string | `"worklog"` | `"worklog"` — finds tickets where time was logged on those dates; `"updated"` — finds tickets updated on those dates that also have worklogs in the range |   
 
 **Use `filter_by="worklog"` (default) when:** checking who logged time, time tracking reports, verifying Jira worklogs
 **Use `filter_by="updated"` when:** checking tickets updated AND worked on in a date range
+
+For server setup, credentials, and troubleshooting see `~/.gemini/skills/jira/reference/MCP-CONFIG.md`.
 
 
 ## Downloading Attachments
@@ -129,187 +133,35 @@ The Jira MCP server exposes `download_jira_attachments(issue_key, output_dir, fi
 ```
 mcp__jira__download_jira_attachments(
     issue_key="LAE-44173",
-    output_dir=r"C:\Users\dpagkaliwangan\git0\issues\LAE-44173-batch-posting-450-contracts\attachments",
+    output_dir=r"C:\Users\dexte\git0\issues\LAE-44173-batch-posting-450-contracts\attachments",
     filename_filter="logs"   # optional: case-insensitive substring match on filename
 )
 ```
 
-If the MCP tool is unavailable (server not running, or working outside Gemini CLI), fall back to the REST API recipe below.     
-
-### Fallback: REST API (when MCP unavailable)
-
-API **v3** is required (v2 returns 403 on this tenant as of 2026-04 — re-verify if Atlassian deprecates v3). `-L` follows the redirect from the API to S3.
-
-```bash
-source /c/workarea/jira_manager/.env
-
-# List attachment IDs
-curl -s -u "$JIRA_EMAIL:$JIRA_API_TOKEN" \
-  "https://nakisa.atlassian.net/rest/api/3/issue/{TICKET_KEY}?fields=attachment" \
-  | python -c "import json,sys; [print(a['id'], a['filename']) for a in json.load(sys.stdin)['fields']['attachment']]"
-
-# Download by ID
-curl -s -L -u "$JIRA_EMAIL:$JIRA_API_TOKEN" \
-  "https://nakisa.atlassian.net/rest/api/3/attachment/content/{ATTACHMENT_ID}" \
-  -o "attachments/{FILENAME}"
-
-# Verify (HTML-as-zip is the silent failure to catch; file -b alone is not enough)
-verify_attachment() {
-  local f="$1"
-  [ -s "$f" ] || { echo "FAIL: $f is empty"; return 1; }
-  if head -c 200 "$f" 2>/dev/null | grep -qiE '<!doctype html|<html|<head'; then
-    echo "FAIL: $f is HTML (auth/error page saved as expected file)"; return 1
-  fi
-  echo "OK: $f"
-}
-verify_attachment "attachments/{FILENAME}" || exit 1
-```
-
-### Failure categorization (do not blindly retry)
-
-| Symptom | Cause | Action |
-|---|---|---|
-| File is HTML (`<!DOCTYPE html>`) | Auth not loaded — `.env` not sourced or vars empty | Re-source `.env`, verify `$JIRA_EMAIL` and `$JIRA_API_TOKEN` are set, retry once |
-| HTTP 401/403 returned | Token expired or wrong scope | Surface the response to the user; do NOT retry — token rotation is required |
-| HTTP 429 | Rate limited | Wait 30s, retry once |
-| HTTP 5xx | Atlassian transient | Retry with 5s backoff, max 2 attempts |
-| Network error / timeout | Connectivity | Retry once; if still failing, ask user to drop files manually |
-| File is 0 bytes after success exit | Likely missing `-L` (followed redirect not honored) | Re-run with `-L` flag |
-
-If recovery fails after the action above, **stop and surface the failure** — do not guess root cause from missing evidence.    
+If the MCP tool is unavailable, load `~/.gemini/skills/jira/reference/ATTACHMENT-PROTOCOL.md` for the REST API fallback and failure categorization.
 
 ---
 
 ## Known Issues & Workarounds
 
-- ⚠️ Field name "customer" does not exist in this Jira instance; always use `"Customer Commitment"` instead
-- Values like "Fairprice", "Fair Price", "FairPrice" may be used inconsistently in descriptions; use the field value directly    
-- ⚠️ `"Customer Commitment" ~ "value"` (contains) does NOT work — always use `"Customer Commitment" = "value"` (exact match)
-- ⚠️ **User field fuzzy search (`~`) does NOT work** — `assignee ~ "Zark"` returns nothing. Always use exact username format: `assignee = "zark.ahmed"` (lowercase, dot-separated). To find a user's username: (1) use the company skill (`~/.gemini/skills/company/SKILL.md`) to look up their full display name, (2) use `text ~ "Full Name"` to find a probe ticket, (3) confirm the display name from results. Note: `reporter = "Display Name"` does NOT work — only exact account usernames resolve in JQL
-- ✅ **For the current user's own tickets**, always use `assignee = currentUser()` — more reliable than hardcoding a username 
-- ⚠️ Customer names from the company skill's reference data may not reflect the exact spelling or casing stored in Jira. When unsure of the exact value, probe with a known ticket: fetch a ticket you know belongs to that customer and read the `Customer Commitment` field value directly from the result — then use that exact string in JQL
+- Field name "customer" does not exist in this Jira instance; always use `"Customer Commitment"` instead
+- Customer values may be inconsistently spelled in descriptions (e.g., "Fairprice" vs "Fair Price") — use the exact field value     
+- Customer names from the company skill's reference data may not reflect exact Jira spelling — when unsure, probe a known ticket and read the `Customer Commitment` field value directly
+- For the current user's own tickets, always use `assignee = currentUser()` — more reliable than hardcoding a username
+
+## User Lookup Procedure
+
+When you need a Jira username and only have a partial name:        
+1. Look up full display name via company skill (`~/.gemini/skills/company/SKILL.md`)
+2. Probe: `text ~ "Full Display Name"` to find any ticket
+3. Read the `assignee` field from results → use that exact username in JQL
 
 
 ## LAE Workflow Map
 
-> Workflows differ by ticket type. Always check the ticket type before transitioning.
-
-### Status Quick Reference
-
-| Status | Meaning |
-|--------|---------|
-| **L2Sup-NeedInfo** | Waiting on reporter/customer feedback |
-| **Dev-Pending** | Actively being worked on (in development) |
-| **Replied** | Ticket is closed — solution provided and verified |
-
-
-### Support Request Tickets
-
-**Full transition map (from each status):**
-
-| From Status | Transition | ID | To Status |
-|---|---|---|---|
-| L2Sup-Creating | Request Support | 921 | L2Sup-NeedInfo |
-| L2Sup-Creating | Request Development | 781 | Dev-Pending |
-| L2Sup-Creating | Request PS | 911 | PS-Actioned |
-| L2Sup-Creating | On Hold | 511 | On Hold |
-| L2Sup-Creating | Reply | 801 | Replied (CLOSED) |
-| L2Sup-Creating | Reject | 811 | Rejected |
-| L2Sup-NeedInfo | Request Development | 931 | Dev-Pending |
-| L2Sup-NeedInfo | Request Product | 941 | Prod-Pending |
-| L2Sup-NeedInfo | Request SEN | 961 | COE/SEN-Pending |
-| L2Sup-NeedInfo | Request PS | 911 | PS-Actioned |
-| L2Sup-NeedInfo | Request Support | 921 | L2Sup-NeedInfo |
-| L2Sup-NeedInfo | On Hold | 511 | On Hold |
-| L2Sup-NeedInfo | Reply | 801 | Replied (CLOSED) |
-| L2Sup-NeedInfo | Reject | 811 | Rejected |
-| Dev-Pending | Start Development | 101 | Dev-Developing |
-| Dev-Pending | Request Development | 931 | Dev-Pending |
-| Dev-Pending | Request Product | 941 | Prod-Pending |
-| Dev-Pending | Request SEN | 961 | COE/SEN-Pending |
-| Dev-Pending | Request PS | 911 | PS-Actioned |
-| Dev-Pending | Request Support | 921 | L2Sup-NeedInfo |
-| Dev-Pending | On Hold | 511 | On Hold |
-| Dev-Pending | Reply | 801 | Replied (CLOSED) |
-| Dev-Pending | Reject | 811 | Rejected |
-| On Hold | Request Development | 931 | Dev-Pending |
-| On Hold | Request Product | 941 | Prod-Pending |
-| On Hold | Request SEN | 961 | COE/SEN-Pending |
-| On Hold | Request PS | 911 | PS-Actioned |
-| On Hold | Request Support | 921 | L2Sup-NeedInfo |
-| On Hold | Reply | 801 | Replied (CLOSED) |
-| On Hold | Reject | 811 | Rejected |
-
-> Note: Transitions from Dev-Developing, Prod-Pending, COE/SEN-Pending, PS-Actioned not yet mapped — no tickets currently in those statuses.
-
-**Comment + Status Convention (when NOT closing):**
-
-When adding a comment addressed to the reporter (using ADF mention) from Dev-Pending:
-- If asking for more info or waiting on the reporter → transition to **L2Sup-NeedInfo** (ID: 921)
-- If providing an update but no response needed yet → stay in **Dev-Pending**
-- Always use ADF mention node for the reporter — never plain text `@Name`
-- Use the LAE Investigation Comment Template (see above)
-
-**Closure (Reply transition) — required fields:**
-- **Root Cause** (`customfield_12301`) — default `{"id": "11886"}` (Platform / Environment) unless told otherwise
-
-  | ID | Value |
-  |---|---|
-  | 10810 | Product Bug |
-  | 16070 | Product API |
-  | 10806 | Product Configuration |
-  | 16071 | Missing Functionality / Perceived Bug or Gap |
-  | 10809 | Product New Scope Request |
-  | 11906 | Managed Services / Data / Pipelines |
-  | 11886 | Platform / Environment *(default)* |
-  | 16069 | Duplicate |
-  | 13347 | User Error / Knowledge / Training / FAD |
-  | 11394 | Not Reproducible |
-- **Resolution Path** (`customfield_12000`) — ADF format, 5-question content (see "5-Question Analysis Format" below). Writing rules: business-user friendly, concise, no technical jargon, plain language only
-- **KB Article** (`customfield_13264`) — leave empty (not required)
-
-**Closure sequence:**
-1. POST transition 801 with Root Cause + Resolution Path in the same call (via REST API)
-2. Follow Mandatory Sequence below to re-fetch and fix assignee fields
-
-**REST API call:**
-```bash
-curl -s -X POST "https://nakisa.atlassian.net/rest/api/3/issue/LAE-XXXXX/transitions" \
-  -u "$JIRA_EMAIL:$JIRA_API_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{"transition": {"id": "801"}, "fields": {"customfield_12301": {"id": "11886"}, "customfield_12000": { ...ADF... }}}'       
-```
+**MANDATORY:** Before performing any status transition, comment, or ticket closure on an LAE ticket, you MUST load `~/.gemini/skills/jira/workflows/LAE-WORKFLOW.md`. Do NOT guess transition IDs, status names, Root Cause IDs, or closure fields — all are defined in that file. Proceeding without loading it is a workflow error.        
 
 ---
-
-## Merge Request Ticket Workflow
-
-Merge Request tickets (PS-type) are created for upgrade conflict resolution. To close them, you must walk through the full transition chain — there is no direct "Close" shortcut.
-
-**Full workflow to close:**
-PS-Creating → Request Development → Start Development → Merge Completed → Passed/Validated
-
-**Transition IDs:**
-| Transition | ID |
-|---|---|
-| Request Development | 81 |
-| Start Development | 11 |
-| Merge Completed | 21 |
-| Passed/Validated | 31 |
-
-**No Resolution Path or Root Cause required** — PS tickets do not require these fields during any transition.
-
-**After every transition, always verify and fix:**
-- **Assignee** → must be Dexter Pagkaliwangan (`60396b7af032740068924835`)
-- **Assignee: Development** (`customfield_13004`) → must be Dexter Pagkaliwangan (`60396b7af032740068924835`)
-
-Both can be fixed in a single `update_jira_issue` call after the final transition.
-
----
-
-## NCS Ticket Rules
-
-- **NEVER write comments on NCS tickets** — Dexter is not allowed to comment on customer-facing NCS tickets. All communication goes through the linked LAE ticket.
 
 ## LAE Ticket Conventions
 
@@ -318,11 +170,11 @@ Both can be fixed in a single `update_jira_issue` call after the final transitio
 When creating or cloning LAE tickets:
 
 - **Type:** Always default to **Support Request** unless explicitly told otherwise
-- **Assignee:** Always default to **Dexter Pagkaliwangan** (`accountId: 60396b7af032740068924835`) unless explicitly told otherwise
+- **Assignee:** Always default to **Dexter Pagkaliwangan** (`accountId: 60396b7af032740068924835`) unless explicitly told otherwise   
 - **Reporter:** Use the **assignee of the linked NCS ticket** (not the reporter), unless explicitly told otherwise. If no linked NCS ticket exists, fall back to the company skill (`~/.gemini/skills/company/SKILL.md`) to look up the customer's Lead Support Sponsor as reporter
 - **Fix/Affect Versions:** If the source or linked NCS ticket has no versions, find the latest BP (or relevant customer) ticket in NCS or LAE with those fields populated and copy from there
 - **Affect Version (if name rejected):** Look up the version ID via REST API (`/rest/api/3/project/LAE/versions`) and pass it via `custom_fields` as `{"versions": [{"id": "VERSION_ID"}]}`
-- **Mentions in description:** Always use Jira's built-in ADF mention node — never plain text `@Name`. Since `mcp__jira__create_jira_issue` does not support ADF natively, always set the description via REST API (`PUT /rest/api/3/issue/LAE-XXXXX`) after creation
+- **Mentions in description:** Always use Jira's built-in ADF mention node — never plain text `@Name`. Since `mcp__jira__create_jira_issue` does not support ADF natively, always set the description via REST API (`PUT /rest/api/3/issue/LAE-XXXXX`) after creation     
 
 ### LAE Description Template
 
@@ -353,7 +205,7 @@ Use this template when posting investigation findings as a comment on an LAE tic
 ```
 Hi @[Reporter ADF mention],
 
-[Investigation findings and resolution plan in plain business language — what was found, what will be done to fix it. Keep it conversational and clear. Reference specific AG/Contract IDs if known.]
+[Investigation findings and resolution plan in plain business language — what was found, what will be done to fix it. Keep it conversational and clear. Reference specific AG/Contract IDs if known.]  
 
 Regards,
 Dexter
@@ -361,7 +213,7 @@ Dexter
 
 ### Post-Action Field Corrections
 
-Jira automation rules override certain fields after ticket creation and status transitions. **Always verify and fix these fields:**
+Jira automation rules override certain fields after ticket creation and status transitions. **Always verify and fix these fields:**   
 
 #### Assignee: Development (`customfield_13004`)
 
@@ -377,10 +229,10 @@ Jira automation rules override certain fields after ticket creation and status t
 
 #### Mandatory Sequence
 
-After every **create** or **status transition** on an LAE ticket:
+After every **create** or **status transition** on an LAE ticket:  
 
 1. Perform the action (create ticket or transition status)
-2. Re-fetch the ticket: `get_jira_issue(issue_key="LAE-XXXXX")`
+2. Re-fetch the ticket: `get_jira_issue(issue_key="LAE-XXXXX")`    
 3. Check **Assignee** — if not Dexter, update it back
 4. Check **Assignee: Development** (`customfield_13004`) — if not Dexter, update it back
 5. Both fixes can be combined in a single update call
@@ -389,7 +241,7 @@ After every **create** or **status transition** on an LAE ticket:
 
 ### Pre-Creation Validation
 
-Before executing any create/clone operation, present ALL proposed fields in a table: Summary, Type, Priority, Assignee, Reporter, Fix Version, Affect Version. Then follow the global confirmation rules above (description is a separate confirmation gate).     
+Before executing any create/clone operation, present ALL proposed fields in a table: Summary, Type, Priority, Assignee, Reporter, Fix Version, Affect Version. Then follow the global confirmation rules above (description is a separate confirmation gate).
 
 ### Updating LAE Tickets via REST API
 
@@ -406,7 +258,7 @@ Credentials are in `/c/workarea/jira_manager/.env`.
 
 - **Customer Commitment:** `customfield_13981` (array type, e.g., `[{"value": "Zoetis"}]`)
 - **Resolution Path:** `customfield_12000` (rich text, use the 5-question format below)
-- Use `get_custom_fields` to look up other field IDs by name
+- Use `get_custom_fields` to look up other field IDs by name       
 - Fields auto-skipped when cloning (read-only/board-managed): Rank (`customfield_10007`, `customfield_10019`), Sprint (`customfield_10016`)
 
 ## Display Formats
@@ -427,70 +279,7 @@ When displaying results from `mcp__jira__search_jira_issues`, always use the **t
 
 ## Content Templates
 
-### 5-Question Analysis Format
-
-Every ticket analysis and Resolution Path field (`customfield_12000`) **MUST** use exactly these 5 questions. Do NOT rephrase, reorder, or substitute.
-
-**1. What was the issue and its impact?**
-- Problem Definition: what the client was unable to do
-- Specific error or symptom reported
-- Business impact (halted processes, compliance risks, financial reporting delays)
-- Priority classification
-- Affected Users/Processes:
-  - Entities affected (company codes, environments, modules)
-  - System version affected
-  - Technical context (currencies, configurations, etc.)
-
-**2. What caused the issue?**
-- Root Cause stated clearly
-- Technical Explanation:
-  - What configuration or setting was incorrect/missing
-  - How the system behaved as a result (API calls, data flow issues)
-  - Preceding events that triggered the issue (upgrades, migrations)
-  - Technical chain of causation
-
-**3. What troubleshooting steps should be taken?**
-- Step-by-Step Diagnostic Process:
-  - Verification steps (connectivity, permissions)
-  - Logging configurations to enable
-  - Log files and traces to review
-  - Configuration areas to validate
-  - Environment comparison steps
-  - Post-upgrade verification checks
-
-**4. What resolution or workaround was applied?**
-- Resolution stated clearly
-- Implementation Steps:
-  - Navigation path in the application
-  - Specific settings to configure
-  - Values to add or modify
-  - Verification steps after changes
-
-**5. How can this be prevented in the future?**
-- Pre-Upgrade Validation Checklist items
-- Post-Upgrade Testing Protocols
-- Environment gaps (e.g., missing QA environment)
-- Configuration review processes
-
-**Writing guidelines:** Be detailed and technical — incorporate all relevant information from the ticket's description, resolution path, comments, and attached files. Expand on brief entries with appropriate technical detail relevant to the product domain (SAP integration, lease accounting, asset management).
-
-**"Not applicable" rule:** Write all answers from the perspective of application support. If a question (especially #5) asks for something outside application support's control (e.g., preventing a system-level data gap), answer with "Not applicable" and a brief explanation of why, plus a reapplication note if a script or workaround exists for recurrence. Never force an answer that implies support can prevent something they cannot.
-
-### KB Article Format
-
-Generate a structured Knowledge Base article based on support case details. Rules:
-- Do not include specific names of individuals or customers
-- Do not add visual elements, dividers, excess spacing, or new sections
-- Maintain consistent formatting throughout
-- Keep the article concise and scannable
-
-**Required sections in this exact order:**
-- **Title:** Brief, descriptive title of the issue
-- **Issue Overview:** Issue description, error messages, impact on user or system
-- **Cause of the Issue:** Root cause. If unclear or not provided, state that concisely
-- **Troubleshooting Steps Taken:** Numbered list of steps that directly helped identify or resolve the issue. Exclude unproductive actions. Keep each step concise
-- **Resolution & Fix:** Fix or workaround applied, follow-up actions taken
-- **Prevention & Best Practices:** Recommendations if applicable. If not applicable, state "Not applicable."
+See `~/.gemini/skills/jira/templates/CONTENT-TEMPLATES.md` — 5-Question Analysis Format and KB Article Format. Load this file when generating content (5Q analyses, KB articles, resolution paths).    
 
 ## Sub-Skills
 

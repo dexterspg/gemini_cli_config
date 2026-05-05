@@ -1,6 +1,6 @@
 ---
 name: project-estimator
-description: Provide realistic time estimates and delivery timelines for software projects. Estimates assume one human developer doing the work manually.
+description: 'Provide realistic time estimates and delivery timelines for software projects. Estimates assume one human developer doing the work manually.'
 ---
 
 # Project Estimator Skill
