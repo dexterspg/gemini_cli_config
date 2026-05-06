@@ -1,58 +1,52 @@
 ---
 name: domain-knowledge
 description: >
-  Governs the creation of public domain knowledge files.
-  **Reactive:** "document [concept] for the knowledge base", "how does [X] work in the industry".
-  **Proactive:** "discover domain knowledge in [code_path]".
-  Orchestrates discovery, pedagogical planning, and delegated writing for a standalone knowledge base.
-
+  Governs the creation of public domain knowledge files and maps the logical web of topics between them.
+  Triggers on: "discover domain knowledge in [path]", "document [concept]", "map intersections between [A] and [B]".
 ---
 
 # Domain Knowledge Skill (Router)
 
-**Purpose:** Rules for writing public domain knowledge files in `knowledge/<domain>/` folders.
+**Purpose:** Provides the rules and triggers for maintaining a public-domain knowledge base. All detailed procedures are lazy-loaded from separate rule and workflow files.
 
-## Workflows
+## Dependencies
 
-### 1. Reactive Workflow (User-Driven)
-Trigger: explicit request to document a single concept.
+- **agent-concept-tutor** -- Primary writing and review agent.
+- **agent-codebase-archaeologist** -- Targeted codebase scanning and pattern detection.
+- **learning-strategy** -- Generation of pedagogical plans and pacing models.
 
-1. **Research** (Main Session): Raw facts, snippets, links.
-2. **Strategize** (learning-strategy): Structured "Pedagogical Plan".
-3. **Execute** (agent-concept-tutor): Write `.md` file based on plan.
-4. **Review** (agent-concept-tutor): Self-review against plan.
+## Routing Index
 
-### 2. Discovery Workflow (Code-Driven)
-Trigger: `discover domain knowledge in [path]`.
+| Trigger | Action |
+|---|---|
+| \"discover domain knowledge in [path]\" | **MANDATORY:** Load WORKFLOWS.md -> Codebase Discovery Workflow |
+| \"document [concept]\" | **MANDATORY:** Load WORKFLOWS.md -> Reactive Documentation Workflow |
+| \"map intersections between [A] and [B]\" | **MANDATORY:** Load WORKFLOWS.md -> Cross-Domain Mapping Workflow |
+| \"discover intersections in [path]\" | **MANDATORY:** Load WORKFLOWS.md -> Cross-Domain Mapping Workflow |
 
-1. **Scan** (archaeologist): List potential domain keywords.
-2. **Backlog** (Main): Update `_keywords.md` (dedupe/cap).
-3. **Triage** (Main): 3-Question Rule + Cluster proprietary terms.
-4. **Propose** (Main): User approves concept clusters.
-5. **Plan** (learning-strategy): detailed pedagogical plan.
-6. **Execute** (agent-concept-tutor): Final writing and self-review.
-7. **Prune** (Main): Remove cluster from `_keywords.md`.
-8. **Index** (Main): Update `_INDEX.md` Tiers (Stand/Walk/Run).
+## Do NOT trigger for:
+- Project-specific implementation details. Use `documentation-specialist` instead.
+- General teaching of a concept without the goal of creating a permanent knowledge file. Use `agent-concept-tutor` directly.
 
 ## Core Mandates
 
-1. **Lazy Loading:** Read `TEMPLATES.md` for structure, `WORKFLOWS.md` for discovery, `RULES.md` for governance.
-2. **Decision Rule:** Apply 3-Question Rule in `RULES.md` to assign to `knowledge/` vs `documentation/`.
-3. **Reference Rules:** `knowledge/` -> `documentation/` (OK); `documentation/` -> `knowledge/` (Stub only).
+1. **Lazy Loading:** For rules, read RULES.md. For step-by-step procedures, read WORKFLOWS.md. For output formats, read TEMPLATES.md.
+2. **Decision Rule:** Apply 3-Question Rule in RULES.md to assign to `knowledge/` vs `documentation/`.
+3. **Reference Rule:** All technical implementation details and Java paths must live in _metadata.md or _formulas.md, never in the pure concept files.
 
 ## File Locations
 
-- **Rules:** `$HOME/.gemini/skills/domain-knowledge/RULES.md`
-- **Templates:** `$HOME/.gemini/skills/domain-knowledge/TEMPLATES.md`
-- **Workflows:** `$HOME/.gemini/skills/domain-knowledge/WORKFLOWS.md`
+- **Rules:** `C:/Users/dpagkaliwangan/.gemini/skills/domain-knowledge/RULES.md`
+- **Templates:** `C:/Users/dpagkaliwangan/.gemini/skills/domain-knowledge/TEMPLATES.md`
+- **Workflows:** `C:/Users/dpagkaliwangan/.gemini/skills/domain-knowledge/WORKFLOWS.md`
 
 ## Lifecycle & Sync
 
-- **Validation:** Snapshot-date > 12 months = `status: stale`.
-- **Sync:** Decision backlog in `knowledge/_PENDING_SYNC.md`. Sync to notebook is user-triggered.
+- **Validation:** Snapshot-date > 12 months = status: stale.
+- **Sync:** Decision backlog managed in knowledge/_PENDING_SYNC.md. Sync to notebook is user-triggered.
 
 ---
 
 ## Decision Values for _PENDING_SYNC.md
 
-`pending` · `promote` (Option A) · `stub` (Option B) · `keep` (Option C)
+pending | promote (Option A) | stub (Option B) | keep (Option C)

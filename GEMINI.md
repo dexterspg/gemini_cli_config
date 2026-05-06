@@ -62,7 +62,7 @@ This document defines the consolidated organizational standards for Jira operati
 - Attribution: Never include `Co-Authored-By` or attribution lines.
 - Push: Always push to remote after committing.
 - Permission: MANDATORY: Ask for user permission before committing.
-- Restricted Paths: Never commit/push in `C:/Users/dexte/git0/`, `C:/Users/dexte/git/`, `/c/gemini-config/`, or `C:/core2/`.
+- Restricted Paths: Never commit/push in `C:/Users/dexte/git0/`, `C:/Users/dexte/git/`, or `/c/gemini-config/`.
 - Sandbox/Notebook: Describe learning/captured concept; avoid production terms.
   - Good: `Add stage 5: Retrofit2 HTTP clients with factory pattern and service abstraction`
   - Bad: `Migrate to production-accurate Retrofit matching NFS codebase`

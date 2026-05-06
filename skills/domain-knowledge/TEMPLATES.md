@@ -7,113 +7,43 @@
 ## Core Formulas
 
 | Calculation | Formula | Source |
-|---|---|---|
-| *[e.g., ROU Asset Measurement]* | `Liability - Incentives + IDC` | `IFRS 16.24` |
+| :--- | :--- | :--- |
+| [Name] | [Formula] | [Standard/File] |
 
 ### Variable Definitions
 
 | Variable | Definition |
-|---|---|
-| **Liability** | The present value of all future lease payments. |
-| **Incentives** | Payments received from the lessor to encourage signing the lease. |
-| **IDC** | Initial Direct Costs, such as broker commissions. |
+| :--- | :--- |
+| [Var] | [Meaning] |
 
 ## Worked Example
-...
+
+**Scenario:** [Setup]
+**Given:** [Inputs]
+**Calculation:**
+1. [Step 1]
+2. [Step 2]
+**Result:** [Final Value]
 
 ---
+
 ## _formulas.md File Template
+A central repository for all mathematical and logical formulas within a domain.
 
-A central repository for all mathematical and logical formulas within a domain. Each entry must be four lines, followed by a separator.
+| Concept | Calculation | Formula | Source | Link |
+| :--- | :--- | :--- | :--- | :--- |
+| [Concept] | [Name] | `[Formula]` | [JavaClass.java] | [Link to .md] |
 
-# Example:
-# Net Book Value (NBV): Calculates the remaining value of an asset on the company's books.
-# (Net Book Value) = (Gross Book Value) - (Accumulated Depreciation)
-# <path-to-source-file.java>
-# <domain>/<concept-name>.md
-#
-# ---
-#
-# Gain or Loss on Disposal: Determines the accounting gain or loss when an asset is sold or retired.
-# (Gain / Loss) = (Proceeds from Sale) - (Net Book Value)
-# <path-to-source-file.java>, <another-source-file.java>
-# <domain>/<concept-name>.md
-
-# Domain Knowledge Templates
-
-## File Template
-
-# [Concept Name]
-
-**What it is:** [1-2 sentence plain-language definition. No jargon.]
-
-## Key Terms
-
-| Term | Meaning |
-|------|---------|
-| [term] | [plain definition] |
-
-## Core Rules / Key Points
-
-[3-7 bullet points covering the most important things a developer needs to know. Focus on what is non-obvious or commonly misunderstood. Do not reproduce the full standard.]
-
-## External Reference
-
-[Standard name and version] — [Authoritative source link: official standard body, vendor docs, or RFC. One link only.]
+---
 
 ## _metadata.md File Template
 The central index for project context and document status.
 
-```md
-# [Domain Name] Domain - Project Context & Status
-
-This file contains the project-specific context and document status for the public domain knowledge files in this directory.
+| File | Status | Last Updated | Project Context | Implementation Details |
+| :--- | :--- | :--- | :--- | :--- |
+| [filename.md] | [draft|validated] | YYYY-MM-DD | [Why relevant] | [Technical paths/Proprietary terms] |
 
 ---
-
-### `[filename.md]`
-- **Status:** [draft | validated | stale] | **Last Updated:** YYYY-MM-DD
-- **Project Context:** [1-2 sentences explaining why this concept is relevant to the current project/codebase.]
-- **Implementation Details:** [Mention proprietary terms here, e.g., "Implemented in the codebase as 'Agreement Groups' and 'Lease Groups'."] See `[link to documentation/platform/...]`
-```
-
-## Frontmatter Fields Explanation
-
-| Field | Purpose | Accepted Values |
-|---|---|---|
-| `source` | Identifies who wrote the content. | `gemini` (default) or `claude` (if written by Claude fallback) |
-| `status` | Current readiness state of the file. | `draft` (new), `validated` (spot-checked), `stale` (snapshot > 12mo) |
-| `last-updated` | The date the file was last edited. | YYYY-MM-DD |
-| `snapshot-date` | The date the research was performed. | YYYY-MM-DD |
-| `standard-version` | Version of the standard described. | e.g., "IFRS 16 (2023)" or "n/a" |
-
-## _PENDING_SYNC.md Table Format
-
-```md
-# Pending Sync Decisions
-
-| File | Domain | Written | Decision | Notes |
-|------|--------|---------|----------|-------|
-| [path/to/file.md] | [domain] | [YYYY-MM-DD] | pending | — |
-```
-
-## INDEX.md Row Template
-
-```md
-| [filename.md] | [Concept Name] | [YYYY-MM-DD] | draft |
-
-## _keywords.md File Template
-A plain text file containing a list of candidate concepts to document, with their frequency count. The file should be sorted by count in descending order.
-
-**Format:** `keyword: count`
-
-**Example `knowledge/accounting/_keywords.md`:**
-```
-asset-class: 8
-depreciation-area: 5
-lease-classification: 5
-erp-master-data: 2
-```
 
 ## _INDEX.md File Template
 A domain-level index that visualizes the "Knowledge Puzzle" roadmap.
@@ -121,33 +51,56 @@ A domain-level index that visualizes the "Knowledge Puzzle" roadmap.
 ```md
 # [Domain Name] Knowledge Puzzle
 
-Build your knowledge of the [Domain Name] domain by following this tiered progression. Like a puzzle, start with the foundational anchors before moving to the logic engines and complex operations.
+---
+
+## How to Read This Knowledge Base
+[Orient non-technical readers to the Purity Mandate and the 4-level hierarchy.]
 
 ---
 
-## Level 1: Anchors
-*Foundational business entities. Prerequisite: None.*
+## Level 1: Stand (Anchors)
+*Foundational business entities and master data.*
 
 | Concept | File | Summary |
 |---------|------|---------|
-| [Name] | [link.md] | [1-sentence summary] |
+| [Name] | [link.md] | [Summary] |
 
 ---
 
-## Level 2: Engines
-*Logic and determination systems. Prerequisite: Anchors.*
+## Level 2: Walk (Engines)
+*Logic engines, determination systems, and core processes.* 
 
 | Concept | File | Summary |
 |---------|------|---------|
-| [Name] | [link.md] | [1-sentence summary] |
+| [Name] | [link.md] | [Summary] |
 
 ---
 
-## Level 3: Operations
-*Complex accounting and workflows. Prerequisite: Anchors & Engines.*
+## Level 3: Run (Operations)
+*Complex accounting treatments, specific operational workflows, and calculations.*
 
 | Concept | File | Summary |
 |---------|------|---------|
-| [Name] | [link.md] | [1-sentence summary] |
+| [Name] | [link.md] | [Summary] |
 ```
+
+---
+
+## _CONCEPTUAL_THEORIES.md File Template
+```md
+# Cross-Conceptual Theories: The First Principles of the Platform
+
+## The Problem It Solves
+[1-2 sentences on why unifying principles are needed.]
+
+## Analogy
+[A high-level analogy (e.g., The Steering Wheel).]
+
+---
+
+## 1. The Theory of [Name] (The "[Slogan]")
+[Fundamental principle.]
+* **[Domain A] Perspective:** [Manifestation A]
+* **[Domain B] Perspective:** [Manifestation B]
+* **The Unifying Logic:** [The core rule connecting them.]
 ```
