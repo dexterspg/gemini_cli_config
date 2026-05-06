@@ -110,12 +110,20 @@ In multi-domain workspaces, these two files provide the "Glue":
 
 ## 18. Empirical Validation (Code Audit) Mandate
 Before finalizing any Level 2-4 document, a technical audit must be performed.
-- **The Process:** Use `codebase_investigator` to find concrete evidence (Classes/Methods) for the claimed behavior.
+- **The Process:** Use `agent-codebase-archaeologist` to find concrete evidence (Classes/Methods) for the claimed behavior.
 - **The Decision:** If no code exists, the concept must be labeled as "Theoretical." If code is found, the concept is "Validated."
 - **Leak Protection:** Move all technical proof discovered to `_metadata.md`.
 
 ## 19. Reader Experience (Non-Developer Focus)
-The primary audience for `.md` files is non-technical stakeholders (BAs, Consultants).
+The primary audience for `.md` files is non-technical stakeholders (BAs, Consultants). All documentation must be written as a **pure concept document**.
+
 - **Hierarchy:** Always use the 4-level "Puzzle" scaffolding (Anchors, Engines, Operations, Integration).
 - **Traceability Flows:** Level 4 files MUST include "Business Traceability Flows" that trace an event (e.g., Rent Change) through all four levels.
 - **Onboarding:** The root `_INDEX.md` must include a "How to Read This Knowledge Base" section.
+- **Clarity and Tone:**
+    - **Use Analogies:** Explain complex topics with simple, real-world analogies (e.g., "Car Rental vs. Taxi Ride").
+    - **Use Q&A Flow:** Describe decision logic as a series of questions a business person would ask.
+    - **AVOID TECHNICAL JARGON:** Strictly avoid code snippets, Java class names, variable names (e.g., `hasIdentifiedAsset`), and implementation-specific details. These belong in `_metadata.md`.
+
+## 20. Skill Meta-Management
+- **Direct Edit Mandate:** When updating the `domain-knowledge` skill files (`RULES.md`, `WORKFLOWS.md`, etc.) based on a direct user instruction, the `replace` tool may be used without a secondary confirmation prompt. The user's instruction to modify the skill is considered pre-approval.
