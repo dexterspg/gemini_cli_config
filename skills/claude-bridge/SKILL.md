@@ -32,11 +32,15 @@ Verbatim migration protocol for porting assets from Anthropic/Claude environment
 
 ## Migration Protocol
 
-### 1. The Verbatim Mandate
+### 1. The Encoding Mandate (UTF-8 No BOM)
+- ALL files MUST be saved as **UTF-8 without BOM**. 
+- A BOM (Byte Order Mark) will cause YAML frontmatter parsing failures in the Gemini CLI.
+
+### 2. The Verbatim Mandate
 - Replicate content exactly (word-for-word, line-for-line).
 - Preserve all structural formatting and comments.
 
-### 2. Conflict & Incompatibility Protocol
+### 3. Conflict & Incompatibility Protocol
 - Detect technically incompatible keywords/tags.
 - **Reporting:** Flag exact **Line Number** and **Phrase**.
 - **Gemini 2026 Mapping:**
@@ -45,12 +49,12 @@ Verbatim migration protocol for porting assets from Anthropic/Claude environment
     - Replace: `model: sonnet` (or other Anthropic models) with `model: flash` or `model: pro`.
 - **Approval:** Obtain user confirmation for every change before writing.
 
-### 3. Dependency Auditing
+### 4. Dependency Auditing
 - Scan source for `@skill` or `@agent` references.
 - Verify existence in `~/.gemini`.
 - If missing, ask: *"Dependency [Name] is missing. Migrate it next?"*
 
-### 4. Workflow Conversion
+### 5. Workflow Conversion
 - Move `workflows/` to `~/.gemini/skills/[skill]/workflows/`.
 - Convert loading logic: `If [condition]: MANDATORY: Load [path]`.
 - Consolidate simple flows into `WORKFLOWS.md` if possible.
