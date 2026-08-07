@@ -1,0 +1,79 @@
+---
+name: hurl-scripting
+description: Verified conventions and non-obvious gotchas for writing Hurl (.hurl) API test/chain files. MANDATORY: Load before writing or debugging any .hurl file. Triggers on "write a hurl file", "hurl chain", "hurl script", ".hurl", "hurl assertion", "hurl capture", "why is my hurl file failing", "hurl variable not working", "how do I capture a value in hurl".
+---
+
+# Writing Hurl Scripts
+
+Hurl is for **fixed, linear, no-branching sequences of HTTP calls with hard pass/fail assertions** — not for exploration, retries-with-backoff, or conditional logic. The moment a "chain" needs an `if`, it belongs in a general-purpose language (pytest/httpx, etc.) that drives Hurl rather than replacing it. The criterion is branching vs. linear, not "CRUD vs. not".
+
+**Do NOT trigger for:** choosing between Hurl and another tool in the first place (that's tool selection — see the `qa-engineer` skill); jsonpath/HTTP questions unrelated to a `.hurl` file.
+
+## Variables: defaults vs. runtime-only
+
+- `[Options] variable: name=value` sets a variable for **the rest of the file**, not just that entry.
+- **Gotcha:** `[Options] variable:` silently **overwrites** a same-named variable from an earlier block or from `--variable` — no error, no warning; the last declaration wins for everything after it. Give every distinct value its own name (`service_a_host`, `service_b_host`, never a shared `host`), or a request meant for service A can silently hit service B.
+- Never give a secret (API key) or a not-yet-known value an in-file default. Leave it undeclared so it must be supplied via `--variable name=value` at runtime — Hurl errors clearly if it's missing, rather than silently running with a wrong/empty value.
+- **Prefer `--secret NAME=VALUE` / `--secrets-file <file>` over a plain `--variable` for real secrets** — same `{{name}}` templating, but Hurl redacts the value (prints `***`) in `--verbose` traces, including the reconstructed `curl_cmd` line. This gets you the "don't retype the key every run" convenience of a variables file without ever putting the secret in the tracked `.hurl` file.
+  - **Gotcha, verified:** the `--verbose` redaction does NOT extend to `--json` output — a value passed via `--secret` still appears in **plaintext** in `--json`'s `request.headers[].value` and `curl_cmd` fields. Don't assume `--secret` makes it safe to log, save, or share `--json` output; it only protects the human-readable trace.
+- **Narrow exception (hardcode the literal key):** only on an explicit, informed, per-repo decision by the repo owner (e.g. "private, never shared") — never a default, inference, or silent application. Requires a technical guard that actually blocks the push — gitignore the `.hurl` files, or a pre-commit hook; a header comment states intent but does nothing to stop `git add -A`. A committed key lives in git history forever, even after deletion — that permanence is the accepted cost, and the guard is what keeps "won't be shared" true rather than merely asserted.
+- **Bulk external inputs via a file:** `--variables-file <file>` loads many vars at once from a plain text file (any extension) — one `name=value` per line; `#` comment lines and unquoted spaces in values both work (verified). **Values are type-inferred, so leading zeros are silently lost** — a bare `code=0001` becomes the number `1`; quote it (`code="0001"`) to keep it a string (verified). This matters for any zero-padded identifier: the request goes out with a value that doesn't exist, and the error you get back is usually about the *entity* not being found, not about the coercion. Passing `--variables-file` more than once is allowed and the files merge (verified) — useful for layering shared defaults under per-run overrides. `--secrets-file <file>` is the same format but its values are redacted like `--secret`. Split by sensitivity: host/ids/dates → `--variables-file`; the key → `--secrets-file` (never a plain `--variables-file` for a secret — those values aren't redacted). Precedence gotcha still applies: an in-file `[Options] variable:` of the same name silently overrides a `--variables-file` value, so to actually consume file-supplied vars, do NOT also declare them in the `.hurl`.
+
+## Organization: folder layout & doc-vs-reality drift
+
+Applies once a suite grows past a couple of ad hoc files — organize by this convention rather than improvising a new one per repo.
+
+- **`crud/` = one subfolder per API resource** (e.g. `crud/contracts/`, `crud/leases/`), each holding standalone single-call scripts. Every call that appears inside a flow should ALSO exist here as a decomposed, independently runnable script — lets one call be debugged in isolation without running the whole chain.
+- **`flows/` = one subfolder per distinct multi-step chain** (e.g. `flows/lease-approve-and-finalize/`), holding that flow's full linear `.hurl` file. A flow's steps deliberately live in both places — the `flows/` copy exercises the call as part of the sequence (chained captures); the `crud/` copy exercises the same call standalone. This is intentional duplication, not a stale fork.
+- **`DISCREPANCIES.md`** — when the real API (verified against live data, not assumed) diverges from what an official API-reference doc claims — wrong filter-field name, wrong HTTP verb, wrong `Content-Type`, an undocumented state gate — record it in a `DISCREPANCIES.md` inside that resource's `crud/<resource>/` folder, not as a comment buried in one script. Include: the doc source (URL + use-case/section id), what the doc claims, what's actually true and how/when it was verified, and the guard the script uses to fail loudly instead of silently misbehaving (e.g. an assert on a count/id that would otherwise be wrong).
+- **`USE_CASES.md`** — one per product (e.g. `nfs/USE_CASES.md`, `nre/USE_CASES.md`, `fos/USE_CASES.md`), never one shared suite-wide file — use cases are product-specific. Indexes which flow (+ its `crud/` scripts) implements which use case from that product's official API reference docs. Scope is deliberately narrow: only include an entry when there's a real, linkable use-case doc. A flow with no such doc (ported from elsewhere, or built through iterative discovery against the real API) gets no entry — there's nothing to map it to. Update it whenever a new doc-sourced flow is built.
+- **`RESTRICTIONS.md`** (optional, per `crud/<resource>/` folder) — distinct from `DISCREPANCIES.md`: this isn't about a doc being wrong, it's about *why a script fails when you actually run it* — state gates, permission requirements, preconditions — regardless of whether any doc claimed otherwise. Add one when a resource has real, observed validation/execution constraints worth explaining once instead of rediscovering per script (e.g. "PATCH fails with 400 unless the parent entity's state is X"); skip it for a resource with no such constraints.
+- **Proactively suggest capturing findings as they happen.** If answering a mid-session question — not just building a script — surfaces something belonging in a file above, suggest creating or updating it right then, while the evidence (live probe, source snippet, exact error string) is still fresh.
+
+## Chaining across requests
+
+- `[Captures]` only carries variables forward **within a single file, in a single invocation**. Two separate `.hurl` files run as two separate CLI calls do NOT share captured state — each run gets a fresh variable slate. If step B needs a value captured in step A, both steps must live in the same file.
+- Before writing an assertion or capture path, verify the actual response shape — don't assume the payload sits at the document root. Some APIs wrap the real payload one level down (e.g. under a literal key like `"object"` or `"data"`); others don't. `jsonpath` doesn't know about "envelopes" as a concept — it only walks whatever keys actually exist. Read one real captured response before writing the path.
+- **A capture whose jsonpath matches nothing is a HARD FAILURE, not a null.** The whole entry fails with `query didn't return any result`. This bites on **optional** response fields: the same endpoint can return an object with the field on one record and without it on another, so a script that works on record A dies on record B. Capture only fields present on *every* record you'll target; read genuinely-optional ones out of the saved `[Options] output:` file instead, or give the optional case its own dedicated `.hurl`.
+- **Gotcha, verified (hurl 8.0.1): `[Captures]` are evaluated BEFORE `[Asserts]`, regardless of the order they appear in the file.** So you **cannot** guard a capture with an assert in the same entry — a `jsonpath "$.x" exists` placed above the captures never fires; the capture's `No query result` error surfaces first and blames the capture line. (`exists` does work correctly when there is no failing capture in the same entry — tested both ways.) Don't write such a guard believing it produces a friendlier error; it's dead code. To get a readable failure, split the check into its own entry, or accept the raw capture error and document the expected failure mode in the header.
+
+## jsonpath in Hurl — non-obvious behavior
+
+`[*]` wildcards over every array element (returns a **list**); `[?(@.field=='x')]` filters to matching elements only, `@` meaning "the element currently being tested."
+
+- **Gotcha:** `count(...)` on top of a filter expression **errors** rather than cleanly returning `0`/`1` — it fails one way when the filter collapses to a single match and a different way on zero matches. Don't use `count` to check filter-match existence.
+- **Reliable existence/membership check instead:** pull the full list with a wildcard, then use `contains`: `jsonpath "$.items[*].someField" contains "{{value}}"`. Works cleanly whether there are 0, 1, or many matches.
+- `contains` behaves differently by the left side's type: against a **list**, it checks membership; against a **string**, it checks substring match. Know which one applies before relying on it.
+- A `[Captures]` filter matching **exactly one** element resolves cleanly to that scalar — no collapsing problem there, unlike `count`.
+- A `[Captures]` filter matching **multiple** elements silently returns a **list**, not an error. Used inline in a scalar field (`"id": {{captured_id}}`) OR as an array body (`"idsIn": {{captured_list}}`), Hurl fails loudly at render time (`Unrenderable expression ... value [a,b,c] can not be rendered`) naming the value — never broken JSON. `{{name}}` substitution is scalar-only, even when the captured value is a list. For the scalar case, verify uniqueness of the field you're filtering on. For a real array body, there is no single-file way to feed "N ids from step 1" into step 2 — build the body with an external script (Python/bash reading step 1's `[Options] output:` JSON) and source it via `file,path;` (see Output/debugging), the same general-purpose-language escape the top-of-skill branching boundary already implies.
+
+## Output and debugging — pick the right one, don't default to the noisiest
+
+| Need | Use |
+|---|---|
+| CI-gate, pass/fail only | `--test` (never shows response body or captures) |
+| See exactly one response body, nothing else | plain `hurl file.hurl` (no flags) — prints only the last response's body by default |
+| Save one specific request's response body to disk, isolated from others in the same file | `[Options] output: <file>` on that request — but ONLY written if that entry fully succeeds; see the two gotchas below |
+| Full request/response trace incl. captured variable names+values | `-v` / `--verbose` — note captures print to **stderr**, so isolate one value with `2>&1 1>/dev/null \| grep <name>` |
+| Structured, scriptable output (multiple named fields, programmatic use) | `--json` — top level is an object with an `entries` array, not a bare list; each entry has its own `captures` array |
+
+Don't reach for `--verbose` or `--json | jq/python` by default — they're for active debugging. `--test` is the everyday default once a chain is working.
+
+**Gotcha, verified (hurl 8.0.1) — `output:` is NOT written when the entry fails.** If the `HTTP <status>` assert fails OR any `[Captures]` jsonpath finds nothing, no output file is produced — in `--test` AND plain mode alike (tested across all 6 combinations). Worse, neither `--verbose` nor `--json` prints the response body either, so **a failing request's body is unobtainable through Hurl**. To see it, replay the request with `curl`. This bites hardest exactly when you need the body most: debugging an unexpected 4xx/5xx. Corollary for mutating requests — a write can succeed server-side while you're left with no record of what came back.
+
+**Gotcha, verified:** Hurl does **not** create the `output:` directory. A missing directory fails with `can not be written (... os error 3)` — and that failure happens *after* the request has already been sent, so for a mutating call the change lands and the response is lost. Create output directories up front (and in a repo, commit a `.gitkeep` so a fresh clone's first run doesn't hit this).
+
+**Gotcha, verified:** no mode reveals which file an `[Options] output:` line wrote to — not `--test`, plain output, or `--json`. (`--json` top-level keys: `cookies`/`entries`/`filename`/`success`/`time`; per-entry: `asserts`/`calls`/`captures`/`curl_cmd`/`index`/`line`/`time`. `filename` is the `.hurl` source, not the output destination — no output-file field exists.) To know where a response landed, read the source's own `output:` line.
+
+## Safety pattern for any mutating request (PUT/PATCH/POST that changes real data)
+
+Capture the response **before** the mutation and **after** it, each to its own file via `[Options] output:`. This is not an automatic rollback — Hurl has no undo. It's an audit trail: if the update turns out wrong, a human reads the "before" file's original values and manually re-issues an update with those values to revert. Treat it as making recovery *possible and reviewable*, not as a safety net that fires itself.
+
+**`HTTP 200` alone proves nothing about a mutation.** Many APIs return 200 for a no-op, a partially-applied change, or a silently-ignored field — a green `--test` run can mean "the server accepted the request," not "the field actually changed." Always add an `[Asserts]` jsonpath check on the specific field the mutation was supposed to change (read it back from the same response, or from a follow-up GET), not just the status code.
+
+**Worse, verified: even the response BODY can echo a value that never persisted.** Some frameworks build the PATCH/PUT response from the client's own patched-in-memory representation rather than a fresh re-fetch from the database — so the response shows exactly the value you submitted regardless of whether the underlying save actually wrote it. Confirmed real case: a PATCH returned `200` with the response body showing the requested new value; an independent `GET` made afterward, in a **separate** request, showed the old value unchanged — the write never persisted. An `[Asserts]` check against *that same response* would have passed anyway, since it was only checking the echo. The only reliable confirmation is a **follow-up GET in a separate request** — never trust the mutating call's own response body as proof, no matter how specific the asserted field.
+
+## Notes
+
+- Error-message strings quoted above (e.g. for `count` on a filter, or the unrenderable-list message) are observed behavior, not a stable public contract — Hurl's exact wording can shift between versions. Treat the *behavior* (fails loudly, fails differently for zero vs. multi-match) as reliable; treat the exact string as illustrative.
+- This skill covers Hurl syntax/tool behavior only. General API-testing discipline (see the shape/mutation notes above) applies regardless of tool.

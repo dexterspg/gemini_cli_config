@@ -106,6 +106,7 @@ To maintain high performance and context efficiency, the workspace follows a **L
 
 ### 2. Hierarchical Routing
 - **Global Routing**: Use `GEMINI.md` (Global/Workspace) for repo-wide mandates and skill priorities.
+- **Project-Specific Configuration**: For any project, ALWAYS look for and read any project-specific/local `.claude` config (or `.gemini` config) if available.
 - **JIT (Just-In-Time) Routing**: Use directory-level `GEMINI.md` files for instructions that only apply to a specific part of the codebase.
 - **Skill Routing**: The `activate_skill` tool is the primary router for switching between specialized expert domains.
 
@@ -146,6 +147,10 @@ For detailed delegation rules, MANDATORY: Load `C:/Users/dexte/.gemini/skills/ro
 | "add feature", "define requirements" | MANDATORY: Load `C:/Users/dexte/.gemini/skills/requirements-discovery/SKILL.md`. Route to agent-product-strategist. |
 | "learning strategy for [X]", "how to learn" | MANDATORY: Load `C:/Users/dexte/.gemini/skills/learning-strategy/SKILL.md` |
 | "plan a walkthrough", "teach [X] as a flow" | MANDATORY: Load `C:/Users/dexte/.gemini/skills/walkthrough-planner/SKILL.md` |
+| "mentor me through this", "teach me as we go", "I have a PRD and want to learn by building" | MANDATORY: Load `C:/Users/dexte/.gemini/agents/agent-mentor.md` |
+| "log a decision", "ADR", "gotcha", "dead end", "update runbook", "engineering journal" | MANDATORY: Load `C:/Users/dexte/.gemini/skills/engineering-journal/SKILL.md` |
+| "document [product] API", "add [resource] to api reference", "map [endpoint] to internal code", "reconcile API docs", "check API drift", "write API docs for [resource]" | MANDATORY: Load `C:/Users/dexte/.gemini/skills/api-reference/SKILL.md` + project supplement if present |
+| "write hurl", "create hurl script", "hurl test", "hurl suite" | MANDATORY: Load `C:/Users/dexte/.gemini/skills/hurl-scripting/SKILL.md` + project supplement if present |
 
 ## Trigger Pattern Guide
 
