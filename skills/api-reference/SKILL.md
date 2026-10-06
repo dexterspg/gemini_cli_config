@@ -25,7 +25,7 @@ project supplement — see Project Configuration below.
 
 ## Project Configuration (MANDATORY — load before any workflow)
 
-Check for a project-level supplement at `{project-root}/.claude/skills/api-reference/SKILL.md`.
+Check for a project-level supplement at `{project-root}/.gemini/skills/api-reference/SKILL.md`.
 If it exists, load it first — it defines:
 - External docs base URL
 - Product names and folder mapping
@@ -44,9 +44,9 @@ If no supplement exists, ask the user for the external docs URL and product name
 
 ## Orchestration Model
 
-1. **Claude (Main Session):** Fetches external docs via WebFetch, orchestrates, writes the final file.
+1. **Antigravity (Main Session):** Fetches external docs via WebFetch, orchestrates, writes the final file.
 2. **agent-codebase-archaeologist:** Traces the endpoint to its internal controller and service.
-3. **Claude (Main Session):** Resolves applicable `knowledge/` concept and applies the link contract.
+3. **Antigravity (Main Session):** Resolves applicable `knowledge/` concept and applies the link contract.
 
 ## Folder Structure
 

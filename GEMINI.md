@@ -61,6 +61,7 @@ This document defines the consolidated organizational standards for Jira operati
 - Format: Single sentence, imperative, plain English.
 - Attribution: Never include `Co-Authored-By` or attribution lines.
 - Push: Always push to remote after committing.
+- Security: Never commit or push files containing security risks such as cleartext API keys, passwords, or secrets.
 - Permission: MANDATORY: Ask for user permission before committing.
 - Restricted Paths: Never commit/push in `C:/Users/dexte/git0/`, `C:/Users/dexte/git/`, or `/c/gemini-config/`.
 - Sandbox/Notebook: Describe learning/captured concept; avoid production terms.
