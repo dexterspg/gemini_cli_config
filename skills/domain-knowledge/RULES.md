@@ -129,13 +129,15 @@ The primary audience for `.md` files is non-technical stakeholders (BAs, Consult
 - **Direct Edit Mandate:** When updating the `domain-knowledge` skill files (`RULES.md`, `WORKFLOWS.md`, etc.) based on a direct user instruction, the `replace` tool may be used without a secondary confirmation prompt. The user's instruction to modify the skill is considered pre-approval.
 
 
-## 21. Source of Truth & Discrepancy Tracking
-- **Code over Concept:** For business logic, rely on the provided workspace source code as the ultimate truth, rather than theoretical assumptions.
+## 21. Source of Truth, Conflict Resolution & Verification Lifecycle
+- **Code vs. Term Conflict Rule:** "Code wins for what the system does. The standard wins for what the term means." Any disagreement becomes content for Part 4 and never blocks the lesson.
 - **Ambiguous Field Resolution:** If a field's business meaning is ambiguous in the code (e.g., `leaseGroup`), teach the standard concept from public domain sources, not your own inference.
 - **Verification Ledger Tiers:** All technical claims must be classified into one of three tiers and tracked exclusively in the Verification Ledger (Part 4 of a lesson):
   1. `code-confirmed`: Direct evidence found in the codebase.
   2. `domain-standard`: Taught based on public standard/documentation, exact code mapping unverified.
   3. `unverified`: Inference or intuition awaiting confirmation.
+- **Ledger Lifecycle & Routing:** Unverified claims are not ignored. Any open `unverified` item is routed to the specific curriculum node that owns the answer. For instance, whether contracts inherit from the Master Agreement is answered at Node 2, so the item is placed on Node 2's "to resolve" list in the curriculum index.
+- **Promotion Path:** A resolved `code-confirmed` fact about proprietary jargon goes to `_metadata.md`, using the existing Bridge pattern. A new public concept goes to the keyword backlog.
 - **Discrepancy Tracking:** If a domain lesson conflicts with the actual codebase implementation, document it explicitly under the "Source Discrepancies" section.
 
 ## 22. Generic Persona Prohibitions
@@ -149,3 +151,15 @@ The primary audience for `.md` files is non-technical stakeholders (BAs, Consult
 - **Mandatory Non-Expert Assumption:** Assume the learner is NOT a domain expert. Before presenting specialized mechanics (e.g., posting keys, DB schemas, load balancers), ground the topic in plain-English everyday analogies.
 - **Reusable Across All Domains:** This non-expert pedagogical bridge applies permanently across all current and future domain learning tracks to guarantee that learners can build deep mental models without getting blocked by domain jargon.
 
+
+## 25. Domain Pack & Persona Selection (The Review Gate)
+To ensure that a domain lesson is factually accurate, it must pass a pre-publication Review Gate handled by a domain-specific persona. This persona is NOT an LLM prompted to "act as an expert"; it is a parameterized validator strictly bounded by provided sources.
+
+- **The Algorithm:** Node -> Knowledge Concept -> Domain Folder -> Domain Pack -> Persona Card.
+- **Sourcing:** The reviewer must cite a `knowledge/<domain>/` concept file or an authoritative link. No citation means no finding.
+- **Source Tiers:** Reviewers must report the tier of their source:
+  1. Official standard text or vendor docs.
+  2. Knowledge file written with live research.
+  3. Knowledge file with the Claude fallback banner. (Tier 3 downgrades findings to `unverified`).
+- **Missing Pack Fallback:** If a node has no concept file, run the `_PENDING_SYNC` research flow first. If no sources exist, the reviewer runs in limited mode and every domain claim is marked `unverified`.
+- **Note on `learn/` Lessons:** The Purity rule (Rule 16) applies to `knowledge/` concept files. Lessons in the `learn/` directory are "bridged lessons" that deliberately contain Java codebase reality in Part 4.
