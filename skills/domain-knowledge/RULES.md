@@ -132,10 +132,11 @@ The primary audience for `.md` files is non-technical stakeholders (BAs, Consult
 ## 21. Source of Truth, Conflict Resolution & Verification Lifecycle
 - **Code vs. Term Conflict Rule:** "Code wins for what the system does. The standard wins for what the term means." Any disagreement becomes content for Part 4 and never blocks the lesson.
 - **Ambiguous Field Resolution:** If a field's business meaning is ambiguous in the code (e.g., `leaseGroup`), teach the standard concept from public domain sources, not your own inference.
-- **Verification Ledger Tiers:** All technical claims must be classified into one of three tiers and tracked exclusively in the Verification Ledger (Part 4 of a lesson):
+- **Verification Ledger Tiers:** All technical claims must be classified into one of four tiers and tracked exclusively in the Verification Ledger (Part 4 of a lesson):
   1. `code-confirmed`: Direct evidence found in the codebase.
-  2. `domain-standard`: Taught based on public standard/documentation, exact code mapping unverified.
-  3. `unverified`: Inference or intuition awaiting confirmation.
+  2. `runtime-observed`: Confirmed via live API call, execution trace, or sandbox lab. Must record the environment and date, as behavior can differ by tenant.
+  3. `domain-standard`: Taught based on public standard/documentation, exact code mapping unverified.
+  4. `unverified`: Inference or intuition awaiting confirmation.
 - **Ledger Lifecycle & Routing:** Unverified claims are not ignored. Any open `unverified` item is routed to the specific curriculum node that owns the answer. For instance, whether contracts inherit from the Master Agreement is answered at Node 2, so the item is placed on Node 2's "to resolve" list in the curriculum index.
 - **Promotion Path:** A resolved `code-confirmed` fact about proprietary jargon goes to `_metadata.md`, using the existing Bridge pattern. A new public concept goes to the keyword backlog.
 - **Discrepancy Tracking:** If a domain lesson conflicts with the actual codebase implementation, document it explicitly under the "Source Discrepancies" section.

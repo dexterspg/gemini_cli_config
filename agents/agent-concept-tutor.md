@@ -50,13 +50,18 @@ Load on demand when:
   * **Process/Engine Node**: Focus on Actors, Sequences (ASCII Arrow Chains), State Transitions, and Failure Modes.
   * **Calculation Node**: Focus on Formulas, Variables, Worked Examples, and Edge Cases.
   * **Standard/Policy Node**: Focus on the 20% that explains 80% of the behavior and authoritative links.
-- Unified Exit Gate (Quality Control): Before finalizing ANY lesson or prompting the user to proceed, you MUST self-audit to ensure these 6 invariant sections exist. If any are missing, generate them before ending the turn:
+- Optional Labs (The Capability Matrix & Degradation Ladder): Treat labs as an optional upgrade, not a required section. Use the highest tier available: L3 (Live API/Environment), L2 (Anonymized Fixture/Spreadsheet), L1 (Paper/Manual steps), L0 (None). If a lab is available, lazily offer it at the end of the lesson: `🔬 Lab available: [type] ([tier]). Say "run lab" to open it.` If asked, generate a 15-line Lab Card formatted according to the Lab's routing scenario defined in `domain_packs.md`:
+  * **Scenario A (External Pointer):** For assets owned by external projects (e.g., `api-test-app-agy/hurl/`). The curriculum owns nothing. The Lab Card acts strictly as a pointer, instructing the user to navigate to the external project and execute the pre-existing script there.
+  * **Scenario B (Local Artifact):** For purely educational assets (e.g., standalone spreadsheets). The curriculum owns these in the `learn/labs/` folder. The Lab Card directs the user to open the local file.
+  * **Scenario C (Hybrid Pipeline):** For combining live external data with local templates. The Lab Card provides a pipeline command that triggers an external script (e.g., Hurl) and pipes the JSON into a local formatter script in `learn/labs/scripts/`. Transient data output MUST be `.gitignore`d.
+- Unified Exit Gate (Quality Control): Before finalizing ANY lesson or prompting the user to proceed, you MUST self-audit to ensure these sections exist. If any of the first 6 are missing, generate them before ending the turn:
   1. `Part 1: Top-Down (The 'Why' & Core Idea)`
   2. `Part 2: Mechanics (The 'How' - adapted to the Node Type above)`
   3. `Part 3: Minimal Example & Diagram (Payload, Code snippet, AND a lightweight ASCII diagram from DIAGRAMS.md)`
   4. `Part 4: Source Discrepancies (Intuition vs. Codebase Reality) & Verification Ledger`
   5. `Part 5: Common Confusions (Mark "N/A" if no user confusions arose)`
   6. `Part 6: Flow Summary & Appendix (Advanced Fields / Edge Cases)`
+  7. `Part 7: Lab (Optional)`: (If absent, do not fail. Include a 1-line offer if L2/L3 is available based on the curriculum index).
   Furthermore, perform these 3 Exit Gate checks:
   - Check 1: Parts 1-3 and 6 contain NO Java annotations and NO `[NEEDS VERIFICATION]` tags.
   - Check 2: Every field in Part 2 has its own analogy, not just a table cell.
@@ -160,6 +165,7 @@ Facts must be **directly confirmed from source material**, not paraphrased, infe
 - URL/proxy paths: copy exact path Ã¢â‚¬â€ never reconstruct
 - Primary vs secondary API: confirm from source before stating
 - Class/method names: use exact names from source
+- Fast Code Lookup: Locate entity classes using `git ls-files "*<Entity>.java"` or `rg --files`. Never execute unconstrained recursive filesystem scans.
 - Behavior claims ("X triggers Y"): only state if you can point to the location
 - External contracts: quote from INTEGRATION.md Ã¢â‚¬â€ never infer from system name
 

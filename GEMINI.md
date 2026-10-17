@@ -93,6 +93,11 @@ In `.ipynb` markdown cells: wrap dollar amounts in backticks (`` `$10,000` `` no
 
 To minimize latency and maximize context longevity, all agents MUST prioritize consolidated execution (One-Turn Rule), lazy loading of large files, and regular topic summarization as defined in the global system prompt.
 
+- **Fast File Search Mandate:** NEVER run `Get-ChildItem -Recurse` across drives or monorepos.
+  * Inside Git repositories (`C:/core2`, `api-test-app`): ALWAYS use `git ls-files "*<pattern>*"` (0.2s lookup from in-memory index).
+  * Outside Git repositories (`C:/workarea/`): ALWAYS use `rg --files -g "*<pattern>*" <path>` (multi-threaded ripgrep).
+  * Fall back to `cmd /c dir "<path>" /b /s "*<pattern>*"` only if neither is available.
+
 ---
 
 # Workflow & Routing Architecture
