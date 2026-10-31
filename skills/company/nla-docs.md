@@ -1,6 +1,6 @@
 # NLA Product Documentation
 
-Official Nakisa Lease Administration/Accounting documentation by release.
+Official Nakisa Lease Administration/Accounting documentation by release. Links here carry no status: treat them as `LISTED` per `product-docs.md`.
 
 ## URL Patterns
 
@@ -123,19 +123,19 @@ Encoding rules: spaces → `%20`, dots → `%2E`, hyphens → `%2D`, parentheses
 - [2025.R4](https://nakisainc.sharepoint.com/sites/Content/Public/Forms/AllItems.aspx?id=%2Fsites%2FContent%2FPublic%2FFinance%20Product%20Documentation%2FIWMS%20Portfolio%202025%2ER4%20Product%20Documentation&viewid=6dd29729%2D0019%2D4850%2D9cbc%2D639463ad81f8&p=true)
 
 **NFS (Nakisa Financial Suite)**
-- [2022.R3](https://nakisainc.sharepoint.com/sites/Content/Public/Forms/AllItems.aspx?id=%2Fsites%2FContent%2FPublic%2FFinance%20Product%20Documentation%2FNFS%202022%2ER3%20Product%20Documentation&viewid=6dd29729%2D0019%2D4850%2D9cbc%2D639463ad81f8&p=true)  
-- [2023.R2](https://nakisainc.sharepoint.com/sites/Content/Public/Forms/AllItems.aspx?id=%2Fsites%2FContent%2FPublic%2FFinance%20Product%20Documentation%2FNFS%202023%2ER2%20Product%20Documentation&viewid=6dd29729%2D0019%2D4850%2D9cbc%2D639463ad81f8&p=true)  
+- [2022.R3](https://nakisainc.sharepoint.com/sites/Content/Public/Forms/AllItems.aspx?id=%2Fsites%2FContent%2FPublic%2FFinance%20Product%20Documentation%2FNFS%202022%2ER3%20Product%20Documentation&viewid=6dd29729%2D0019%2D4850%2D9cbc%2D639463ad81f8&p=true)
+- [2023.R2](https://nakisainc.sharepoint.com/sites/Content/Public/Forms/AllItems.aspx?id=%2Fsites%2FContent%2FPublic%2FFinance%20Product%20Documentation%2FNFS%202023%2ER2%20Product%20Documentation&viewid=6dd29729%2D0019%2D4850%2D9cbc%2D639463ad81f8&p=true)
 - [2023.R4 (CA-Walmart-Pfizer)](https://nakisainc.sharepoint.com/sites/Content/Public/Forms/AllItems.aspx?id=%2Fsites%2FContent%2FPublic%2FFinance%20Product%20Documentation%2FNFS%202023%2ER4%20%28CA%2DWalmart%2DPfizer%29%20Product%20Documentation&viewid=6dd29729%2D0019%2D4850%2D9cbc%2D639463ad81f8&p=true)
 - [2023.R4 (GA)](https://nakisainc.sharepoint.com/sites/Content/Public/Forms/AllItems.aspx?id=%2Fsites%2FContent%2FPublic%2FFinance%20Product%20Documentation%2FNFS%202023%2ER4%20%28GA%29%20Product%20Documentation&viewid=6dd29729%2D0019%2D4850%2D9cbc%2D639463ad81f8&p=true)
-- [2024.R1](https://nakisainc.sharepoint.com/sites/Content/Public/Forms/AllItems.aspx?id=%2Fsites%2FContent%2FPublic%2FFinance%20Product%20Documentation%2FNFS%202024%2ER1%20Product%20Documentation&viewid=6dd29729%2D0019%2D4850%2D9cbc%2D639463ad81f8&p=true)  
+- [2024.R1](https://nakisainc.sharepoint.com/sites/Content/Public/Forms/AllItems.aspx?id=%2Fsites%2FContent%2FPublic%2FFinance%20Product%20Documentation%2FNFS%202024%2ER1%20Product%20Documentation&viewid=6dd29729%2D0019%2D4850%2D9cbc%2D639463ad81f8&p=true)
 
 **NLA (Nakisa Lease Administration)**
-- [2021.R1](https://nakisainc.sharepoint.com/sites/Content/Public/Forms/AllItems.aspx?id=%2Fsites%2FContent%2FPublic%2FFinance%20Product%20Documentation%2FNLA%202021%2ER1%20Product%20Documentation&viewid=6dd29729%2D0019%2D4850%2D9cbc%2D639463ad81f8&p=true)  
-- [2021.R2](https://nakisainc.sharepoint.com/sites/Content/Public/Forms/AllItems.aspx?id=%2Fsites%2FContent%2FPublic%2FFinance%20Product%20Documentation%2FNLA%202021%2ER2%20Product%20Documentation&viewid=6dd29729%2D0019%2D4850%2D9cbc%2D639463ad81f8&p=true)  
-- [2022.R1](https://nakisainc.sharepoint.com/sites/Content/Public/Forms/AllItems.aspx?id=%2Fsites%2FContent%2FPublic%2FFinance%20Product%20Documentation%2FNLA%202022%2ER1%20Product%20Documentation&viewid=6dd29729%2D0019%2D4850%2D9cbc%2D639463ad81f8&p=true)  
-- [2022.R2](https://nakisainc.sharepoint.com/sites/Content/Public/Forms/AllItems.aspx?id=%2Fsites%2FContent%2FPublic%2FFinance%20Product%20Documentation%2FNLA%202022%2ER2%20Product%20Documentation&viewid=6dd29729%2D0019%2D4850%2D9cbc%2D639463ad81f8&p=true)  
+- [2021.R1](https://nakisainc.sharepoint.com/sites/Content/Public/Forms/AllItems.aspx?id=%2Fsites%2FContent%2FPublic%2FFinance%20Product%20Documentation%2FNLA%202021%2ER1%20Product%20Documentation&viewid=6dd29729%2D0019%2D4850%2D9cbc%2D639463ad81f8&p=true)
+- [2021.R2](https://nakisainc.sharepoint.com/sites/Content/Public/Forms/AllItems.aspx?id=%2Fsites%2FContent%2FPublic%2FFinance%20Product%20Documentation%2FNLA%202021%2ER2%20Product%20Documentation&viewid=6dd29729%2D0019%2D4850%2D9cbc%2D639463ad81f8&p=true)
+- [2022.R1](https://nakisainc.sharepoint.com/sites/Content/Public/Forms/AllItems.aspx?id=%2Fsites%2FContent%2FPublic%2FFinance%20Product%20Documentation%2FNLA%202022%2ER1%20Product%20Documentation&viewid=6dd29729%2D0019%2D4850%2D9cbc%2D639463ad81f8&p=true)
+- [2022.R2](https://nakisainc.sharepoint.com/sites/Content/Public/Forms/AllItems.aspx?id=%2Fsites%2FContent%2FPublic%2FFinance%20Product%20Documentation%2FNLA%202022%2ER2%20Product%20Documentation&viewid=6dd29729%2D0019%2D4850%2D9cbc%2D639463ad81f8&p=true)
 - [2022.R2-SP](https://nakisainc.sharepoint.com/sites/Content/Public/Forms/AllItems.aspx?id=%2Fsites%2FContent%2FPublic%2FFinance%20Product%20Documentation%2FNLA%202022%2ER2%2DSP%20Product%20Documentation&viewid=6dd29729%2D0019%2D4850%2D9cbc%2D639463ad81f8&p=true)
-- [4.0.3](https://nakisainc.sharepoint.com/sites/Content/Public/Forms/AllItems.aspx?id=%2Fsites%2FContent%2FPublic%2FFinance%20Product%20Documentation%2FNLA%204%2E0%2E3%20Product%20Documentation&viewid=6dd29729%2D0019%2D4850%2D9cbc%2D639463ad81f8&p=true)    
+- [4.0.3](https://nakisainc.sharepoint.com/sites/Content/Public/Forms/AllItems.aspx?id=%2Fsites%2FContent%2FPublic%2FFinance%20Product%20Documentation%2FNLA%204%2E0%2E3%20Product%20Documentation&viewid=6dd29729%2D0019%2D4850%2D9cbc%2D639463ad81f8&p=true)
 - [5.0 Consultation Package](https://nakisainc.sharepoint.com/sites/Content/Public/Forms/AllItems.aspx?id=%2Fsites%2FContent%2FPublic%2FFinance%20Product%20Documentation%2FNLA%205%2E0%20Consultation%20Package&viewid=6dd29729%2D0019%2D4850%2D9cbc%2D639463ad81f8&p=true)
 - [5.0 Product Documentation](https://nakisainc.sharepoint.com/sites/Content/Public/Forms/AllItems.aspx?id=%2Fsites%2FContent%2FPublic%2FFinance%20Product%20Documentation%2FNLA%205%2E0%20Product%20Documentation&viewid=6dd29729%2D0019%2D4850%2D9cbc%2D639463ad81f8&p=true)
 - [5.1 Consultation Package](https://nakisainc.sharepoint.com/sites/Content/Public/Forms/AllItems.aspx?id=%2Fsites%2FContent%2FPublic%2FFinance%20Product%20Documentation%2FNLA%205%2E1%20Consultation%20Package&viewid=6dd29729%2D0019%2D4850%2D9cbc%2D639463ad81f8&p=true)
