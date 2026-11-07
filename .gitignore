@@ -4,6 +4,7 @@
 google_accounts.json
 oauth_creds.json
 installation_id
+browser-profile/
 
 # Transient State
 state.json
@@ -60,3 +61,4 @@ obj/
 .DS_Store
 Thumbs.db
 antigravity-cli/
+sandbox/
