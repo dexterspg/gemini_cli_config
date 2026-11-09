@@ -1,7 +1,6 @@
 ---
 name: csr
 description: 'Create Cloud Services (CSR) tickets with correct required fields and valid option values'
-args: ""
 user-invocable: false
 ---
 

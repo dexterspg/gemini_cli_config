@@ -517,4 +517,4 @@ Migration is not purely linear. Three failure loops can occur:
 | `agent-implementation-engineer` | 03-transform | Reads `FIELD_MAPPING.md` → writes `migrate.py` + `validate.py` |
 | `agent-qa-engineer` | 05-reconciliation | Runs reconciliation → writes `RECONCILIATION_REPORT.md` |
 | `agent-quality-guardian` | Any | Reviews any artifact at any phase |
-| `agent-persona-reviewer` | Any | Panel review (auto-detects `migration` content type; panel: Migration Engineer, Client Success Manager, Data Steward, Implementation Consultant) |
+| `adversarial-review` (skill, main session) | Any | Adversarial panel review (auto-detects `migration` content type; concern groups: Migration Engineer, Customer Success Manager, Data Steward, Implementation Consultant) |

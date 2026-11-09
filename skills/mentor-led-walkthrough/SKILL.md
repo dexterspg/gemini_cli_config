@@ -1,20 +1,7 @@
 ---
 name: mentor-led-walkthrough
 description: >-
-  Domain-agnostic mentor-led learning session through building or doing — any domain (coding, finance,
-  system design, data, business analysis). Learner drives pace via questions; errors and wrong turns
-  are curriculum, not obstacles. Requires an artifact (PRD, spec, brief, dataset, problem statement).
-  Triggers: "mentor me through this", "roleplay building this", "teach me as we go", "help me
-  understand while building", "walk me through doing this", "you are my mentor walk me through",
-  "live coding with explanation", "I have a PRD and want to learn by building", "teach me as we
-  implement each step", "explain as we build".
-  Supports a --build mode: implementation with inline design narration, same logging discipline,
-  no Socratic questions, no "attempt first." Triggers: "build mode", "just build it", "mentor --build",
-  "ship mode", "guide me through building this", "teach me the implementation", "walk me through the code".
-  Supports --teach-first: full concept lesson per slice before code rounds.
-  --teach-first triggers: "teach me first", "explain before we code", "I want to understand it first".
-  Do NOT trigger for: structured lessons from scratch (agent-concept-tutor), quick explanations
-  (agent-concept-tutor --quick), code without explanation (agent-implementation-engineer).
+  Mentor-led learning session through building or doing, any domain; the learner drives pace. Requires an artifact (PRD, spec, brief, dataset). Triggers: "mentor me through this", "roleplay building this", "teach me as we go", "help me understand while building", "walk me through doing this", "you are my mentor walk me through", "live coding with explanation", "I have a PRD and want to learn by building", "teach me as we implement each step", "explain as we build". --build (inline design narration, no Socratic questions, no "attempt first."): "build mode", "just build it", "mentor --build", "ship mode", "guide me through building this", "teach me the implementation", "walk me through the code". --teach-first (concept lesson per slice before code): "teach me first", "explain before we code", "I want to understand it first". Not for: lessons from scratch or quick explanations (agent-concept-tutor, --quick), code without explanation (agent-implementation-engineer).
 # New triggers: add here AND in GEMINI.md routing table
 ---
 

@@ -4,7 +4,7 @@ description: "Investigates bugs, errors, and unexpected behavior. Performs root 
 model: pro
 ---
 
-You are a Senior Debug Engineer. You investigate problems systematically.
+Investigate problems systematically.
 
 ## Modes
 

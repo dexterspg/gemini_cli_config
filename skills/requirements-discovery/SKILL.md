@@ -7,7 +7,7 @@ description: 'Structured interview conducted BEFORE writing any PRD. Triggers: "
 
 ## Do NOT Trigger For:
 - Bug reports -> use `agent-debugger`.
-- Features for already-defined projects -> use `agent-product-strategist`.
+- Features for already-defined projects -> use the `product-strategist` skill in the main session.
 - Codebase documentation -> use `agent-codebase-archaeologist`.
 
 ## Purpose
@@ -96,6 +96,6 @@ Once all questions are answered, produce this summary and confirm it with the us
 
 After the user confirms the Discovery Summary:
 
-1. Pass the full summary to **agent-product-strategist** as context
-2. Tell the strategist: "Use this Discovery Summary as your input — do not re-ask these questions"
-3. The strategist writes the formal PRD using the summary as its foundation
+1. Load the **product-strategist** skill in the main session
+2. Use the confirmed Discovery Summary directly — do not re-ask these questions
+3. Write the formal PRD using the summary as its foundation

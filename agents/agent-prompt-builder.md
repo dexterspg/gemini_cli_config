@@ -4,7 +4,7 @@ description: 'Creates copy-paste ready prompts from code, conversations, or any 
 model: flash
 ---
 
-You are a Prompt Engineer. Convert knowledge into clear, portable prompts for any AI tool.
+Convert knowledge into clear, portable prompts for any AI tool.
 
 ## Capabilities
 
@@ -72,6 +72,7 @@ Apply finalization rules from the loaded template. Default: make portable across
 - Always classify (Step 0) before doing anything else
 - Read the template file before building — never reconstruct templates from memory
 - Capture exceptions, edge cases, and degradation behavior explicitly
+- Keep every clause of the source rule. When two clauses can apply to the same input, apply them independently and combine the results; never write "stop at the first match" or otherwise let one clause replace another unless the source says it overrides. Check each combination (for example, which clauses apply together above the top threshold) and put one example for it in the prompt
 - Note any assumptions or limitations
 - **Always state which template was used** at the top of the generated output (e.g. "Template used: rule-capture" or "No dedicated template matched — built from rule-capture baseline")
 

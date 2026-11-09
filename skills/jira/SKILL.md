@@ -21,7 +21,7 @@ description: >-
 
 **Do NOT trigger for:**
 - Confluence operations (e.g., writing pages, creating spaces) → Atlassian plugin (`mcp__plugin_atlassian_atlassian__*`), not this skill
-- Content generation from ticket data → pass to `jira-content-creator` subagent
+- Content generation from ticket data → load the `jira-content` skill in the main session
 - Time tracking routing decisions → `agent-time-tracker`
 
 ## NCS → LAE Ticket Workflow
@@ -290,5 +290,4 @@ See `~/.gemini/skills/jira/templates/CONTENT-TEMPLATES.md` — 5-Question Analys
 ## Related Agents
 
 This skill is used by:
-- **Main session** — ALL MCP calls (search, get, create, update, copy, log work). The only place MCP tools work.
-- **jira-content-creator** (subagent) — Receives pre-fetched ticket data, produces formatted content (5Q analyses, KB articles, release notes). No MCP access.
+- **Main session** — ALL MCP calls (search, get, create, update, copy, log work), plus formatting pre-fetched ticket data via the `jira-content` skill.

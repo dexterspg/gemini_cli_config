@@ -76,12 +76,17 @@ This section tracks assets in `~/.gemini` relative to `~/.claude`, separating mi
 
 ### Intentional Gemini-Native Adaptations (Do Not Overwrite on Sync)
 `~/.gemini` is the source of truth for the platform adaptations below; only sync domain rules from `~/.claude`:
+- `GEMINI.md` & `quality-guardian/EVIDENCE-agent-design.md` (Single-Agent vs Multi-Agent Orchestration):
+    - Adopts Single-Agent by Default (Main Session First) with the 5 verified delegation reasons, adapted to Antigravity's native subagent mechanics (`invoke_subagent` with built-in read-only sandbox `research` vs `self`, `Workspace: inherit | branch | share`, `EnableMCPTools: false` / `EnableWriteTools: false` hard boundaries, and `flash_lite` / `flash` / `pro` / `inherit` model tiering).
+    - Includes Gemini-adapted `skills/quality-guardian/scripts/config_check.py` and `check_frontmatter.py` (enforces UTF-8 without BOM, zero `color:` frontmatter, valid Gemini `model` tiers, 0 identity lines, 15 global agents, and zero references to folded/removed agents).
 - `browser-scenarios` (skill):
     - Uses `~/.gemini/browser-profile` (isolated from `~/.claude/browser-profile` and ignored in `~/.gemini/.gitignore`).
     - Includes Windows PowerShell launcher `scripts/start-chrome.ps1` alongside `start-chrome.sh`, with Chrome path fallback detection (`CHROME_BIN`, `Program Files`, `Program Files (x86)`, `LocalAppData`).
     - Disambiguates Antigravity's native `/browser` command (one-off page inspection) from replayable Playwright scripts (`browser-scenarios`), and documents `/goal` and `flash`/`pro` model guidance.
     - Documents live-verified Quasar / Vue SPA UI automation rules (`payable-ui` on `ra-env2`): scoping active dialogs to `.q-dialog__inner:visible`, clearing orphaned `.q-dialog__backdrop` overlays, interacting with portaled `.q-menu:visible` server-filtered dropdowns (`ApInputPinnedSingleSelect`), dismissing date popups with `Escape`, and pairing `--write` with `--cleanup` (`Callback` -> `Draft` -> `Delete`).
     - Enforces scenario conventions via `recon/lint_browser_scenarios.py` and prohibits scratch scripts inside `scenarios/browser/`.
+    - Mandates persistent professional callout overlays (`position: fixed` unclipped bounding box on `document.body` at `z-index: 2147483647`, numbered callout pill badges `[1]`, `[2]`, Scribe-style click-target bullseye beacons, semantic palette), pre-capture visual hygiene (modal inner scroll, tooltip cursor reset, popup dismissal), `--step <N>` single-step execution, and optional `--docx` Word document walkthrough export for walkthrough scenarios.
+    - Defines the Fast UI Exploration Protocol: prohibits PowerShell inline `python -c` DOM probing, checks cached Quasar page maps (`references/quasar-page-maps.md`) first, and uses `scripts/probe.py` (with `--active-tab` and `--quasar` interactive widget indexing) for single-pass Observe-then-Lock authoring.
 - `browser-login` (skill):
     - Uses `~/.gemini/browser-profile` and `<build>-user` files inside `~/.gemini/browser-profile/`.
     - Includes `scripts/login.py`, `scripts/run.ps1`, `scripts/run.sh`, `scripts/mod-login.ps1`, and `scripts/mod-login.cmd` directly in the skill, plus the user-run `mod-login` PowerShell `$PROFILE` function (replacing Claude's `~/.claude/mods/mod-login` plugin).
@@ -93,15 +98,15 @@ This section tracks assets in `~/.gemini` relative to `~/.claude`, separating mi
 - `browser-login` (skill — domain parity + Gemini-native adaptation above)
 - `engineering-journal` (skill)
 - `jira` (skill)
+- `jira-content` (skill — folded from `jira-content-creator` agent)
 - `company` (skill)
-- `jira-content-creator` (agent)
 - `claude-bridge` (skill)
-- `agent-persona-reviewer` (agent)
-- `persona-reviewer` (skill)
+- `adversarial-review` (skill — replaced `agent-persona-reviewer` agent and `persona-reviewer` skill)
 - `agent-quality-guardian` (agent)
 - `quality-guardian` (skill)
 - `documentation-specialist` (skill)
 - `migration` (skill)
+- `agent-qa-engineer` (agent)
 - `qa-engineer` (skill)
 - `scheduled-automation-routine` (skill)
 - `agent-data-analysis-expert` (agent)
@@ -110,12 +115,12 @@ This section tracks assets in `~/.gemini` relative to `~/.claude`, separating mi
 - `agent-note-taker` (agent)
 - `agent-implementation-engineer` (agent)
 - `agent-system-architect` (agent)
-- `agent-product-strategist` (agent)
+- `product-strategist` (skill — folded from `agent-product-strategist` agent)
 - `agent-data-doc-specialist` (agent)
 - `agent-support-investigator` (agent)
 - `agent-codebase-archaeologist` (agent)
 - `agent-tech-detective` (agent)
-- `agent-nla-implementation-engineer` (agent)
+- `agent-mentor` (agent)
 - `learning-strategy` (skill)
 - `sandbox-builder` (skill)
 - `step-visualization` (skill)

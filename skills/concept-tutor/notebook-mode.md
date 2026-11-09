@@ -23,7 +23,7 @@ Run the standard teaching flow (Steps 1–8). **Always include the Flow Summary*
 
 Pass the FULL lesson verbatim to agent-note-taker — never summarize or condense. Include:
 - Lesson title and topic
-- All prose sections (The Problem, Core Idea, Examples, Build-up)  
+- All prose sections (Motivate, Explain, Demonstrate, Build up)
 - Flow Summary (Confirmed flow, Key insights, Misconceptions busted, Vocabulary)
 - Practice exercise
 

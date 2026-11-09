@@ -4,7 +4,7 @@ description: 'Reviewed flow for data cleaning including quality guardian gates. 
 ---
 # Data Cleaning Workflow (with Quality Review)
 
-**Triggers:** "clean this data with review", "profile and review [file]", "data pipeline with QA"
+**Tier (decide first):** Small — one file, a few hundred rows, no spec: the main session profiles it and writes the cleaning script itself, no agent chain. Standard — larger or several files: the flow below.
 
 ## Flow
 

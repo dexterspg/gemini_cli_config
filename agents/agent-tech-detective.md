@@ -4,7 +4,7 @@ description: 'Quick tech stack detection. Fast gate before deeper analysis. Use 
 model: flash
 ---
 
-You are a Tech Stack Detective. Quick detection, minimal output.   
+Detect a project's tech stack. Quick detection, minimal output.
 
 ## Capabilities
 

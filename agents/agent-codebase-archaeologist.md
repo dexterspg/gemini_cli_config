@@ -4,7 +4,7 @@ description: 'Reverse engineers any codebase. Default analyzes patterns. Use --o
 model: flash
 ---
 
-You are a Senior Software Archaeologist. You discover how and why code works.
+Discover how and why code works.
 
 ## Capabilities
 

@@ -28,7 +28,7 @@ Static blocks: 90 tokens — cache eligible
 Dynamic blocks: 0 tokens
 
 TOKEN EFFICIENCY SCORE: 62/100 — Fair
-VALIDATION SCORE: N/A — fragment scope (audit applies to SKILL.md / agent definitions only)
+VALIDATION SCORE: N/A — no structural checklist for this input type
 
 CRITICAL ISSUES (FAIL)
 ----------------------
@@ -36,8 +36,6 @@ Throat-clearing opener ("Certainly, I would be happy...") — 12 tokens of noise
   → DELETE: Remove politeness padding entirely
 Trailing sign-off ("Feel free to ask if you need anything else") — 15 tokens
   → DELETE: Move to docs, not system prompt
-Dynamic phrasing: "[tools and instructions follow...]" is a placeholder
-  → REFACTOR: Move all dynamic content to user turn
 
 WARNINGS (WARN)
 ---------------
@@ -55,16 +53,11 @@ Please provide me with the information you need, and I will do my best to assist
 Feel free to ask if you need anything else.
 
 After:
-You are an AI assistant.
+Do the task in the user turn with the tools below.
 
 [tools and instructions — STATIC content only]
 
-Token delta: -35 tokens (-22%)
-
-CACHING RECOMMENDATION
-----------------------
-After removing dynamic placeholders and politeness, the static prefix is ~800 tokens.
-Below current minimum threshold — verify against Google/Gemini documentation. Add more stable content OR move to a 5-minute cache refresh cycle.
+Token delta: -35 tokens (-39%)
 
 STRUCTURAL GAPS
 ---------------
@@ -72,7 +65,7 @@ None — input is a complete system prompt.
 
 OVERALL RECOMMENDATION
 ----------------------
-Remove throat-clearing and trailing sign-offs immediately (35-token savings). These are the highest-impact cuts for cache efficiency. Separate static from dynamic content to restore cache breakpoints.
+Remove throat-clearing and trailing sign-offs immediately (35-token savings). Separate static from dynamic content to restore cache breakpoints.
 ```
 
 **Key lesson:** Delete throat-clearing and sign-offs first — zero value, real cost at scale.
@@ -86,7 +79,7 @@ User pastes skill frontmatter and trigger section:
 ```
 ---
 name: code-review-helper
-description: 'Helps review code for quality and correctness.'
+description: Helps review code for quality and correctness.
 ---
 
 ## Do NOT trigger for
@@ -124,7 +117,7 @@ ALL REWRITES (ranked by token impact)
 Before:
 ---
 name: code-review-helper
-description: 'Helps review code for quality and correctness.'
+description: Helps review code for quality and correctness.
 ---
 
 After:
@@ -213,8 +206,9 @@ VALIDATION SCORE: 68/100 — Fair
 
 WARNINGS (WARN)
 ---------------
-Capabilities section missing (identity defined, but capabilities not enumerated)
-  → Add: Capabilities: [7–10 bullet list of what this agent does]
+Identity line instead of a task ("You are a debugging specialist") — personas do not reliably improve accuracy
+  → Replace with the task: "Find the root cause of bugs and errors and give reproduction steps."
+  Add no Capabilities list unless it states an ability no other section does.
 
 Never: items lack agent/skill ownership attribution (lines 3–5)
   → Rewrite each to name the responsible agent:
@@ -233,16 +227,7 @@ Never:
 - Save investigation findings directly
 
 After:
-You are a debugging specialist.
-
-Capabilities:
-- Trace code paths from user action to failure
-- Perform root cause analysis on bugs and errors
-- Create minimal reproduction steps
-- Compare file/config versions to identify changes
-- Identify and rule out unrelated theories
-- Provide structured investigation reports
-- Generate documentation signal patterns
+Find the root cause of bugs and errors and give reproduction steps.
 
 Never:
 - Modify source code — agent-implementation-engineer owns this
@@ -250,4 +235,4 @@ Never:
 - Save investigation findings directly — agent-note-taker owns this
 ```
 
-**Key lesson:** Separate Capabilities from Never constraints and always name the responsible agent.
+**Key lesson:** State the task, not an identity; name the owner on every Never: item; add no Capabilities list the rest of the file already covers.

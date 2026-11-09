@@ -1,9 +1,10 @@
 ---
 name: data-cleaning
-description: "End-to-end flow from raw data scan to Python cleaning script. Triggers: \"clean this data\", \"how to fix this CSV\"."
+description: 'End-to-end flow from raw data scan to Python cleaning script. Triggers: "clean this data", "how to fix this CSV".'
 ---
 # Data Cleaning Workflow
 
+**Tier (decide first):** Small — one file, a few hundred rows, no spec: the main session profiles it and writes the cleaning script itself, no agent chain. Standard — larger or several files: the flow below.
 
 ## Flow
 

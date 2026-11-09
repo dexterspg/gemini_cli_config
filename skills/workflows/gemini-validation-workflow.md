@@ -10,4 +10,4 @@
 
 ## Rules
 - User-triggered only — never auto-trigger
-- Main session owns the comparison and routing; agent-gemini does not participate
+- Main session owns the comparison and routing
