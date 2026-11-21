@@ -39,7 +39,7 @@ Run the login command in your terminal:
 - CMD / batch shim: `"%USERPROFILE%\.gemini\skills\browser-login\scripts\mod-login.cmd" <build> [product]`
 - Git Bash: `bash ~/.gemini/skills/browser-login/scripts/run.sh <build> [product]`
 
-It starts the scenario Chrome if needed, fills the login form from Credential Manager only when the form shows, and prints `signed in.` or `already signed in`.
+It starts the scenario Chrome if needed, opens the product's `auth/login` entry (on Keycloak builds), fills the login form from Credential Manager only when the form shows, and prints `signed in.`, `already signed in`, or `NOT signed in` when the build answers with an error page instead of the form.
 
 - No product: the build's default product. A product: that one, by short name or UI segment. `list` prints the build's products,
   short names and probe date.

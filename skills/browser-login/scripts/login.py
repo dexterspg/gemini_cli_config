@@ -108,6 +108,8 @@ if want_url:
     print(target)
     sys.exit(0)
 label = f"{build} {name}"
+# Keycloak entry: the form when signed out, back to the product when signed in. The bare product path answers 403 JSON on a stale session.
+entry = target if cfg["manual"] else target_base + "auth/login"
 
 import keyring
 from playwright.sync_api import sync_playwright
@@ -123,11 +125,11 @@ with sync_playwright() as p:
     # Every open is a NEW tab; the one blank tab a fresh Chrome starts with is reused.
     blank = [pg for pg in ctx.pages if pg.url in ("about:blank", "chrome://newtab/")]
     page = blank[0] if len(ctx.pages) == 1 and blank else ctx.new_page()
-    page.goto(target, timeout=20_000)
+    page.goto(entry, timeout=20_000)
     page.bring_to_front()   # show the tab; the window itself may still need a click
-    if page.url.startswith(target):   # still on the product: allow a late redirect to a sign-in page (up to 2 s)
+    if page.url.startswith(target_base):   # still on the product: allow a late redirect to a sign-in page (up to 2 s)
         try:
-            page.wait_for_url(lambda u: not u.startswith(target), timeout=2000)
+            page.wait_for_url(lambda u: not u.startswith(target_base), timeout=2000)
         except Exception:
             pass
     page.wait_for_load_state("domcontentloaded")
@@ -139,20 +141,19 @@ with sync_playwright() as p:
             print(f"{label}: already signed in.")
         sys.exit(0)
 
-    body_text = page.locator("body").inner_text() if page.locator("body").count() else ""
-    if "AccessDenied" in body_text or '"code":403' in body_text or '"status":"FORBIDDEN"' in body_text:
-        # If hit with 403 API JSON, retry once with hash route /#/
-        if not page.url.endswith("/#/"):
-            page.goto(page.url.rstrip("/") + "/#/", timeout=20_000)
-            page.wait_for_load_state("domcontentloaded")
-            body_text = page.locator("body").inner_text() if page.locator("body").count() else ""
-
     if page.locator("#username").count() == 0:
-        if "AccessDenied" in body_text or '"code":403' in body_text or '"status":"FORBIDDEN"' in body_text:
-            print(f"{label}: HTTP 403 Forbidden received. Verify user has assigned roles for this environment.")
-            sys.exit(1)
-        print(f"{label}: already signed in.")
-        sys.exit(0)
+        shown = page.evaluate("document.body ? document.body.innerText.slice(0, 300) : ''")
+        if "AccessDenied" in shown or '"status":"FORBIDDEN"' in shown or re.search(r'"code"\s*:\s*[45]\d\d', shown):
+            if not page.url.endswith("/#/"):
+                page.goto(target_base + "#/", timeout=20_000)
+                page.wait_for_load_state("domcontentloaded")
+                shown = page.evaluate("document.body ? document.body.innerText.slice(0, 300) : ''")
+        if page.locator("#username").count() == 0:
+            if "AccessDenied" in shown or '"status":"FORBIDDEN"' in shown or re.search(r'"code"\s*:\s*[45]\d\d', shown):
+                print(f"{label}: NOT signed in: the build answered with an error page, not the sign-in form. Close the extra tabs and run it again.")
+                sys.exit(1)
+            print(f"{label}: already signed in.")
+            sys.exit(0)
 
     env_name = build.upper().replace("-", "_") + "_USER"
     user = os.environ.get(env_name, "").strip()

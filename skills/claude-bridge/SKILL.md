@@ -80,18 +80,23 @@ This section tracks assets in `~/.gemini` relative to `~/.claude`, separating mi
     - Adopts Single-Agent by Default (Main Session First) with the 5 verified delegation reasons, adapted to Antigravity's native subagent mechanics (`invoke_subagent` with built-in read-only sandbox `research` vs `self`, `Workspace: inherit | branch | share`, `EnableMCPTools: false` / `EnableWriteTools: false` hard boundaries, and `flash_lite` / `flash` / `pro` / `inherit` model tiering).
     - Includes Gemini-adapted `skills/quality-guardian/scripts/config_check.py` and `check_frontmatter.py` (enforces UTF-8 without BOM, zero `color:` frontmatter, valid Gemini `model` tiers, 0 identity lines, 15 global agents, and zero references to folded/removed agents).
 - `browser-scenarios` (skill):
-    - Uses `~/.gemini/browser-profile` (isolated from `~/.claude/browser-profile` and ignored in `~/.gemini/.gitignore`).
+    - Uses `~/.gemini/browser-profile` (isolated from `~/.claude/browser-profile` and ignored in `~/.gemini/.gitignore`) and port `9223` (`SCENARIO_CDP_PORT=9223`).
     - Includes Windows PowerShell launcher `scripts/start-chrome.ps1` alongside `start-chrome.sh`, with Chrome path fallback detection (`CHROME_BIN`, `Program Files`, `Program Files (x86)`, `LocalAppData`).
     - Disambiguates Antigravity's native `/browser` command (one-off page inspection) from replayable Playwright scripts (`browser-scenarios`), and documents `/goal` and `flash`/`pro` model guidance.
-    - Documents live-verified Quasar / Vue SPA UI automation rules (`payable-ui` on `ra-env2`): scoping active dialogs to `.q-dialog__inner:visible`, clearing orphaned `.q-dialog__backdrop` overlays, interacting with portaled `.q-menu:visible` server-filtered dropdowns (`ApInputPinnedSingleSelect`), dismissing date popups with `Escape`, and pairing `--write` with `--cleanup` (`Callback` -> `Draft` -> `Delete`).
+    - Syncs Claude's `API-to-UI mode` (`api-ui-<flow>.py` with `_apiui.py`, `--cap N`, 3-layer verification, negative control), `product_tab(browser, URL)` one-tab-per-product reuse, screen-order & `# revisit: <reason>` discipline, and 4-line `Brief:` docstring block.
+    - Documents live-verified Quasar / Vue SPA UI automation rules (`payable-ui`, `fos`, `nfs`, `spb` on `preview1` and `ra-env2`, including 2026-11-13 updates in `references/quasar-page-maps.md`).
     - Enforces scenario conventions via `recon/lint_browser_scenarios.py` and prohibits scratch scripts inside `scenarios/browser/`.
-    - Mandates persistent professional callout overlays (`position: fixed` unclipped bounding box on `document.body` at `z-index: 2147483647`, numbered callout pill badges `[1]`, `[2]`, Scribe-style click-target bullseye beacons, semantic palette), pre-capture visual hygiene (modal inner scroll, tooltip cursor reset, popup dismissal), `--step <N>` single-step execution, and optional `--docx` Word document walkthrough export for walkthrough scenarios.
-    - Defines the Fast UI Exploration Protocol: prohibits PowerShell inline `python -c` DOM probing, checks cached Quasar page maps (`references/quasar-page-maps.md`) first, and uses `scripts/probe.py` (with `--active-tab` and `--quasar` interactive widget indexing) for single-pass Observe-then-Lock authoring.
+    - Mandates persistent professional callout overlays (`_walkthrough.py` with `ui_given`, `ui_fill`, `ui_check`, `ui_click`, `ui_verify`), pre-capture visual hygiene (`park_mouse`, modal inner scroll, horizontal table scroll), `--step <N>`, resumable flags (`--invoice-id`, `--pictures-from`, `--first-picture`, `SCENARIO_FAIL_SHOTS`), and optional `--docx` Word document walkthrough export.
+    - Defines the Fast UI Exploration Protocol: prohibits PowerShell inline `python -c` DOM probing, checks cached Quasar page maps (`references/quasar-page-maps.md`) first, and uses `scripts/probe.py` (with one-tab-per-product reuse, `--active-tab`, `--buttons`, and `--quasar` interactive widget indexing).
 - `browser-login` (skill):
-    - Uses `~/.gemini/browser-profile` and `<build>-user` files inside `~/.gemini/browser-profile/`.
+    - Uses `~/.gemini/browser-profile` and `<build>-user` files inside `~/.gemini/browser-profile/`, on port `9223` (`SCENARIO_CDP_PORT=9223`).
     - Includes `scripts/login.py`, `scripts/run.ps1`, `scripts/run.sh`, `scripts/mod-login.ps1`, and `scripts/mod-login.cmd` directly in the skill, plus the user-run `mod-login` PowerShell `$PROFILE` function (replacing Claude's `~/.claude/mods/mod-login` plugin).
     - Resolves `nakisa-products.md` across `NAKISA_PRODUCTS_FILE`, `C:/workarea/references/nakisa-products.md`, and `~/workarea/references/nakisa-products.md`.
-    - Adds R&D / SPA hash-route (`/#/`) handling and 403 JSON retry logic in `login.py` and `SKILL.md` for `ra-env*` builds.
+    - Combines Claude's Keycloak `auth/login` entry point and `[45]\d\d` JSON error-page detection with R&D / SPA hash-route (`/#/`) retry handling in `login.py` and `SKILL.md` for `ra-env*` builds.
+- `api-test-app` workspace (`C:/Users/dpagkaliwangan/workarea/api-test-app/GEMINI.md` & `.gemini/skills/`, migrated from the retired `api-test-app-agy` workspace):
+    - Syncs `hurl-conventions` (trimmed `SKILL.md` + `references/repo-files.md`, `references/run-gate.md` preview1 mutating exception, `references/sidecars.md` & `ADR-006` precondition catalog `hurl/PRECONDITIONS.tsv`), `core2-source-reading` (with `recon/preflight.py --error` fallback to `recon/out/core2-error-index.tsv` and `C:/core2/GEMINI.local.md`), `learning-layer`, `report-field-mapping` (with BAPI trace field map), and `endpoint-health-check`, adapted to `.gemini/skills/`, `~/.gemini/skills/`, and `GEMINI.md`.
+- `jira` (`SKILL.md`, `fco/SKILL.md`, `api-support/SKILL.md`, `api-docs-tickets/SKILL.md`, `reference/ATTACHMENT-PROTOCOL.md`, `workflows/LAE-WORKFLOW.md`) & `engineering-journal` (`SKILL.md`, `references/session-audit.md`):
+    - Synced 2026-11-13 with Gemini-native paths (`~/.gemini/skills/`, `.gemini/skills/`, `GEMINI.md`, `C:/workarea/gemini-config-todo.md`).
 
 ### In-Sync / Migrated
 - `browser-scenarios` (skill — domain parity + Gemini-native adaptation above)
@@ -134,6 +139,10 @@ This section tracks assets in `~/.gemini` relative to `~/.claude`, separating mi
 - `walkthrough-planner` (skill)
 - `agent-prompt-builder` (agent)
 - `agent-time-tracker` (agent)
+- `ncp-api-access` (skill — client-agnostic NCP Cockpit API access policies and key lifecycle)
+- `mapping-table-artifact` (skill — client interface/field mapping editable table artifact)
+- `api-reference` (skill — with required records contract)
+- `client-requirements` (skill in client_api — client integration requirements, API email replies, secrets)
 - `architecture-audit` (skill)
 - `architecture-audit-workspace` (skill)
 - `data` (skill)

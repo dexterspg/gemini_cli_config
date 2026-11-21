@@ -1,0 +1,335 @@
+<title>{{CLIENT}} Mapping Tables</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: sheet tabs and filters on top, one wide table per sheet ({{CLIENT}}'s columns locked on the left, Nakisa's columns editable on the right), sync note below. Bright look: white page, saturated blue and green headings, a yellow highlight for edits. Single light theme by choice. */
+:root {
+  color-scheme: light;
+  --bg: #f4f9ff; --surface: #ffffff; --surface-2: #e9f2ff; --ink: #0f2438; --muted: #4a6076; --line: #d3e2f2;
+  --client: #1a5fd0; --client-soft: #e4efff; --nak: #07856a; --nak-soft: #def7ef; --chg: #fff0a3; --chg-line: #f0a500;
+  --bad: #c62828; --ok: #07856a; --accent: #1a5fd0; --mine: #6a3fc9; --mine-soft: #f2ecff;
+  --font: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "DM Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font); font-size: 14px; line-height: 1.45; margin: 0;
+  border-top: 5px solid var(--client); border-image: linear-gradient(90deg, #1a5fd0, #07856a) 1;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 22px 40px; }
+.wrap { max-width: 1500px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
+h1 { font-size: 28px; line-height: 1.15; margin: 0; letter-spacing: -0.01em; text-wrap: balance; color: var(--ink); }
+.lede { color: var(--muted); margin: 6px 0 0; max-width: 78ch; }
+.bar { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; }
+.tabs { display: flex; flex-wrap: wrap; gap: 6px; }
+.tabs button { font: inherit; font-weight: 500; padding: 7px 15px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 999px; cursor: pointer; }
+.tabs button:hover { border-color: var(--client); color: var(--client); }
+.tabs button[aria-selected="true"] { background: var(--client); color: #fff; border-color: var(--client); box-shadow: 0 2px 8px rgba(26, 95, 208, .28); }
+.tabs .n { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-left: 6px; }
+.tabs button[aria-selected="true"] .n { color: inherit; opacity: .85; }
+.tools { display: flex; flex-wrap: wrap; gap: 8px; margin-left: auto; align-items: center; }
+input[type="search"], select, textarea, input.cell { font: inherit; font-size: 13px; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 5px 8px; min-width: 0; }
+input[type="search"] { width: 220px; }
+textarea { width: 100%; resize: none; overflow: hidden; display: block; font-family: var(--mono); font-size: 12px; line-height: 1.4; }
+select { width: 100%; }
+:focus-visible { outline: 2px solid var(--client); outline-offset: 1px; }
+.stats { display: flex; flex-wrap: wrap; gap: 6px 18px; color: var(--muted); font-size: 13px; }
+.stats b { color: var(--client); font-weight: 700; }
+.scroll { overflow-x: auto; overflow-y: visible; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); box-shadow: 0 4px 16px rgba(26, 95, 208, .08); }
+table { border-collapse: separate; border-spacing: 0; width: max-content; min-width: 100%; font-size: 13px; }
+th, td { padding: 8px 10px; border-bottom: 1px solid var(--line); border-right: 1px solid var(--line); vertical-align: top; text-align: left; }
+thead th { font-size: 11.5px; text-transform: uppercase; letter-spacing: .05em; white-space: nowrap; }
+thead tr.group th { font-size: 12px; letter-spacing: .04em; }
+tbody tr:hover td.ap, tbody tr:hover td.nk:not(.chg) { background: #f3f8ff; }
+tbody tr:hover td.ap.key { background: #d6e7ff; }
+/* headings that follow the page scroll: a copy of the heading rows, pinned to the top of the window and shifted sideways with the table */
+.floathead { position: sticky; top: env(safe-area-inset-top, 0px); height: 0; z-index: 20; }
+.fhwrap { display: none; position: absolute; top: 0; overflow: hidden; box-shadow: 0 3px 10px rgba(15, 36, 56, .2); border-radius: 0 0 8px 8px; }
+.fhwrap table { table-layout: fixed; border-collapse: separate; border-spacing: 0; }
+.fhwrap th.key { position: static; }
+th.ap { background: var(--client); color: #fff; }
+th.nk { background: var(--nak); color: #fff; }
+td.ap { background: var(--surface); white-space: pre-wrap; overflow-wrap: anywhere; }
+td.ap.key { position: sticky; left: 0; z-index: 2; background: var(--client-soft); font-weight: 600; min-width: 120px; }
+th.key { position: sticky; left: 0; z-index: 5; }
+td.nk { background: var(--surface); min-width: 220px; }
+td.nk.narrow { min-width: 130px; }
+td.nk.chg { background: var(--chg); box-shadow: inset 4px 0 0 var(--chg-line); }
+th.mine { background: var(--mine); color: #fff; }
+th.mine .soft { font-weight: 400; text-transform: none; letter-spacing: 0; opacity: .9; }
+td.mine { background: var(--mine-soft); min-width: 260px; box-shadow: inset 4px 0 0 var(--mine); }
+td.mine textarea { background: #fff; border-color: #cdbdf2; }
+.colmenu { position: relative; }
+.colmenu summary { list-style: none; cursor: pointer; font-size: 13px; font-weight: 500; padding: 5px 12px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--ink); }
+.colmenu summary::-webkit-details-marker { display: none; }
+.colmenu[open] summary { border-color: var(--client); color: var(--client); }
+.colmenu .menu { position: absolute; right: 0; top: calc(100% + 6px); z-index: 40; min-width: 250px; max-height: 60vh; overflow: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px 12px; box-shadow: 0 8px 24px rgba(15, 36, 56, .18); }
+.colmenu .mh { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 10px 0 4px; font-weight: 600; }
+.colmenu label { display: flex; gap: 8px; align-items: baseline; padding: 3px 0; font-size: 13px; cursor: pointer; }
+.colmenu .soft { color: var(--muted); font-size: 12px; }
+.colmenu #showall { margin-top: 10px; font: inherit; font-size: 13px; padding: 5px 12px; border: 1px solid var(--client); background: var(--client); color: #fff; border-radius: 6px; cursor: pointer; }
+button.hidecol { font: inherit; font-size: 14px; line-height: 1; padding: 0 5px; margin-left: 4px; border: 0; border-radius: 4px; background: rgba(255, 255, 255, .22); color: inherit; cursor: pointer; }
+button.hidecol:hover { background: rgba(255, 255, 255, .45); }
+.desc { min-width: 260px; } .rem { min-width: 240px; } .sap { min-width: 150px; }
+.mono { font-family: var(--mono); font-size: 12px; }
+.empty { padding: 34px 20px; color: var(--muted); }
+.note { color: var(--muted); font-size: 13px; }
+.sync { display: flex; flex-wrap: wrap; gap: 8px 20px; align-items: baseline; border: 1px solid var(--line); border-left: 5px solid var(--nak); border-radius: 10px; background: var(--surface); padding: 12px 14px; }
+.about { display: grid; gap: 10px; max-width: 900px; }
+.about div { border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; background: var(--surface); }
+.about b { display: block; font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--client); margin-bottom: 2px; }
+.err { color: var(--bad); font-size: 13px; }
+@media (max-width: 640px) { input[type="search"] { width: 100%; } .tools { margin-left: 0; width: 100%; } h1 { font-size: 22px; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>{{CLIENT}} mapping tables</h1>
+    <p class="lede">The interface tables Nakisa maps for {{CLIENT}}. {{CLIENT}}'s columns are {{CLIENT}}'s own words from its specifications and are locked here. The Nakisa columns are ours to edit. Claude copies the changed cells into the shared workbook. "My assumption" is a private working column: it lives only on this page and is never copied to the workbook.</p>
+  </header>
+  <div class="bar">
+    <div class="tabs" id="tabs" role="tablist"></div>
+    <div class="tools">
+      <details class="colmenu" id="colmenu" hidden><summary id="colsum">Columns</summary><div class="menu" id="colboxes"></div></details>
+      <input type="search" id="q" placeholder="Search this table" aria-label="Search this table">
+      <select id="sf" aria-label="Filter rows" style="width:auto">
+        <option value="all">All rows</option>
+        <option value="open">No Nakisa field yet</option>
+        <option value="mapped">Has a Nakisa field</option>
+        <option value="chg">Changed since the last sync</option>
+      </select>
+    </div>
+  </div>
+  <div class="stats" id="stats"></div>
+  <div id="main"></div>
+  <div class="sync" id="sync"></div>
+  <div class="err" id="err" role="status"></div>
+</div>
+
+<script>
+(function () {
+  var SHEETS = {{SHEETS_JSON}}, NK = ["endpoint", "field", "status", "confirms", "comment"];
+  var NLAB = { endpoint: "Nakisa endpoint", field: "Nakisa field", status: "Status", confirms: "{{CLIENT}} confirms (Y / N / comment)", comment: "Comment", assumption: "My assumption" };
+  var S = { rows: null, meta: {}, sheet: "T92", q: "", sf: "all", db: null, canWrite: true, pending: false };
+  var chains = {};
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function g(o, k) { var v = o && o[k]; return v == null ? "" : String(v); }
+  var HID = {};
+  try { HID = JSON.parse(localStorage.getItem("mappingHiddenColumns") || "{}") || {}; } catch (e) { HID = {}; }
+  function hid(id) { return !!HID[id]; }
+  function setHid(id, v) { if (v) HID[id] = 1; else delete HID[id]; try { localStorage.setItem("mappingHiddenColumns", JSON.stringify(HID)); } catch (e) { } }
+  function cid(kind, name) { return kind + ":" + name; }
+  function sheetColIds() {
+    var rs = sheetRows(S.sheet), ids = [];
+    if (!rs.length) return ids;
+    rs[0].apple.forEach(function (p, i) { if (i > 0) ids.push(cid("a", p[0])); });
+    NK.forEach(function (k) { ids.push(cid("n", k)); });
+    ids.push(cid("m", "assumption"));
+    return ids;
+  }
+  function updateMenuLabel() {
+    var n = sheetColIds().filter(hid).length;
+    document.getElementById("colsum").textContent = "Columns" + (n ? " (" + n + " hidden)" : "");
+  }
+  function renderMenu() {
+    var det = document.getElementById("colmenu"), box = document.getElementById("colboxes");
+    if (S.rows === null || S.sheet === "About" || !sheetRows(S.sheet).length) { det.hidden = true; return; }
+    det.hidden = false;
+    var cols = sheetRows(S.sheet)[0].apple.map(function (p) { return p[0]; });
+    function row(id, label, locked) { return '<label><input type="checkbox" data-col="' + esc(id) + '"' + (hid(id) ? "" : " checked") + (locked ? " disabled" : "") + "> " + esc(label) + (locked ? ' <span class="soft">(always shown)</span>' : "") + "</label>"; }
+    var h = '<div class="mh">{{CLIENT}}\'s columns</div>';
+    cols.forEach(function (c, i) { h += row(cid("a", c), c, i === 0); });
+    h += '<div class="mh">Nakisa\'s columns</div>';
+    NK.forEach(function (k) { h += row(cid("n", k), NLAB[k], false); });
+    h += '<div class="mh">Only on this page</div>' + row(cid("m", "assumption"), "My assumption", false);
+    h += '<button type="button" id="showall">Show all columns</button>';
+    box.innerHTML = h;
+    updateMenuLabel();
+  }
+  function setErr(t) { document.getElementById("err").textContent = t || ""; }
+  /* a box grows with its text, so nothing needs scrolling inside it */
+  function fit(t) { t.style.height = "auto"; t.style.height = (t.scrollHeight + 2) + "px"; }
+  function fitAll() { var a = document.querySelectorAll("#main textarea"); for (var i = 0; i < a.length; i++) fit(a[i]); }
+
+  function fromHash() { var h = (location.hash || "").slice(1); S.sheet = (SHEETS.indexOf(h) >= 0 || h === "About") ? h : "T92"; }
+  function sheetRows(n) { return (S.rows || []).filter(function (r) { return r.sheet === n; }).sort(function (a, b) { return a.n - b.n; }); }
+  function changed(r) { return NK.some(function (k) { return g(r.nakisa, k) !== g(r.synced, k); }); }
+  function mapped(r) { return !!(g(r.nakisa, "endpoint") || g(r.nakisa, "field")); }
+
+  function renderTabs() {
+    var h = "";
+    SHEETS.concat(["About"]).forEach(function (n) {
+      var c = n === "About" ? "" : '<span class="n">' + sheetRows(n).length + "</span>";
+      h += '<button role="tab" data-sheet="' + n + '" aria-selected="' + (S.sheet === n) + '">' + n + c + "</button>";
+    });
+    document.getElementById("tabs").innerHTML = h;
+  }
+
+  function renderMain() {
+    var el = document.getElementById("main"), stats = document.getElementById("stats");
+    if (S.rows === null) { el.innerHTML = '<div class="empty">Loading the mapping tables...</div>'; stats.innerHTML = ""; return; }
+    if (S.sheet === "About") {
+      stats.innerHTML = "";
+      var items = (S.meta.about && S.meta.about.items) || [];
+      var inter = (S.meta.about && S.meta.about.interfaces) || [];
+      var h = '<div class="about">';
+      items.forEach(function (it) { h += "<div><b>" + esc(it[0]) + "</b>" + esc(it[1]) + "</div>"; });
+      if (inter.length) { h += "<div><b>Fields in {{CLIENT}}'s files</b>"; inter.forEach(function (r) { h += esc(r[0]) + ": " + esc(r[1]) + "<br>"; }); h += "</div>"; }
+      if (!items.length) h += '<div class="empty">Nothing loaded yet.</div>';
+      el.innerHTML = h + "</div>"; return;
+    }
+    var all = sheetRows(S.sheet);
+    if (!all.length) {
+      el.innerHTML = '<div class="empty">No rows for ' + S.sheet + ' yet. Claude loads them from the shared workbook; ask Claude to load them.</div>';
+      stats.innerHTML = ""; return;
+    }
+    var q = S.q.toLowerCase();
+    var vis = all.filter(function (r) {
+      if (S.sf === "open" && mapped(r)) return false;
+      if (S.sf === "mapped" && !mapped(r)) return false;
+      if (S.sf === "chg" && !changed(r)) return false;
+      if (!q) return true;
+      var hay = (r.apple || []).map(function (p) { return p[1]; }).concat(NK.map(function (k) { return g(r.nakisa, k); })).concat([g(r.nakisa, "assumption")]).join(" ").toLowerCase();
+      return hay.indexOf(q) >= 0;
+    });
+    stats.innerHTML = "<span><b>" + all.length + "</b> {{CLIENT}} fields</span><span><b>" + all.filter(mapped).length + "</b> with a Nakisa field</span><span><b>" +
+      all.filter(changed).length + "</b> changed since the last sync</span><span>Showing <b>" + vis.length + "</b></span>";
+    var cols = all[0].apple.map(function (p) { return p[0]; });
+    var v{{CLIENT}} = cols.filter(function (c, i) { return i === 0 || !hid(cid("a", c)); });
+    var vNK = NK.filter(function (k) { return !hid(cid("n", k)); });
+    var vMine = !hid(cid("m", "assumption"));
+    var hb = function (id, label) { return ' <button type="button" class="hidecol" data-col="' + esc(id) + '" title="Hide this column" aria-label="Hide column ' + esc(label) + '">&times;</button>'; };
+    var h = '<div class="scroll"><table><thead><tr class="group"><th class="ap key" style="z-index:6" colspan="1"></th>' +
+      (v{{CLIENT}}.length > 1 ? '<th class="ap" colspan="' + (v{{CLIENT}}.length - 1) + '">{{CLIENT}}\'s table, locked, word for word from the specification</th>' : '') +
+      (vNK.length ? '<th class="nk" colspan="' + vNK.length + '">Nakisa, editable</th>' : '') +
+      (vMine ? '<th class="mine">Only on this page</th>' : '') + '</tr><tr class="cols">';
+    cols.forEach(function (c, i) { if (i > 0 && hid(cid("a", c))) return; h += '<th class="ap' + (i === 0 ? " key" : "") + '">' + esc(c) + (i === 0 ? "" : hb(cid("a", c), c)) + "</th>"; });
+    vNK.forEach(function (k) { h += '<th class="nk">' + esc(NLAB[k]) + hb(cid("n", k), NLAB[k]) + "</th>"; });
+    if (vMine) h += '<th class="mine">My assumption <span class="soft">(not in the workbook)</span>' + hb(cid("m", "assumption"), "My assumption") + "</th>";
+    h += "</tr></thead><tbody>";
+    vis.forEach(function (r) {
+      h += "<tr>";
+      r.apple.forEach(function (p, i) {
+        if (i > 0 && hid(cid("a", p[0]))) return;
+        var cls = "ap" + (i === 0 ? " key" : "") + (p[0] === "Description of Field" ? " desc" : p[0] === "Remarks" ? " rem" : p[0] === "SAP Data Field" ? " sap mono" : "");
+        h += '<td class="' + cls + '">' + esc(p[1]) + "</td>";
+      });
+      NK.forEach(function (k) {
+        if (hid(cid("n", k))) return;
+        var v = g(r.nakisa, k), dis = S.canWrite ? "" : " disabled", chg = v !== g(r.synced, k) ? " chg" : "";
+        var base = '<td class="nk' + (k === "status" || k === "confirms" ? " narrow" : "") + chg + '">';
+        if (k === "status") {
+          h += base + '<select data-id="' + esc(r.id) + '" data-k="status"' + dis + ' aria-label="Status">' +
+            ["", "As is", "Not used", "To decide", "Agreed"].map(function (o) { return '<option value="' + o + '"' + (o === v ? " selected" : "") + ">" + (o || "(none)") + "</option>"; }).join("") + "</select></td>";
+        } else {
+          h += base + '<textarea rows="' + Math.max(2, Math.min(6, Math.ceil(v.length / 38) || 2)) + '" data-id="' + esc(r.id) + '" data-k="' + k + '"' + dis +
+            ' aria-label="' + esc(NLAB[k]) + " for " + esc(g(r.apple[0] && { x: r.apple[0][1] }, "x")) + '">' + esc(v) + "</textarea></td>";
+        }
+      });
+      var av = g(r.nakisa, "assumption"), adis = S.canWrite ? "" : " disabled";
+      if (vMine) h += '<td class="mine"><textarea rows="' + Math.max(2, Math.min(6, Math.ceil(av.length / 38) || 2)) + '" data-id="' + esc(r.id) + '" data-k="assumption"' + adis +
+        ' aria-label="My assumption for ' + esc(g(r.apple[0] && { x: r.apple[0][1] }, "x")) + '">' + esc(av) + "</textarea></td>";
+      h += "</tr>";
+    });
+    if (!vis.length) h += '<tr><td class="ap empty" colspan="' + (v{{CLIENT}}.length + vNK.length + (vMine ? 1 : 0)) + '">No row matches this filter.</td></tr>';
+    el.innerHTML = h + "</tbody></table></div>";
+    setupFloat();
+    fitAll();
+  }
+
+  var FH = null;
+  function setupFloat() {
+    FH = null;
+    var sc = document.querySelector("#main .scroll"); if (!sc) return;
+    var table = sc.querySelector("table"), real = table && table.tHead; if (!real) return;
+    var holder = document.createElement("div"); holder.className = "floathead";
+    var wrap = document.createElement("div"); wrap.className = "fhwrap";
+    var t = document.createElement("table"); t.setAttribute("aria-hidden", "true");
+    t.appendChild(real.cloneNode(true)); wrap.appendChild(t); holder.appendChild(wrap);
+    sc.parentNode.insertBefore(holder, sc);
+    FH = { sc: sc, table: table, real: real, holder: holder, wrap: wrap, t: t };
+    sizeFloat(); updateFloat();
+    sc.addEventListener("scroll", updateFloat, { passive: true });
+  }
+  function sizeFloat() {
+    if (!FH) return;
+    var cells = FH.real.rows[1].cells, cg = document.createElement("colgroup"), total = 0;
+    for (var i = 0; i < cells.length; i++) { var w = cells[i].getBoundingClientRect().width; total += w; var c = document.createElement("col"); c.style.width = w + "px"; cg.appendChild(c); }
+    var old = FH.t.querySelector("colgroup"); if (old) old.remove();
+    FH.t.insertBefore(cg, FH.t.firstChild); FH.t.style.width = total + "px";
+    FH.wrap.style.width = FH.sc.clientWidth + "px";
+    FH.wrap.style.left = (FH.sc.getBoundingClientRect().left - FH.holder.getBoundingClientRect().left) + "px";
+  }
+  function updateFloat() {
+    if (!FH) return;
+    var top = 0, r = FH.real.getBoundingClientRect(), tb = FH.table.getBoundingClientRect();
+    var on = r.bottom < top + 2 && tb.bottom > 70;
+    FH.wrap.style.display = on ? "block" : "none";
+    var x = FH.sc.scrollLeft;
+    FH.t.style.transform = "translateX(" + (-x) + "px)";
+    var first = FH.t.querySelectorAll("th.key"); for (var i = 0; i < first.length; i++) first[i].style.transform = "translateX(" + x + "px)";
+  }
+  window.addEventListener("scroll", updateFloat, { passive: true });
+  window.addEventListener("resize", function () { fitAll(); sizeFloat(); updateFloat(); });
+  document.addEventListener("input", function (e) { if (e.target && e.target.tagName === "TEXTAREA") fit(e.target); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { fitAll(); sizeFloat(); updateFloat(); });
+
+  function renderSync() {
+    var s = S.meta.sync, n = (S.rows || []).filter(changed).length;
+    var t = s && s.at ? "Last copied into the shared workbook: <b>" + esc(new Date(s.at).toLocaleString()) + "</b>" + (s.note ? " (" + esc(s.note) + ")" : "") : "Not copied into the shared workbook yet.";
+    document.getElementById("sync").innerHTML = "<span>" + t + "</span><span class=\"note\">" + n + " cell edit" + (n === 1 ? "" : "s") + " waiting. Ask Claude to sync: it shows the differences against the shared workbook first and writes only what you approve.</span>";
+  }
+
+  function renderAll() { renderTabs(); renderMain(); renderSync(); renderMenu(); }
+
+  function save(id, k, v) {
+    var p = (chains[id] || Promise.resolve()).then(function () {
+      var patch = { nakisa: {} }; patch.nakisa[k] = v;
+      return S.db.doc("rows/" + id).update(patch);
+    }).then(function () { setErr(""); }, function (e) { setErr("Could not save: " + (e && e.message ? e.message : "unknown error")); });
+    chains[id] = p;
+  }
+
+  document.addEventListener("change", function (e) {
+    var t = e.target; if (!t.getAttribute || !t.getAttribute("data-id") || !S.db) return;
+    save(t.getAttribute("data-id"), t.getAttribute("data-k"), t.value);
+  });
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest && e.target.closest("[data-sheet]"); if (!b) return;
+    location.hash = b.getAttribute("data-sheet");
+  });
+  document.addEventListener("change", function (e) {
+    var t = e.target; if (!t || !t.matches || !t.matches("#colboxes input[data-col]")) return;
+    setHid(t.getAttribute("data-col"), !t.checked); updateMenuLabel(); renderMain();
+  });
+  document.addEventListener("click", function (e) {
+    var t = e.target, det = document.getElementById("colmenu");
+    var hb = t.closest && t.closest(".hidecol");
+    if (hb) { setHid(hb.getAttribute("data-col"), true); renderMenu(); renderMain(); return; }
+    if (t.id === "showall") { sheetColIds().forEach(function (id) { setHid(id, false); }); renderMenu(); renderMain(); return; }
+    if (det && det.open && !det.contains(t)) det.open = false;
+  });
+  document.addEventListener("focusout", function () { setTimeout(function () { if (S.pending && !document.activeElement.closest(".scroll")) { S.pending = false; renderAll(); } }, 0); });
+  window.addEventListener("hashchange", function () { fromHash(); renderAll(); });
+  document.getElementById("q").addEventListener("input", function (e) { S.q = e.target.value; renderMain(); });
+  document.getElementById("sf").addEventListener("change", function (e) { S.sf = e.target.value; renderMain(); });
+
+  fromHash(); renderAll();
+
+  var timer = setTimeout(function () { if (S.rows === null) setErr("The saved tables can't be reached yet. Showing nothing until they answer."); }, 10000);
+  (async function () {
+    var db = await claude.use("db");
+    if (!db) { S.rows = []; clearTimeout(timer); renderAll(); setErr("Saved data is not available in this view."); return; }
+    S.db = db;
+    try { var u = await claude.use("user"); if (u && u.can) { var c = u.can("data.write"); if (c === false) S.canWrite = false; } } catch (x) { }
+    db.collection("rows").onSnapshot(function (snap) {
+      clearTimeout(timer);
+      S.rows = snap.docs.map(function (d) { var o = d.data() || {}; o.id = d.id; return o; });
+      if (document.activeElement && document.activeElement.closest && document.activeElement.closest(".scroll")) { S.pending = true; renderTabs(); renderSync(); return; }
+      renderAll();
+    }, function (e) { clearTimeout(timer); if (S.rows === null) S.rows = []; renderAll(); setErr("Could not read the tables: " + (e && e.message ? e.message : e && e.code)); });
+    db.collection("meta").onSnapshot(function (snap) {
+      snap.docs.forEach(function (d) { S.meta[d.id] = d.data() || {}; });
+      renderMain(); renderSync();
+    }, function () { });
+  })();
+})();
+</script>

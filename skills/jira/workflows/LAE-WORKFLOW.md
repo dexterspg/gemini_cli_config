@@ -10,17 +10,17 @@
 
 | From Status | Transition | ID | To Status |
 |---|---|---|---|
-| L2Sup-Creating | Request Support | 921 | L2Sup-NeedInfo |        
-| L2Sup-Creating | Request Development | 781 | Dev-Pending |       
+| L2Sup-Creating | Request Support | 921 | L2Sup-NeedInfo |
+| L2Sup-Creating | Request Development | 781 | Dev-Pending |
 | L2Sup-Creating | Request PS | 911 | PS-Actioned |
 | L2Sup-Creating | On Hold | 511 | On Hold |
 | L2Sup-Creating | Reply | 801 | Replied (CLOSED) |
 | L2Sup-Creating | Reject | 811 | Rejected |
-| L2Sup-NeedInfo | Request Development | 931 | Dev-Pending |       
+| L2Sup-NeedInfo | Request Development | 931 | Dev-Pending |
 | L2Sup-NeedInfo | Request Product | 941 | Prod-Pending |
 | L2Sup-NeedInfo | Request SEN | 961 | COE/SEN-Pending |
 | L2Sup-NeedInfo | Request PS | 911 | PS-Actioned |
-| L2Sup-NeedInfo | Request Support | 921 | L2Sup-NeedInfo |        
+| L2Sup-NeedInfo | Request Support | 921 | L2Sup-NeedInfo |
 | L2Sup-NeedInfo | On Hold | 511 | On Hold |
 | L2Sup-NeedInfo | Reply | 801 | Replied (CLOSED) |
 | L2Sup-NeedInfo | Reject | 811 | Rejected |
@@ -48,11 +48,10 @@
 When adding a comment addressed to the reporter (using ADF mention) from Dev-Pending:
 - If asking for more info or waiting on the reporter → transition to **L2Sup-NeedInfo** (ID: 921)
 - If providing an update but no response needed yet → stay in **Dev-Pending**
-- Always use ADF mention node for the reporter — never plain text `@Name`
-- Use the LAE Investigation Comment Template (see SKILL.md)        
+- Use the LAE Investigation Comment Template (SKILL.md), unless the user is both reporter and assignee: then SKILL.md → "Commenting on a Ticket You Reported and Own"
 
 **Closure (Reply transition) — required fields:**
-- **Root Cause** (`customfield_12301`) — default `{"id": "11886"}` (Platform / Environment) unless told otherwise
+- **Root Cause** (`customfield_12301`) — default `{"id": "11886"}` (Platform / Environment) unless told otherwise; for a ticket about an API, default `{"id": "16070"}` (Product API)
 
   | ID | Value |
   |---|---|
@@ -66,11 +65,11 @@ When adding a comment addressed to the reporter (using ADF mention) from Dev-Pen
   | 16069 | Duplicate |
   | 13347 | User Error / Knowledge / Training / FAD |
   | 11394 | Not Reproducible |
-- **Resolution Path** (`customfield_12000`) — ADF format, 5-question content (see `~/.gemini/skills/jira/templates/CONTENT-TEMPLATES.md`). Writing rules: business-user friendly, concise, no technical jargon, plain language only
+- **Resolution Path** — NOT offered on LAE: not on the Reply screen (only Root Cause + KB Article) and not editable afterwards (`customfield_12000` → 400 "cannot be set"). Never draft, ask for, or set it.
 - **KB Article** (`customfield_13264`) — leave empty (not required)
 
 **Closure sequence:**
-1. POST transition 801 with Root Cause + Resolution Path in the same call (via REST API)
+1. POST transition 801 with Root Cause (via REST API)
 2. Follow Mandatory Sequence in SKILL.md to re-fetch and fix assignee fields
 
 **REST API call:**
@@ -78,7 +77,7 @@ When adding a comment addressed to the reporter (using ADF mention) from Dev-Pen
 curl -s -X POST "https://nakisa.atlassian.net/rest/api/3/issue/LAE-XXXXX/transitions" \
   -u "$JIRA_EMAIL:$JIRA_API_TOKEN" \
   -H "Content-Type: application/json" \
-  -d '{"transition": {"id": "801"}, "fields": {"customfield_12301": {"id": "11886"}, "customfield_12000": { ...ADF... }}}'
+  -d '{"transition": {"id": "801"}, "fields": {"customfield_12301": {"id": "11886"}}}'
 ```
 
 ---

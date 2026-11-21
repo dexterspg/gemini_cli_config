@@ -5,7 +5,7 @@ description: >-
   dead ends, gotchas/config facts, and progressively improved runbooks. Triggers on:
   "log a decision", "ADR", "gotcha", "dead end", "tried and failed", "config fact",
   "hard-won fix", "create a runbook", "update runbook", "how did we set up [X]", "setup guide", "engineering journal",
-  "knowledge log", "sweep knowledge log". NOT for README, API docs, concept tutorials,
+  "knowledge log", "sweep knowledge log", "audit this session". NOT for README, API docs, concept tutorials,
   or personal learning notes.
 ---
 
@@ -14,6 +14,8 @@ description: >-
 **Purpose:** Maintain a project's institutional memory — the knowledge that lives between
 the code and the README. Decisions, dead ends, hard-won discoveries, and operational
 runbooks that would otherwise rot in Slack threads or leave with the engineer who found them.
+
+**Also:** "audit this session" reviews a session for what belongs in the Gemini config (skills, references, memory); it writes no project knowledge and follows `references/session-audit.md`.
 
 **Boundary with `domain-knowledge` skill:** Domain-knowledge captures public-domain concepts
 (what is OAuth2, what is event sourcing). Engineering-journal captures project-specific
@@ -44,7 +46,8 @@ and `{project-root}/GEMINI.md` for the category you are about to write (`ADR`/`d
 `runbook`, `gotcha`, `dead end`).
 
 A project that documents its own location, filename pattern or template for a category
-**overrides this skill for that category only**. Write there, in that format — the project convention wins in full:
+**overrides this skill for that category only** (see `~/.gemini/GEMINI.md` → "Project Skill vs
+Global Skill Precedence"). Write there, in that format — the project convention wins in full:
 path, filename, section set, and status vocabulary — except a runbook not about that project (last row
 below). Leave the other categories to this skill.
 State which directory you chose and why before writing, so a wrong choice is visible immediately
@@ -56,7 +59,7 @@ Known overrides:
 |---|---|---|
 | `api-test-app` | decisions | `hurl/adr/ADR-NNN-kebab-title.md` per its `hurl-conventions` skill — do NOT create `engineering-log/decisions/` there |
 | any project with a `documentation/` tree | decisions | `documentation/platform/decisions/ADR-NNN-TITLE.md` per `documentation-specialist`, written by `agent-system-architect` |
-| a failure caused by one environment's data (a record that must exist or be linked, a company the external system accepts, a scope already full of open items) | discoveries | that project's `docs/environments/<env>-data-blockers.md` if it has one, else ask before creating it; one row per blocker: symptom, a check to run before acting, date. It is read BEFORE acting (global GEMINI.md → Tool Boundaries), so it never waits in `discoveries.md`. `api-test-app`: `docs/environments/ra-env2-data-blockers.md` |
+| a failure caused by one environment's data (a record that must exist or be linked, a company the external system accepts, a scope already full of open items) | discoveries | that project's `docs/environments/<env>-data-blockers.md` if it has one, else ask before creating it; one row per blocker: symptom, a check to run before acting, date. It is read BEFORE acting (global GEMINI.md → Tool Boundaries), so it never waits in `discoveries.md`. `api-test-app`: `docs/environments/ra-env2-data-blockers.md`; log only a fact the error or script header does not already say and that stays true for weeks (never a count or a state one read away); a rule a `RESTRICTIONS.md` already holds gets a pointer, not a copy |
 | a runbook not about the current project, or one the user says stays out of its repo | runbooks | `C:/workarea/runbooks/short-title.md`, Runbook template, no `INDEX.md` entry. Overrides a project's runbook convention unless the runbook is about that project. Unsure whether it is: ask. cwd not inside a repo: this row. Create the folder if missing; it is not a git repo, so never commit there. Authoring-time only |
 
 Only once no project convention exists and no row above applies: if `engineering-log/` does not
@@ -169,6 +172,7 @@ The changelog at the bottom tracks what evolved and why.
 | "create a runbook", "update runbook", "add to runbook", "how did we set up [X]", "config steps" | Create or update in `runbooks/`; for an update or lookup also search `C:/workarea/runbooks/` by filename and `Tags` |
 | "what do we know about [topic]", "check knowledge log" | Search INDEX.md and relevant files by tag; also `C:/workarea/runbooks/` by filename and `Tags` |
 | "sweep knowledge log", "stale entries" | Review entries older than 6 months referencing removed components |
+| "audit this session" | Read `references/session-audit.md` and follow it; proposals only |
 
 After writing a DISCOVERY, DEAD-END, or RUNBOOK entry in `engineering-log/`, update `INDEX.md` with a one-line summary:
 ```
@@ -226,3 +230,4 @@ This preserves the project's timeline of reasoning — "what did we know when?" 
 valuable as "what do we know now?"
 
 **Exception:** Runbooks are living documents and SHOULD be edited in place (with changelog).
+

@@ -5,6 +5,7 @@ google_accounts.json
 oauth_creds.json
 installation_id
 browser-profile/
+config/mcp_config.json
 
 # Transient State
 state.json

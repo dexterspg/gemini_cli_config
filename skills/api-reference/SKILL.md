@@ -116,6 +116,10 @@ external-ref: {external-docs-url-for-this-resource}
 | Status | Code | When |
 |---|---|---|
 
+**Required records:** [create/upsert only; write `None found` if none]
+| Order | Record | Scoped to | Error when missing |
+|---|---|---|---|
+
 ---
 
 ## Implementation
@@ -152,6 +156,7 @@ external-ref: {external-docs-url-for-this-resource}
 5. **Reference direction** — `api/` may link into `documentation/` and `knowledge/`. Neither `documentation/` nor `knowledge/` links back into `api/`.
 6. **Project supplement takes precedence** — any rule in the project supplement overrides the matching rule here.
 7. **Skill meta-management:** Direct edits to this skill file may be made without confirmation when the user gives explicit instruction.
+8. **Required records are contract** — a create can need records that already exist (a rate needs both its currencies, under the same company), which a schema's Required column never shows. Take each from a create sent with that record missing, or from the source; a row nobody saw fail says `not tested`. Authoring-time only.
 
 ## Notes
 
